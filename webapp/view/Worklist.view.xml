@@ -1,0 +1,41 @@
+<mvc:View controllerName="wip.controller.Worklist" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartMultiInput="sap.ui.comp.smartmultiinput" xmlns:smartFilterBar="sap.ui.comp.smartfilterbar">
+	<Button text="Level2" press="onNav"/>
+	
+
+	<smartFilterBar:SmartFilterBar id="SmartFilterBar" search="onBind" persistencyKey="SmartFilterBar" entityType="WipMatters"
+				filterChange="filterChangeData">
+				<smartFilterBar:controlConfiguration>
+					<smartFilterBar:ControlConfiguration key="Pspid" label="{i18n>Matter}" id="Matter" visibleInAdvancedArea="true"
+						preventInitialDataFetchInValueHelpDialog="true" filterType="multi"/>
+					<smartFilterBar:ControlConfiguration key="Budat" label="{i18n>Date Selection}" index="1" controlType="date" filterType="interval"
+						visibleInAdvancedArea="true"/>
+					<smartFilterBar:ControlConfiguration key="Client" label="{i18n>ClientNumber}" index="2" id="client" visibleInAdvancedArea="true"
+						preventInitialDataFetchInValueHelpDialog="true" filterType="multi"/>
+					<smartFilterBar:ControlConfiguration key="MpatnerParvw" label="{i18n>MpatnerParvw}" index="3" id="MpatnerParvw" visibleInAdvancedArea="true"
+						preventInitialDataFetchInValueHelpDialog="true" filterType="multi"/>
+					<smartFilterBar:ControlConfiguration key="Mpatner" label="{i18n>Mpatner}" id="Mpatner" visibleInAdvancedArea="true"
+						preventInitialDataFetchInValueHelpDialog="true" filterType="multi"/>
+					<smartFilterBar:ControlConfiguration key="WipTypeKey"  groupId="_BASIC" label="{i18n>Rptgroup}" width="300px"
+							visibleInAdvancedArea="true">
+							<smartFilterBar:customControl>
+										<smartMultiInput:SmartMultiInput entitySet="WipMattersSet" value="{Rptgroup}"/>
+							</smartFilterBar:customControl>
+						</smartFilterBar:ControlConfiguration>
+							<smartFilterBar:ControlConfiguration key="WipTypeKey2"  groupId="_BASIC" label="{i18n>Mgbill}" width="300px"
+							visibleInAdvancedArea="true">
+							<smartFilterBar:customControl>
+										<smartMultiInput:SmartMultiInput entitySet="WipMattersSet" value="{Mgbill}"/>
+							</smartFilterBar:customControl>
+						</smartFilterBar:ControlConfiguration>
+					<smartFilterBar:ControlConfiguration key="Belnr" label="{i18n>Belnr}" id="Belnr" visibleInAdvancedArea="true"
+						preventInitialDataFetchInValueHelpDialog="true" filterType="multi"/>
+					<smartFilterBar:ControlConfiguration key="Pernr" label="{i18n>Pernr}" id="Pernr" visibleInAdvancedArea="true"
+						preventInitialDataFetchInValueHelpDialog="true" filterType="multi"/>
+				
+						
+				</smartFilterBar:controlConfiguration>
+			</smartFilterBar:SmartFilterBar>
+
+
+</mvc:View>
