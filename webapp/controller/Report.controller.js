@@ -1027,7 +1027,7 @@ sap.ui.define([
 							
 				     var isTask = that.jsonModel.getProperty("/modelData/" + i + "/Zzphase");
 					that.jsonModel.setProperty("/modelData/" + i + "/phaseCodes", isTask.length ? [{
-						Phasecode: isTask,
+						Phasecode:  isTask,
 						PhasecodeDesc: ""
 					}].concat(phaseCodes.results) : phaseCodes.results);			
 							
