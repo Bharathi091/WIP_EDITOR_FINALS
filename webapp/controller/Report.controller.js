@@ -1008,61 +1008,37 @@ sap.ui.define([
 
 			.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes) {
 				debugger;
-				phaseCodes.results.unshift("");
-				activityCodes.results.unshift("");
-				ffTskCodes.results.unshift("");
-				that.jsonModel.setProperty("/phaseCodes", phaseCodes.results);
-				that.jsonModel.setProperty("/activityCodes", activityCodes.results);
-				that.jsonModel.setProperty("/ffTskCodes", ffTskCodes.results);
-				if (that.rowData.results.length > 0) {
-					that.WipEditModel.setProperty("/LinetableResults", that.rowData.results.length);
-					var lineItems = that.rowData.results;
-					// for (var i = 0; i < lineItems.length; i++) {
-
-					// 	lineItems[i].phaseCodes = lineItems[i].Zzphase.length ? [{
-					// 		Phasecode: lineItems[i].Zzphase,
-					// 		PhasecodeDesc: ""
-					// 	}].concat(phaseCodes.results) : phaseCodes.results;
-					// 	lineItems[i].taskCodes = lineItems[i].Zztskcd.length ? [{
-					// 		TaskCodes: lineItems[i].Zztskcd,
-					// 		TaskCodeDesc: ""
-					// 	}].concat(taskCodes.results) : taskCodes.results;
-					// 	lineItems[i].actCodes = lineItems[i].Zzactcd.length ? [{
-					// 		ActivityCodes: lineItems[i].Zzactcd,
-					// 		ActivityCodeDesc: ""
-					// 	}].concat(activityCodes.results) : activityCodes.results;
-					// 	lineItems[i].ffTskCodes = lineItems[i].Zzfftskcd.length ? [{
-					// 		FfTaskCodes: lineItems[i].Zzfftskcd,
-					// 		FfTaskCodeDesc: ""
-					// 	}].concat(ffTskCodes.results) : ffTskCodes.results;
-					// 	lineItems[i].ffActCodes = lineItems[i].Zzffactcd.length ? [{
-					// 		FfActivityCodes: lineItems[i].Zzffactcd,
-					// 		FfActivityCodeDesc: ""
-					// 	}] : [];
-					// 	lineItems[i].index = i;
-					// 	lineItems[i].indeces = i;
-					// 	lineItems[i].selectedPhaseCode = lineItems[i].Zzphase;
-					// 	lineItems[i].selectedTaskCode = lineItems[i].Zztskcd;
-					// 	lineItems[i].selectedActCode = lineItems[i].Zzactcd;
-					// 	lineItems[i].selectedFFTaskCode = lineItems[i].Zzfftskcd;
-					// 	lineItems[i].selectedFFActCode = lineItems[i].Zzffactcd;
-					// 	lineItems[i].isRowEdited = false;
-
-					// 	// lineItems[i].lineworkDate = sap.ui.core.format.DateFormat.getDateInstance({
-					// 	// 	source: {
-					// 	// 		pattern: "timestamp"
-					// 	// 	},
-					// 	// 	pattern: "dd.MM.yyyy"
-					// 	// }).format(new Date(lineItems[i].Budat.match(/\d+/)[0] * 1));
-					// 	// lineItems[i].Item = lineItems[i].Posnr.replace(/\b0+/g, '');
-					// 	// lineItems[i].BaseQty = lineItems[i].BaseQty.toString();
-
-					// }
-					that.WipEditModel.setProperty("/LineItemEdits", lineItems);
-				} else {
-					that.showAlert("Wip Edit", "No Data Found");
+				// phaseCodes.results.unshift("");
+				// activityCodes.results.unshift("");
+				// ffTskCodes.results.unshift("");
+				
+				// that.jsonModel.setProperty("/phaseCodes", phaseCodes.results);
+				// that.jsonModel.setProperty("/activityCodes", activityCodes.results);
+				// that.jsonModel.setProperty("/ffTskCodes", ffTskCodes.results);
+				debugger;
+				for( var i = 0; i < Rowdata.length ; i++){
+					
+				
+				// Rowdata[i].phaseCodes = Rowdata[i].Zzphase.length ? [{
+				// 				Phasecode: Rowdata[i].Zzphase,
+				// 				PhasecodeDesc: ""
+				// 			}].concat(phaseCodes.results) : phaseCodes.results;
+							
+							
+				     var isTask = that.jsonModel.getProperty("/modelData/" + i + "/Zzphase");
+					that.jsonModel.setProperty("/modelData/" + i + "/phaseCodes", isTask.length ? [{
+						Phasecode: isTask,
+						PhasecodeDesc: ""
+					}].concat(phaseCodes.results) : phaseCodes.results);			
+							
+			   
 				}
-
+			
+				 //     	var isTask = that.jsonModel.getProperty("/modelData/" + idx + "/ToZztskcd");
+					// that.jsonModel.setProperty("/modelData/" + idx + "/phaseCodes", isTask.length ? [{
+					// 	TaskCodes: isTask,
+					// 	TaskCodeDesc: ""
+					// }].concat(taskCodes.results) : taskCodes.results);
 			});
 		},
 		phaseCodesChange: function(oEvent) {
@@ -1091,9 +1067,9 @@ sap.ui.define([
 					taskCodes.results.unshift("");
 					activityCodes.results.unshift("");
 					ffTskCodes.results.unshift("");
-					that.jsonModel.setProperty("/taskCodes", taskCodes.results);
-					that.jsonModel.setProperty("/activityCodes", activityCodes.results);
-					that.jsonModel.setProperty("/ffTskCodes", ffTskCodes.results);
+					// that.jsonModel.setProperty("/taskCodes", taskCodes.results);
+					// that.jsonModel.setProperty("/activityCodes", activityCodes.results);
+					// that.jsonModel.setProperty("/ffTskCodes", ffTskCodes.results);
 
 					//  that.taskCodeChange(thisRow);
 					var isTask = that.BillEditModel.getProperty("/LineItemEdits/" + thisRow.index + "/Zztskcd");
