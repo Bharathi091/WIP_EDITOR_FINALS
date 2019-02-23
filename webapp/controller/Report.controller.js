@@ -1025,7 +1025,8 @@ sap.ui.define([
 				// 			}].concat(phaseCodes.results) : phaseCodes.results;
 							
 							
-				     var isTask = that.jsonModel.getProperty("/modelData/" + i + "/Zzphase");
+				     //var isTask = that.jsonModel.getProperty("/modelData/" + i + "/Zzphase");
+				     var isTask ="";
 					that.jsonModel.setProperty("/modelData/" + i + "/phaseCodes", isTask.length ? [{
 						Phasecode:  isTask,
 						PhasecodeDesc: ""

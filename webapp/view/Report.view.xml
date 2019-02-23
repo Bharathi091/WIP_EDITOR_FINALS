@@ -511,7 +511,7 @@
 														<Text text="Phase Code"/></uitbl:label>
 													<uitbl:template>
 														<m:Select width="11rem" forceSelection="false" id="phaseCodeId" selectedKey="{MatterModel>selectedPhaseCode}" change="phaseCodesChange"
-															items="{phaseCodes/}">
+														 items="{ path: 'JSONModel>/phaseCodes' , templateShareable:false }">
 															
 															<core:Item key="{JSONModel>Phasecode}" text="{JSONModel>Phasecode}  {JSONModel>PhasecodeDesc}"/>
 														</m:Select>
