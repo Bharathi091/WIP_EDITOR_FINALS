@@ -1,0 +1,18 @@
+<core:FragmentDefinition
+   xmlns="sap.m"
+   xmlns:core="sap.ui.core"
+   xmlns:f="sap.ui.layout.form">
+<f:SimpleForm class="simpleform" layout="Layout" maxContainerCols="3">
+	<f:content>
+		<core:Title/>
+		<Label text="Matter Number"  design="Bold"/>
+		<Text  text="{jsonmodel>/Matter}"/>
+		<core:Title/>
+		<Label text="Lead Partner"  design="Bold"/>
+		<Text  text="{jsonmodel>/Lead Partner}"/>
+		<core:Title/>
+		<Label text="Billing Office"  design="Bold"/>
+		<Text  text="{jsonmodel>/Billing Office}"/>
+	</f:content>
+</f:SimpleForm>
+</core:FragmentDefinition>

@@ -1,0 +1,102 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:smartField="sap.ui.comp.smartfield" xmlns:m="sap.m">
+	<Dialog title="Split Transfer {JSONModel>/docno}">
+		<l:Grid defaultSpan="L12 M12 S12" width="auto" id="idGrid">
+			<l:content>
+				<Table id="splitTable">
+					<columns>
+						<Column width="160px">
+							<Text text="Matter"/>
+						</Column>
+						<Column width="80px">
+							<Text text="Phase Code"/>
+						</Column>
+						<Column width="80px">
+							<Text text="Task Code"/>
+						</Column>
+						<Column width="160px">
+							<Text text="Activity Code"/>
+						</Column>
+						<Column width="160px">
+							<Text text="FF Task Code"/>
+						</Column>
+						<Column width="160px">
+							<Text text="FF Activity Code"/>
+						</Column>
+						<Column width="160px">
+							<Text text="Hours/Quantity"/>
+						</Column>
+						<Column width="160px">
+							<Text text="Document No"/>
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Text text="{JSONModel>/matter}"/>
+								<Text text=""/>
+								<Text text=""/>
+								<Text text=""/>
+								<Text text=""/>
+								<Text text=""/>
+								<Text text="{JSONModel>/quantity}"/>
+								<Text text="{JSONModel>/docno}"/>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+					<Table id="splitTable2">
+					<columns>
+						<Column width="160px">
+							<Text text="To Matter"/>
+						</Column>
+						<Column>
+							<Text text="Phase Code"/>
+						</Column>
+						<Column>
+							<Text text="Task Code"/>
+						</Column>
+						<Column>
+							<Text text="Activity Code"/>
+						</Column>
+						<Column>
+							<Text text="FF Task Code"/>
+						</Column>
+						<Column>
+							<Text text="FF Activity Code"/>
+						</Column>
+						<Column>
+							<Text text="Hours/Quantity"/>
+						</Column>
+						<Column>
+							<Text text="%"/>
+						</Column>
+						<Column width="50px"/>
+						<Column width="50px"/>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+							    <smartField:SmartField id="matter" entitySet="WipMattersSet" textLabel="matter" value="{Pspid}"/>
+								<Input id="pCode" value=""/>
+								<Input id="tCode" value=""/>
+								<Input id="aCode" value=""/>
+								<Input id="fftCode" value=""/>
+								<Input id="ffaCode" value=""/>
+								<Input id="hours" value=""  placeholder = "Quantity"/>
+								<Input id="per" value=""  placeholder = "%"/>
+								<Button icon="sap-icon://add" press="onAdd"/>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+			</l:content>
+		</l:Grid>
+		
+			
+		
+		<buttons>
+			<Button text="Transfer" press="onTransfer" type="Accept"/>
+			<Button text="Cancel" press="closeSplitDialog" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>
