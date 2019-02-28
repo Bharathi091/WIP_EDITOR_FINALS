@@ -834,7 +834,7 @@
 				<Button text="Save" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/Save}"/>
 				<Button text="Modify/Reverse" press="onModifyReverse" visible="{InputsModel>/Inputs/Toolbar/Modify_Reverse}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Modify_Reverse}"/>
-				<Button text="Updatecodes" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/Updatecodes}"
+				<Button text="Updatecodes" press="onUpdateCodes" visible="{InputsModel>/Inputs/Toolbar/Updatecodes}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Updatecodes}"/>
 				<Button text="A GlobalSpellCheck" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/GlobalSpellCheck}"/>
 				<Button text="Consolidate" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/Consolidate}"

@@ -1,4 +1,5 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:smartField="sap.ui.comp.smartfield" xmlns:m="sap.m">
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core"
+	xmlns:smartField="sap.ui.comp.smartfield" xmlns:m="sap.m">
 	<Dialog title="Split Transfer {JSONModel>/docno}">
 		<l:Grid defaultSpan="L12 M12 S12" width="auto" id="idGrid">
 			<l:content>
@@ -44,7 +45,7 @@
 						</ColumnListItem>
 					</items>
 				</Table>
-					<Table id="splitTable2">
+				<Table id="splitTable2">
 					<columns>
 						<Column width="160px">
 							<Text text="To Matter"/>
@@ -76,14 +77,31 @@
 					<items>
 						<ColumnListItem>
 							<cells>
-							    <smartField:SmartField id="matter" entitySet="WipMattersSet" textLabel="matter" value="{Pspid}"/>
-								<Input id="pCode" value=""/>
-								<Input id="tCode" value=""/>
-								<Input id="aCode" value=""/>
-								<Input id="fftCode" value=""/>
-								<Input id="ffaCode" value=""/>
-								<Input id="hours" value=""  placeholder = "Quantity"/>
-								<Input id="per" value=""  placeholder = "%"/>
+								<smartField:SmartField id="matter" entitySet="WipMattersSet" textLabel="matter" value="{Pspid}" change="onSelectMatter"/>
+								<Select width="11rem" forceSelection="false" id="pCode" selectedKey="{MatterModel>selectedPhaseCode}" change="splitPhaseCodesChange"
+									items="{ path: 'JSONModel>/splitPhaseCodes' , templateShareable:false }">
+									<core:Item key="{JSONModel>Phasecode}" text="{JSONModel>Phasecode} {JSONModel>PhasecodeDesc}"/>
+								</Select>
+								<Select width="11rem" forceSelection="false" id="tCode" selectedKey="{MatterModel>selectedTaskCode}"
+									items="{ path: 'JSONModel>/splitTaskCodes' , templateShareable:false }">
+									<core:Item key="{JSONModel>TaskCodes}" text="{JSONModel>TaskCodes} {JSONModel>TaskCodeDesc}"/>
+								</Select>
+								<Select width="11rem" forceSelection="false" id="aCode" selectedKey="{MatterModel>selectedActCode}" change="splitActivityCodesChange"
+									items="{ path: 'JSONModel>/splitActivityCodes' , templateShareable:false }">
+									<core:Item key="{JSONModel>activityCodes}" text="{JSONModel>ActivityCodes} {JSONModel>ActivityCodeDesc}"/>
+								</Select>
+								<Select width="11rem" forceSelection="false" id="fftCode" selectedKey="{MatterModel>selectedFFTaskCode}" change="splitFfTaskCodesChange"
+									items="{ path: 'JSONModel>/splitFfTskCodes' , templateShareable:false }">
+									<core:Item key="{JSONModel>FfTaskCodes}" text="{JSONModel>FfTaskCodes} {JSONModel>FfTaskCodeDesc}"/>
+								</Select>
+								<Select width="11rem" forceSelection="false" id="ffaCode" selectedKey="{MatterModel>selectedFFTaskCode}" 
+									items="{ path: 'JSONModel>/splitFfActCodes' , templateShareable:false }">
+									<core:Item key="{JSONModel>FfActivityCodes}" text="{JSONModel>FfActivityCodes} {JSONModel>FfActivityCodeDesc}"/>
+								</Select>
+								
+								<!--<Input id="ffaCode" value=""/>-->
+								<Input id="hours" value="" placeholder="Quantity"/>
+								<Input id="per" value="" placeholder="%"/>
 								<Button icon="sap-icon://add" press="onAdd"/>
 							</cells>
 						</ColumnListItem>
@@ -91,9 +109,6 @@
 				</Table>
 			</l:content>
 		</l:Grid>
-		
-			
-		
 		<buttons>
 			<Button text="Transfer" press="onTransfer" type="Accept"/>
 			<Button text="Cancel" press="closeSplitDialog" type="Reject"/>

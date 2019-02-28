@@ -202,7 +202,7 @@ sap.ui.define([
 			oModelFFActivitycodes.read(ffactvitycodedataset, {
 				filters: taskfilter,
 				success: function(oData) {
-					console.log("ffactivity",oData);
+				
 					sap.ui.core.BusyIndicator.hide(0);
 					deferred.resolve(oData);
 
