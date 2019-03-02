@@ -94,14 +94,14 @@
 													<uitbl:template>
 														<smartField:SmartField editable="false" id="Awtyp1" value="{Awtyp}"/></uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"3", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Activity Desc"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Audat1" value="{ZzbgrpDesc}"/></uitbl:template>
-												</uitbl:Column>
+												<!--<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"3", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Activity Desc"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Audat1" value="{ZzbgrpDesc}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
 												<uitbl:Column width="8rem" filterProperty="Bldat" sortProperty="Bldat" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" , "maxLength": "5","columnIndex":"4", "leadingProperty": "Bldat" }'/></uitbl:customData>
@@ -136,63 +136,63 @@
 													<uitbl:template>
 														<smartField:SmartField editable="false" id="Quantity1" value="{Quantity}"/></uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Zzblvl" sortProperty="Zzblvl" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" , "maxLength": "5","columnIndex":"8", "leadingProperty": "Zzblvl" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Band Level"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Zzblvl1" value="{Zzblvl}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ZzblvlDesc" sortProperty="ZzblvlDesc" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ZzblvlDesc" , "maxLength": "5","columnIndex":"9", "leadingProperty": "ZzblvlDesc" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Band Level Description"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="ZzblvlDesc1" value="{ZzblvlDesc}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Zzbgrp" sortProperty="Zzbgrp" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzbgrp" , "maxLength": "5","columnIndex":"10", "leadingProperty": "Zzbgrp" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Bang Group"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Zzbgrp1" value="{Zzbgrp}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"11", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Band Group Description"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="ZzbgrpDesc1" value="{ZzbgrpDesc}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Zzteam" sortProperty="Zzteam" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzteam" , "maxLength": "5","columnIndex":"12", "leadingProperty": "Zzteam" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Fee Earner Team"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Zzteam1" value="{Zzteam}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Zzfepgrp" sortProperty="Zzfepgrp" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzfepgrp" , "maxLength": "5","columnIndex":"13", "leadingProperty": "Zzfepgrp" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Practise Group"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Zzfepgrp1" value="{Zzfepgrp}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ZzfepgrpDesc" sortProperty="ZzfepgrpDesc" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData"
-															value='\{"columnKey": "ZzfepgrpDesc" , "maxLength": "5","columnIndex":"14", "leadingProperty": "ZzfepgrpDesc" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Practise Group Description"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="ZzfepgrpDesc1" value="{ZzfepgrpDesc}"/></uitbl:template>
-												</uitbl:Column>
+												<!--<uitbl:Column width="8rem" filterProperty="Zzblvl" sortProperty="Zzblvl" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" , "maxLength": "5","columnIndex":"8", "leadingProperty": "Zzblvl" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Band Level"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Zzblvl1" value="{Zzblvl}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="ZzblvlDesc" sortProperty="ZzblvlDesc" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzblvlDesc" , "maxLength": "5","columnIndex":"9", "leadingProperty": "ZzblvlDesc" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Band Level Description"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="ZzblvlDesc1" value="{ZzblvlDesc}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="Zzbgrp" sortProperty="Zzbgrp" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzbgrp" , "maxLength": "5","columnIndex":"10", "leadingProperty": "Zzbgrp" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Bang Group"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Zzbgrp1" value="{Zzbgrp}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"11", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Band Group Description"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="ZzbgrpDesc1" value="{ZzbgrpDesc}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="Zzteam" sortProperty="Zzteam" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzteam" , "maxLength": "5","columnIndex":"12", "leadingProperty": "Zzteam" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Fee Earner Team"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Zzteam1" value="{Zzteam}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="Zzfepgrp" sortProperty="Zzfepgrp" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzfepgrp" , "maxLength": "5","columnIndex":"13", "leadingProperty": "Zzfepgrp" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Practise Group"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Zzfepgrp1" value="{Zzfepgrp}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="ZzfepgrpDesc" sortProperty="ZzfepgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData"-->
+												<!--			value='\{"columnKey": "ZzfepgrpDesc" , "maxLength": "5","columnIndex":"14", "leadingProperty": "ZzfepgrpDesc" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Practise Group Description"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="ZzfepgrpDesc1" value="{ZzfepgrpDesc}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
 												<uitbl:Column width="8rem" filterProperty="ToZzactcd" sortProperty="ToZzactcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "ToZzactcd" , "maxLength": "5","columnIndex":"15", "leadingProperty": "ToZzactcd" }'/></uitbl:customData>
@@ -362,49 +362,49 @@
 										</smartTable:customToolbar>
 										<uitbl:Table id="WipDetailsSet2" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemEditsSelection">
 											<uitbl:columns>
-												<!--<uitbl:Column width="8rem" filterProperty="Zzwiprate" sortProperty="Zzwiprate" showSortMenuEntry="true" autoResizable="true">-->
-												<!--	<uitbl:customData>-->
-												<!--		<core:CustomData key="p13nData"-->
-												<!--			value='\{"columnKey": "Zzwiprate" , "maxLength": "5","columnIndex":"1", "leadingProperty": "ReviewComplete" }'/>-->
-												<!--	</uitbl:customData>-->
-												<!--	<uitbl:label>-->
-												<!--		<Text text="Info"/>-->
-												<!--	</uitbl:label>-->
-												<!--	<uitbl:template>-->
-												<!--		<m:Text class="revColor" text="{ path: 'Zzwiprate', formatter: '.formatter.isReviewByInfo' }"/>-->
-												<!--	</uitbl:template>-->
-												<!--</uitbl:Column>-->
-												<!--<uitbl:Column width="8rem" filterProperty="ReviewComplete" sortProperty="ReviewComplete" showSortMenuEntry="true" autoResizable="true">-->
-												<!--	<uitbl:customData>-->
-												<!--		<core:CustomData key="p13nData"-->
-												<!--			value='\{"columnKey": "ReviewComplete" , "maxLength": "5","columnIndex":"2", "leadingProperty": "ReviewComplete" }'/>-->
-												<!--	</uitbl:customData>-->
-												<!--	<uitbl:label>-->
-												<!--		<Text text="Review"/>-->
-												<!--	</uitbl:label>-->
-												<!--	<uitbl:template>-->
-												<!--		<m:Text class="revColor" text="{ path: 'ReviewComplete', formatter: '.formatter.isReviewByStatus' }"/>-->
-												<!--	</uitbl:template>-->
-												<!--</uitbl:Column>-->
-												<!--<uitbl:Column width="8rem" filterProperty="Belnr" sortProperty="Belnr" showSortMenuEntry="true" autoResizable="true">-->
-												<!--	<uitbl:customData>-->
-												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Belnr" , "maxLength": "5","columnIndex":"3", "leadingProperty": "Belnr" }'/>-->
-												<!--	</uitbl:customData>-->
-												<!--	<uitbl:label>-->
-												<!--		<Text text="Document No"/>-->
-												<!--	</uitbl:label>-->
-												<!--	<uitbl:template>-->
-												<!--		<smartField:SmartField editable="false" id="Belnr2" value="{Belnr}"/>-->
-												<!--	</uitbl:template>-->
-												<!--</uitbl:Column>-->
-												<!--<uitbl:Column width="8rem" filterProperty="Awtyp" sortProperty="Awtyp" showSortMenuEntry="true" autoResizable="true">-->
-												<!--	<uitbl:customData>-->
-												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Awtyp" , "maxLength": "5","columnIndex":"4", "leadingProperty": "Awtyp" }'/></uitbl:customData>-->
-												<!--	<uitbl:label>-->
-												<!--		<Text text="Trans Type"/></uitbl:label>-->
-												<!--	<uitbl:template>-->
-												<!--		<smartField:SmartField editable="false" id="Awtyp2" value="{Awtyp}"/></uitbl:template>-->
-												<!--</uitbl:Column>-->
+												<uitbl:Column width="8rem" filterProperty="Zzwiprate" sortProperty="Zzwiprate" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData"
+															value='\{"columnKey": "Zzwiprate" , "maxLength": "5","columnIndex":"1", "leadingProperty": "ReviewComplete" }'/>
+													</uitbl:customData>
+													<uitbl:label>
+														<Text text="Info"/>
+													</uitbl:label>
+													<uitbl:template>
+														<m:Text class="revColor" text="{ path: 'Zzwiprate', formatter: '.formatter.isReviewByInfo' }"/>
+													</uitbl:template>
+												</uitbl:Column>
+												<uitbl:Column width="8rem" filterProperty="ReviewComplete" sortProperty="ReviewComplete" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData"
+															value='\{"columnKey": "ReviewComplete" , "maxLength": "5","columnIndex":"2", "leadingProperty": "ReviewComplete" }'/>
+													</uitbl:customData>
+													<uitbl:label>
+														<Text text="Review"/>
+													</uitbl:label>
+													<uitbl:template>
+														<m:Text class="revColor" text="{ path: 'ReviewComplete', formatter: '.formatter.isReviewByStatus' }"/>
+													</uitbl:template>
+												</uitbl:Column>
+												<uitbl:Column width="8rem" filterProperty="Belnr" sortProperty="Belnr" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Belnr" , "maxLength": "5","columnIndex":"3", "leadingProperty": "Belnr" }'/>
+													</uitbl:customData>
+													<uitbl:label>
+														<Text text="Document No"/>
+													</uitbl:label>
+													<uitbl:template>
+														<smartField:SmartField editable="false" id="Belnr2" value="{Belnr}"/>
+													</uitbl:template>
+												</uitbl:Column>
+												<uitbl:Column width="8rem" filterProperty="Awtyp" sortProperty="Awtyp" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Awtyp" , "maxLength": "5","columnIndex":"4", "leadingProperty": "Awtyp" }'/></uitbl:customData>
+													<uitbl:label>
+														<Text text="Trans Type"/></uitbl:label>
+													<uitbl:template>
+														<smartField:SmartField editable="false" id="Awtyp2" value="{Awtyp}"/></uitbl:template>
+												</uitbl:Column>
 												<!--<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
 												<!--	<uitbl:customData>-->
 												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"5", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>-->
@@ -413,40 +413,40 @@
 												<!--	<uitbl:template>-->
 												<!--		<smartField:SmartField editable="false" id="Audat2" value="{ZzbgrpDesc}"/></uitbl:template>-->
 												<!--</uitbl:Column>-->
-												<!--<uitbl:Column width="8rem" filterProperty="Bldat" sortProperty="Bldat" showSortMenuEntry="true" autoResizable="true">-->
-												<!--	<uitbl:customData>-->
-												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Bldat" }'/></uitbl:customData>-->
-												<!--	<uitbl:label>-->
-												<!--		<Text text="Work Date"/></uitbl:label>-->
-												<!--	<uitbl:template>-->
-												<!--		<smartField:SmartField editable="false" id="Blda2t" value="{Bldat}"/>-->
-												<!--		<m:Text width="100%" text="{ path: 'Bldat', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium', UTC:true } }"/>-->
-												<!--	</uitbl:template>-->
-												<!--</uitbl:Column>-->
-												<!--<uitbl:Column width="8rem" filterProperty="Tdid" sortProperty="Tdid" showSortMenuEntry="true" autoResizable="true">-->
-												<!--	<uitbl:customData>-->
-												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Tdid" , "maxLength": "5","columnIndex":"7", "leadingProperty": "Tdid" }'/></uitbl:customData>-->
-												<!--	<uitbl:label>-->
-												<!--		<Text text="TimeKeeper no"/></uitbl:label>-->
-												<!--	<uitbl:template>-->
-												<!--		<smartField:SmartField editable="false" id="Tdid2" value="{Tdid}"/></uitbl:template>-->
-												<!--</uitbl:Column>-->
-												<!--<uitbl:Column width="8rem" filterProperty="Tdname" sortProperty="Tdname" showSortMenuEntry="true" autoResizable="true">-->
-												<!--	<uitbl:customData>-->
-												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Tdname" , "maxLength": "5","columnIndex":"8", "leadingProperty": "Tdname" }'/></uitbl:customData>-->
-												<!--	<uitbl:label>-->
-												<!--		<Text text="TimeKeeper Name"/></uitbl:label>-->
-												<!--	<uitbl:template>-->
-												<!--		<smartField:SmartField editable="false" id="Tdname2" value="{Tdname}"/></uitbl:template>-->
-												<!--</uitbl:Column>-->
-												<!--<uitbl:Column width="8rem" filterProperty="Quantity" sortProperty="Quantity" showSortMenuEntry="true" autoResizable="true">-->
-												<!--	<uitbl:customData>-->
-												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Quantity" , "maxLength": "5","columnIndex":"9", "leadingProperty": "Quantity" }'/></uitbl:customData>-->
-												<!--	<uitbl:label>-->
-												<!--		<Text text="Quantity"/></uitbl:label>-->
-												<!--	<uitbl:template>-->
-												<!--		<smartField:SmartField editable="false" id="Quantity2" value="{Quantity}"/></uitbl:template>-->
-												<!--</uitbl:Column>-->
+												<uitbl:Column width="8rem" filterProperty="Bldat" sortProperty="Bldat" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Bldat" }'/></uitbl:customData>
+													<uitbl:label>
+														<Text text="Work Date"/></uitbl:label>
+													<uitbl:template>
+														<smartField:SmartField editable="false" id="Blda2t" value="{Bldat}"/>
+														<m:Text width="100%" text="{ path: 'Bldat', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium', UTC:true } }"/>
+													</uitbl:template>
+												</uitbl:Column>
+												<uitbl:Column width="8rem" filterProperty="Tdid" sortProperty="Tdid" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Tdid" , "maxLength": "5","columnIndex":"7", "leadingProperty": "Tdid" }'/></uitbl:customData>
+													<uitbl:label>
+														<Text text="TimeKeeper no"/></uitbl:label>
+													<uitbl:template>
+														<smartField:SmartField editable="false" id="Tdid2" value="{Tdid}"/></uitbl:template>
+												</uitbl:Column>
+												<uitbl:Column width="8rem" filterProperty="Tdname" sortProperty="Tdname" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Tdname" , "maxLength": "5","columnIndex":"8", "leadingProperty": "Tdname" }'/></uitbl:customData>
+													<uitbl:label>
+														<Text text="TimeKeeper Name"/></uitbl:label>
+													<uitbl:template>
+														<smartField:SmartField editable="false" id="Tdname2" value="{Tdname}"/></uitbl:template>
+												</uitbl:Column>
+												<uitbl:Column width="8rem" filterProperty="Quantity" sortProperty="Quantity" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Quantity" , "maxLength": "5","columnIndex":"9", "leadingProperty": "Quantity" }'/></uitbl:customData>
+													<uitbl:label>
+														<Text text="Quantity"/></uitbl:label>
+													<uitbl:template>
+														<smartField:SmartField editable="false" id="Quantity2" value="{Quantity}"/></uitbl:template>
+												</uitbl:Column>
 												<!--<uitbl:Column width="8rem" filterProperty="Zzblvl" sortProperty="Zzblvl" showSortMenuEntry="true" autoResizable="true">-->
 												<!--	<uitbl:customData>-->
 												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" , "maxLength": "5","columnIndex":"10", "leadingProperty": "Zzblvl" }'/></uitbl:customData>-->
@@ -504,70 +504,67 @@
 												<!--	<uitbl:template>-->
 												<!--		<smartField:SmartField editable="false" id="ZzfepgrpDesc2" value="{ZzfepgrpDesc}"/></uitbl:template>-->
 												<!--</uitbl:Column>-->
-												<uitbl:Column width="8rem" filterProperty="Zzphase" sortProperty="Zzphase" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:Column width="8rem" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzphase" , "maxLength": "5","columnIndex":"17", "leadingProperty": "Zzphase" }'/></uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "" , "maxLength": "5","columnIndex":"17", "leadingProperty": "" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Phase Code"/></uitbl:label>
 													<uitbl:template>
-														<m:Select width="11rem" forceSelection="false" id="phaseCodeId" selectedKey="{MatterModel>selectedPhaseCode}" change="phaseCodesChange"
-														 items="{ path: 'JSONModel>/phaseCodes' , templateShareable:false }">
-															
-															<core:Item key="{JSONModel>Phasecode}" text="{JSONModel>Phasecode}  {JSONModel>PhasecodeDesc}"/>
+														<m:Select width="11rem" forceSelection="false" id="phaseCodeId" selectedKey="{selectedPhaseCode}"  change="phaseCodesChange" items="{ path: 'phaseCodes'}">
+															<core:Item key="{Phasecode}" text="{Phasecode} {PhasecodeDesc}"/>
 														</m:Select>
 													</uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ToZztskcd" sortProperty="ToZztskcd" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="Zztskcd" sortProperty="Zztskcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ToZztskcd" , "maxLength": "5","columnIndex":"18", "leadingProperty": "ToZztskcd" }'/></uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Zztskcd" , "maxLength": "5","columnIndex":"18", "leadingProperty": "Zztskcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Task Code"/></uitbl:label>
 													<uitbl:template>
-														<m:Select width="11rem" forceSelection="false" id="taskCodeId" selectedKey="{MatterModel>selectedTaskCode}" 
-															items="{ path: 'JSONModel>/taskCodes' , templateShareable:false }">
+														<m:Select width="11rem" forceSelection="false" id="taskCodeId" selectedKey="{selectedTaskCode}" 
+															items="{ path: 'taskCodes' , templateShareable:false }">
 															
-															<core:Item key="{JSONModel>TaskCodes}" text="{JSONModel>TaskCodes}  {JSONModel>TaskCodeDesc}"/>
+															<core:Item key="{TaskCodes}" text="{TaskCodes}  {TaskCodeDesc}"/>
 														</m:Select>
 													</uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ToZzactcd" sortProperty="ToZzactcd" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="Zzactcd" sortProperty="Zzactcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ToZzactcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "ToZzactcd" }'/></uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Zzactcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "Zzactcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Activity Code"/></uitbl:label>
 													<uitbl:template>
-														<m:Select width="11rem" forceSelection="false" id="activityCodeId" selectedKey="{MatterModel>selectedActCode}" change="phaseCodesChange"
-															items="{ path: 'JSONModel>/activityCodes' , templateShareable:false }">
-															<core:Item key="{JSONModel>activityCodes}" text="{JSONModel>ActivityCodes}  {JSONModel>ActivityCodeDesc}"/>
+														<m:Select width="11rem" forceSelection="false" id="activityCodeId" selectedKey="{selectedActCode}" 
+															items="{ path: 'activityCodes' , templateShareable:false }">
+															<core:Item key="{activityCodes}" text="{ActivityCodes}  {ActivityCodeDesc}"/>
 														</m:Select>
 													</uitbl:template>
 												</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="ToZzfftskcd" sortProperty="ToZzfftskcd" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:Column width="8rem" filterProperty="Zzfftskcd" sortProperty="Zzfftskcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData"
-															value='\{"columnKey": "ToZzfftskcd" , "maxLength": "5","columnIndex":"20", "leadingProperty": "ToZzfftskcd" }'/></uitbl:customData>
+															value='\{"columnKey": "Zzfftskcd" , "maxLength": "5","columnIndex":"20", "leadingProperty": "Zzfftskcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Flat Fee Task Code"/></uitbl:label>
 													<uitbl:template>
-														<m:Select width="11rem" forceSelection="false" id="ToZzfftskcdId" selectedKey="{MatterModel>selectedFFTaskCode}" change="phaseCodesChange"
-															items="{ path: 'JSONModel>/ffTskCodes' , templateShareable:false }">
-															<core:Item key="{JSONModel>FfTaskCodes}" text="{JSONModel>FfTaskCodes}  {JSONModel>FfTaskCodes}"/>
+														<m:Select width="11rem" forceSelection="false" id="ToZzfftskcdId" selectedKey="{selectedFFTaskCode}" change="fftaskCodeChange"
+															items="{ path: 'ffTskCodes' , templateShareable:false }">
+															<core:Item key="{FfTaskCodes}" text="{FfTaskCodes}  {FfTaskCodes}"/>
 														</m:Select>
 													</uitbl:template>
 												</uitbl:Column>
 												
 											
-												<uitbl:Column width="8rem" filterProperty="ToZzffactcd" sortProperty="ToZzffactcd" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="Zzffactcd" sortProperty="Zzffactcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData"
-															value='\{"columnKey": "ToZzffactcd" , "maxLength": "5","columnIndex":"21", "leadingProperty": "ToZzffactcd" }'/></uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Zzffactcd" , "maxLength": "5","columnIndex":"21", "leadingProperty": "Zzffactcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Flat Fee Activity Code"/></uitbl:label>
 													<uitbl:template>
-													<!--<m:Select width="11rem" forceSelection="false" id="ffActCodeId" selectedKey="{MatterModel>selectedPhaseCode}" change="phaseCodesChange"-->
-													<!--		items="{ path: 'JSONModel>/taskCodes' , templateShareable:false }">-->
-													<!--		<core:Item key="{JSONModel>TaskCodes}" text="{JSONModel>TaskCodes}-{JSONModel>TaskCodeDesc}"/>-->
-													<!--	</m:Select>-->
+														<m:Select width="11rem" forceSelection="false" id="ffActCodeId" 
+														items="{ path: 'ffActCodes'}" selectedKey="{selectedFFActCode}">
+															<core:Item key="{FfActivityCodes}" text="{FfActivityCodes} {FfActivityCodeDesc}"/>
+														</m:Select>
 													</uitbl:template>
 												</uitbl:Column>
 											</uitbl:columns>
@@ -645,14 +642,14 @@
 													<uitbl:template>
 														<smartField:SmartField editable="false" id="Awtyp3" value="{Awtyp}"/></uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"5", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Activity Desc"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Audat3" value="{ZzbgrpDesc}"/></uitbl:template>
-												</uitbl:Column>
+												<!--<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"5", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Activity Desc"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Audat3" value="{ZzbgrpDesc}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
 												<uitbl:Column width="8rem" filterProperty="Bldat" sortProperty="Bldat" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Bldat" }'/></uitbl:customData>
@@ -687,107 +684,121 @@
 													<uitbl:template>
 														<smartField:SmartField editable="false" id="Quantity3" value="{Quantity}"/></uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Zzblvl" sortProperty="Zzblvl" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" , "maxLength": "5","columnIndex":"10", "leadingProperty": "Zzblvl" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Band Level"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Zzblvl3" value="{Zzblvl}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ZzblvlDesc" sortProperty="ZzblvlDesc" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ZzblvlDesc" , "maxLength": "5","columnIndex":"11", "leadingProperty": "ZzblvlDesc" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Band Level Description"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="ZzblvlDesc3" value="{ZzblvlDesc}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Zzbgrp" sortProperty="Zzbgrp" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzbgrp" , "maxLength": "5","columnIndex":"12", "leadingProperty": "Zzbgrp" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Bang Group"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Zzbgrp3" value="{Zzbgrp}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"13", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Band Group Description"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="ZzbgrpDesc3" value="{ZzbgrpDesc}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Zzteam" sortProperty="Zzteam" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzteam" , "maxLength": "5","columnIndex":"14", "leadingProperty": "Zzteam" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Fee Earner Team"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Zzteam3" value="{Zzteam}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Zzfepgrp" sortProperty="Zzfepgrp" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzfepgrp" , "maxLength": "5","columnIndex":"15", "leadingProperty": "Zzfepgrp" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Practise Group"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="Zzfepgrp3" value="{Zzfepgrp}"/></uitbl:template>
-												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ZzfepgrpDesc" sortProperty="ZzfepgrpDesc" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData"
-															value='\{"columnKey": "ZzfepgrpDesc" , "maxLength": "5","columnIndex":"16", "leadingProperty": "ZzfepgrpDesc" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Practise Group Description"/></uitbl:label>
-													<uitbl:template>
-														<smartField:SmartField editable="false" id="ZzfepgrpDesc3" value="{ZzfepgrpDesc}"/></uitbl:template>
-												</uitbl:Column>
+												<!--<uitbl:Column width="8rem" filterProperty="Zzblvl" sortProperty="Zzblvl" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" , "maxLength": "5","columnIndex":"10", "leadingProperty": "Zzblvl" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Band Level"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Zzblvl3" value="{Zzblvl}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="ZzblvlDesc" sortProperty="ZzblvlDesc" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzblvlDesc" , "maxLength": "5","columnIndex":"11", "leadingProperty": "ZzblvlDesc" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Band Level Description"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="ZzblvlDesc3" value="{ZzblvlDesc}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="Zzbgrp" sortProperty="Zzbgrp" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzbgrp" , "maxLength": "5","columnIndex":"12", "leadingProperty": "Zzbgrp" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Bang Group"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Zzbgrp3" value="{Zzbgrp}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"13", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Band Group Description"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="ZzbgrpDesc3" value="{ZzbgrpDesc}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="Zzteam" sortProperty="Zzteam" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzteam" , "maxLength": "5","columnIndex":"14", "leadingProperty": "Zzteam" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Fee Earner Team"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Zzteam3" value="{Zzteam}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="Zzfepgrp" sortProperty="Zzfepgrp" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzfepgrp" , "maxLength": "5","columnIndex":"15", "leadingProperty": "Zzfepgrp" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Practise Group"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="Zzfepgrp3" value="{Zzfepgrp}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
+												<!--<uitbl:Column width="8rem" filterProperty="ZzfepgrpDesc" sortProperty="ZzfepgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData"-->
+												<!--			value='\{"columnKey": "ZzfepgrpDesc" , "maxLength": "5","columnIndex":"16", "leadingProperty": "ZzfepgrpDesc" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Practise Group Description"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<smartField:SmartField editable="false" id="ZzfepgrpDesc3" value="{ZzfepgrpDesc}"/></uitbl:template>-->
+												<!--</uitbl:Column>-->
 												<uitbl:Column width="8rem" filterProperty="ToZzactcd" sortProperty="ToZzactcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "ToZzactcd" , "maxLength": "5","columnIndex":"17", "leadingProperty": "ToZzactcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Phase Code"/></uitbl:label>
 													<uitbl:template>
-														<Select>
+														<Select enabled="false">
 															<core:ListItem key="{ToZzactcd}" text="{ToZzactcd}"/>
 														</Select>
 													</uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ToZztskcd" sortProperty="ToZztskcd" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="Zztskcd" sortProperty="Zztskcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ToZztskcd" , "maxLength": "5","columnIndex":"18", "leadingProperty": "ToZztskcd" }'/></uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Zztskcd" , "maxLength": "5","columnIndex":"18", "leadingProperty": "Zztskcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Task Code"/></uitbl:label>
 													<uitbl:template>
-														<Select>
-															<core:ListItem key="{ToZztskcd}" text="{ToZztskcd}"/>
+														<Select enabled="false">
+															<core:ListItem key="{Zztskcd}" text="{Zztskcd}"/>
 														</Select>
 													</uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ToZzfftskcd" sortProperty="ToZzfftskcd" showSortMenuEntry="true" autoResizable="true">
+												
+													<uitbl:Column width="8rem" filterProperty="Zzactcd" sortProperty="Zzactcd" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Zzactcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "Zzactcd" }'/></uitbl:customData>
+													<uitbl:label>
+														<Text text="Activity Code"/></uitbl:label>
+													<uitbl:template>
+														<Select enabled="false">
+															<core:ListItem key="{Zzactcd}" text="{Zzactcd}"/>
+														</Select>
+													</uitbl:template>
+												</uitbl:Column>
+												
+												
+												<uitbl:Column width="8rem" filterProperty="Zzfftskcd" sortProperty="Zzfftskcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData"
-															value='\{"columnKey": "ToZzfftskcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "ToZzfftskcd" }'/></uitbl:customData>
+															value='\{"columnKey": "Zzfftskcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "Zzfftskcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Flat Fee Task Code"/></uitbl:label>
 													<uitbl:template>
-														<Select>
-															<core:ListItem key="{ToZzfftskcd}" text="{ToZzfftskcd}"/>
+														<Select enabled="false">
+															<core:ListItem key="{Zzfftskcd}" text="{Zzfftskcd}"/>
 														</Select>
 													</uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="ToZzffactcd" sortProperty="ToZzffactcd" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="Zzffactcd " sortProperty="Zzffactcd " showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData"
-															value='\{"columnKey": "ToZzffactcd" , "maxLength": "5","columnIndex":"20", "leadingProperty": "ToZzffactcd" }'/></uitbl:customData>
+															value='\{"columnKey": "Zzffactcd " , "maxLength": "5","columnIndex":"20", "leadingProperty": "Zzffactcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Flat Fee Activity Code"/></uitbl:label>
 													<uitbl:template>
 														<!--<smartField:SmartField editable="false" id="ToZzffactcd1" value="{ToZzffactcd}"/>-->
-														<Select>
-															<core:ListItem key="{ToZzffactcd}" text="{ToZzffactcd}"/>
+														<Select enabled="false">
+															<core:ListItem key="{Zzffactcd }" text="{Zzffactcd }"/>
 														</Select>
 													</uitbl:template>
 												</uitbl:Column>

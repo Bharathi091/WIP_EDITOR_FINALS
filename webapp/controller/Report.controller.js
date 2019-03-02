@@ -49,7 +49,7 @@ sap.ui.define([
 			oModel.read("/WipDetailsSet", {
 				filters: aFilter,
 				success: function(oData) {
-				
+
 					debugger;
 
 					that.homeArr = oData.results;
@@ -58,10 +58,10 @@ sap.ui.define([
 					that.jsonModel.setProperty("/Matter", oData.results[0].Pspid);
 					that.jsonModel.setProperty("/LeadPartner", oData.results[1].Sname);
 					that.jsonModel.setProperty("/BillingOffice", oData.results[0].Werks);
-					
-						that.homeArr.forEach(function(o, k) {
+
+					that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
-					     });
+					});
 
 				}
 			});
@@ -82,10 +82,6 @@ sap.ui.define([
 			InputFields.setProperty("/Inputs/IconTabs/Narrative_Edits", true);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Edits", true);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Transfers", true);
-			
-			
-		
-					
 
 		},
 
@@ -240,40 +236,65 @@ sap.ui.define([
 			//this.jsonModel.setProperty("/modelData", this.rowData );
 			var NarStr;
 
-			data = this.rowData;
+			//data = this.rowData;
+ 
+          this.rowData.forEach(function(o, k) {
+						data[k] = o;
+					});
+         
 			var that = this;
 
 			var endChars = [".", "?", "!", "\"", "'"];
 
 			res = $.each(data, function(item) {
 				NarStr = that.capitalizeFirstLetter(data[item].NarrativeString);
+				data[item].NarrativeString = NarStr;
 				if (NarStr !== "") {
 					var lastChar = NarStr.charAt(NarStr.length - 1);
 					if (endChars.indexOf(lastChar.slice(-1)) === -1) {
 						NarStr = NarStr + ".";
 						data[item].NarrativeString = NarStr;
+
 					}
 					return data[item].NarrativeString;
 				}
 
 			});
 
-			this.jsonModel.setProperty("/modelData", res);
-
-		
+			this.jsonModel.setProperty("/modelData", data);
 
 			this.getView().setModel(this.jsonModel);
 			Otable.bindRows("/modelData");
 		},
 
+		remove_character: function(str, char_pos) {
+			var part1 = str.substring(0, char_pos);
+			var part2 = str.substring(char_pos + 1, str.length);
+			return (part1 + part2);
+		},
+
 		removeSpaces: function(oEvt) {
+			debugger;
 			var data = [];
 			var result;
-			data = this.rowData;
+			
+			 this.rowData.forEach(function(o, k) {
+						data[k] = o;
+					});
+			
 			var that = this;
 			var res = [];
 			res = $.each(data, function(item) {
 				result = data[item].NarrativeString.replace(/\s+/g, " ").trim();
+				var lastChar = result.charAt(result.length - 1);
+				var spaceLastChar = result.charAt(result.length - 2);
+
+				if (lastChar === "." && spaceLastChar === " ") {
+           
+					result = that.remove_character(result, result.length - 2);
+ 
+				}
+
 				data[item].NarrativeString = result;
 
 				return data[item].NarrativeString;
@@ -426,8 +447,8 @@ sap.ui.define([
 		},
 
 		Reload: function(oEvent) {
-		debugger;
-			
+			debugger;
+
 			var row = this.rowData;
 			var model1 = JSON.stringify(this.homeArr);
 			var model2 = JSON.stringify(row);
@@ -441,17 +462,16 @@ sap.ui.define([
 			// var oTable = this.getView().byId("WipDetailsSet1");
 			// var row = oTable.getBinding("rows").oModel.oData;
 			var that = this;
-				this.homeArr.forEach(function(o, j) {
-						that.rowData[j] = o;
-					});
-					
+			this.homeArr.forEach(function(o, j) {
+				that.rowData[j] = o;
+			});
 
 		},
-		
+
 		changeNarrative: function(oEvent) {
-            
-            debugger;
-            
+
+			debugger; 
+
 			var changedRow = oEvent.getSource().getBindingContext();
 			// changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
 			var obj = changedRow.getObject();
@@ -465,11 +485,18 @@ sap.ui.define([
 			this.rowData[index] = obj;
 		},
 		
+		changeCodes: function(oEvent){
+		
+		
+		
+			
+		},
+
 		closeDialog: function() {
 			this._Dialog.close();
 		},
 		ReloadTable: function() {
-		var oTable = [];
+			var oTable = [];
 			var InputFields = this.getView().getModel("InputsModel");
 			var filters = InputFields.getProperty("/Inputs/Filters/filters");
 			for (var i = 1; i <= filters.length; i++) {
@@ -480,9 +507,9 @@ sap.ui.define([
 				var tableID = oTable[j];
 				this.getView().byId(tableID).getModel().refresh(true);
 			}
-		
+
 			this._Dialog.close();
-				
+
 		},
 
 		onDataReceived0: function(oEvent) {
@@ -799,7 +826,7 @@ sap.ui.define([
 		},
 		//replace
 		onReplacewords: function(evt) {
-		var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			if (oTable.getSelectedIndices().length === 0) {
 				debugger;
 				MessageBox.show(
@@ -847,15 +874,14 @@ sap.ui.define([
 					var string = cells[0].getValue();
 					var replacewith = cells[1].getValue();
 					var searchindex = str.search(string);
-					if (searchindex >= 0) 
-				    {
-				    	
+					if (searchindex >= 0) {
+
 						var res = str.replace(string, replacewith);
 						that.replaceItems = that.jsonModel.getProperty("/modelData");
 						that.replaceItems[o].NarrativeString = res;
 						// console.log(that.replaceItems);
 						str = that.replaceItems[o].NarrativeString;
-	
+
 					}
 
 				});
@@ -1000,30 +1026,83 @@ sap.ui.define([
 		closemassDialog: function() {
 			this._omassDialog.close();
 		},
-		onmassTransfer: function() {
+		// onmassTransfer: function() {
 
+		// 	var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
+		// 	var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
+
+		// 	var oTable = this.getView().byId("WipDetailsSet3");
+		// 	var that = this;
+		// 	$.each(oTable.getSelectedIndices(), function(i, o) {
+		// 		that.masstransfer = that.jsonModel.getProperty("/modelData");
+		// 		that.masstransfer[o].ToMatter = matter;
+		// 		that.masstransfer[o].Percent = percent;
+		// 		// that.masstransfer[o]. = matter;
+
+		// 	});
+		// 	this.jsonModel.setProperty("/modelData", that.masstransfer);
+		// 	this.getView().setModel(this.jsonModel);
+		// 	oTable.bindRows("/modelData");
+		// 	sap.ui.core.Fragment.byId("masstransfer", "masspspid").setValue("");
+		// 	sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
+		// 	var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+		// 	$.each(tbl.getItems(), function(i, o) {
+		// 		var rowid = o.getId();
+		// 		tbl.removeItem(rowid);
+
+		// 	});
+		// 	this._omassDialog.close();
+		// },
+
+		onmassTransferchange: function() {
+			debugger;
 			var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
+			this.WipEditModel = this.getModel("InputsModel");
+			this.serviceInstance = LineItemsServices.getInstance();
 			var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
-
 			var oTable = this.getView().byId("WipDetailsSet3");
+			var Pspid = matter;
+
 			var that = this;
-			$.each(oTable.getSelectedIndices(), function(i, o) {
-				that.masstransfer = that.jsonModel.getProperty("/modelData");
-				that.masstransfer[o].ToMatter = matter;
-				that.masstransfer[o].Percent = percent;
-				// that.masstransfer[o]. = matter;
+
+			$.when(
+				that.serviceInstance.getPhaseCodes(that.WipEditModel, Pspid, that),
+				that.serviceInstance.getTaskcodes(that.WipEditModel, "", that),
+				that.serviceInstance.getActivitycodes(that.WipEditModel, Pspid, that),
+				that.serviceInstance.getFFtaskcodes(that.WipEditModel, Pspid, that),
+				that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
+
+			.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
+				debugger;
+				phaseCodes.results.unshift("");
+				activityCodes.results.unshift("");
+				taskCodes.results.unshift("");
+				ffTskCodes.results.unshift("");
+				ffActCodes.results.unshift("");
+
+				$.each(oTable.getSelectedIndices(), function(j, o) {
+
+					that.masstransfer = that.jsonModel.getProperty("/modelData");
+					that.masstransfer[o].ToMatter = matter;
+					that.masstransfer[o].Percent = percent;
+					that.jsonModel.setProperty("/modelData/" + o + "/phaseCodes", phaseCodes.results);
+					that.jsonModel.setProperty("/modelData/" + o + "/taskCodes", taskCodes.results);
+					that.jsonModel.setProperty("/modelData/" + o + "/activityCodes", activityCodes.results);
+					that.jsonModel.setProperty("/modelData/" + o + "/ffTskCodes", ffTskCodes.results);
+					that.jsonModel.setProperty("/modelData/" + o + "/ffActCodes", ffActCodes.results);
+
+				});
+
+				that.getView().setModel(that.jsonModel);
+				oTable.bindRows("/modelData");
 
 			});
-			this.jsonModel.setProperty("/modelData", that.masstransfer);
-			this.getView().setModel(this.jsonModel);
-			oTable.bindRows("/modelData");
 			sap.ui.core.Fragment.byId("masstransfer", "masspspid").setValue("");
 			sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
 			var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
 			$.each(tbl.getItems(), function(i, o) {
 				var rowid = o.getId();
 				tbl.removeItem(rowid);
-
 			});
 			this._omassDialog.close();
 		},
@@ -1032,10 +1111,10 @@ sap.ui.define([
 			debugger;
 			this.WipEditModel = this.getModel("InputsModel");
 			this.serviceInstance = LineItemsServices.getInstance();
-			this.getLineItemsData(odata['results']);
+			this.getLineItemsData(odata);
 		},
-			getLineItemsData: function(Rowdata) {
-		debugger;
+		getLineItemsData: function(Rowdata) {
+			debugger;
 			var Pspid = Rowdata[0].Pspid;
 			//this.showBusyIndicator();
 			var that = this;
@@ -1057,17 +1136,26 @@ sap.ui.define([
 					that.jsonModel.setProperty("/modelData/" + i + "/taskCodes", taskCodes.results);
 					that.jsonModel.setProperty("/modelData/" + i + "/activityCodes", activityCodes.results);
 					that.jsonModel.setProperty("/modelData/" + i + "/ffTskCodes", ffTskCodes.results);
-					that.jsonModel.setProperty("/modelData/" + i + "/ffTskCodes", ffActCodes.results);
+					that.jsonModel.setProperty("/modelData/" + i + "/ffActCodes", ffActCodes.results);
+
+					that.jsonModel.setProperty("/modelData/" + i + "/selectedPhaseCode", that.jsonModel.getProperty("/modelData/" + i +
+						"/ZzPhaseCode"));
+					that.jsonModel.setProperty("/modelData/" + i + "/selectedTaskCode", that.jsonModel.getProperty("/modelData/" + i + "/Zztskcd"));
+					that.jsonModel.setProperty("/modelData/" + i + "/selectedActCode", that.jsonModel.getProperty("/modelData/" + i + "/Zzactcd"));
+					that.jsonModel.setProperty("/modelData/" + i + "/selectedFFTaskCode", that.jsonModel.getProperty("/modelData/" + i +
+						"/Zzfftskcd"));
+					that.jsonModel.setProperty("/modelData/" + i + "/selectedFFActCode", that.jsonModel.getProperty("/modelData/" + i +
+						"/Zzffactcd"));
 				}
-
+				var Otable = that.getView().byId("WipDetailsSet2");
+				Otable.setModel(that.jsonModel);
+				Otable.bindRows("/modelData");
 			});
-			var Otable = this.getView().byId("WipDetailsSet2");
+			debugger;
 
-			Otable.setModel(this.jsonModel);
-			Otable.bindRows("/modelData");
 		},
 		phaseCodesChange: function(oEvent) {
-		debugger;
+			debugger;
 			var item = oEvent.getSource().getParent();
 			var idx = oEvent.getSource().getParent().getParent().indexOfRow(item);
 			var thisRow = oEvent.getSource().getParent().getParent().getContextByIndex(idx).getObject();
@@ -1096,14 +1184,14 @@ sap.ui.define([
 					that.jsonModel.setProperty("/modelData/" + idx + "/taskCodes", taskCodes.results);
 					that.jsonModel.setProperty("/modelData/" + idx + "/activityCodes", activityCodes.results);
 					that.jsonModel.setProperty("/modelData/" + idx + "/ffTskCodes", ffTskCodes.results);
-					that.jsonModel.setProperty("/modelData/" + idx + "/ffTskCodes", ffActCodes.results);
+					//	that.jsonModel.setProperty("/modelData/" + idx + "/ffActCodes", ffActCodes.results);
 
 				}
 
 			});
 		},
-		
-			fftaskCodeChange: function(oEvent) {
+
+		fftaskCodeChange: function(oEvent) {
 			debugger;
 			var item = oEvent.getSource().getParent();
 			var idx = oEvent.getSource().getParent().getParent().indexOfRow(item);
@@ -1127,7 +1215,7 @@ sap.ui.define([
 
 				ffActCodes.results.unshift("");
 				//that.jsonModel.setProperty("/ffActCodes", ffActCodes.results);
-				if (that.rowData.results.length > 0) {
+				if (idx !== "") {
 
 					var isTask = that.jsonModel.getProperty("/modelData/" + idx + "/ToZzfftskcd");
 					that.jsonModel.setProperty("/modelData/" + idx + "/ffActCodes", isTask.length ? [{
@@ -1135,8 +1223,6 @@ sap.ui.define([
 						FfActivityCodeSetDesc: ""
 					}].concat(ffActCodes.results) : ffActCodes.results);
 
-				} else {
-					that.showAlert("Wip Edit", "No Data Found");
 				}
 
 			});
@@ -1290,7 +1376,7 @@ sap.ui.define([
 				}
 			});
 		},
-	
+
 		onSplitRow: function() {
 			var oTable = this.getView().byId("smartTable_ResponsiveTable3").getTable();
 			this._getSplitDialog().open();
@@ -1410,7 +1496,7 @@ sap.ui.define([
 					// useIconTooltip: true,
 					visible: false,
 					color: "green"
-				   // tooltip: this.msgTxt
+						// tooltip: this.msgTxt
 
 				})
 			];
@@ -1523,7 +1609,7 @@ sap.ui.define([
 			var rows = sap.ui.core.Fragment.byId("splitTransfer", "splitTable2").getItems();
 			var that = this;
 			var jsonModel = that.getView().getModel("JSONModel");
-			
+
 			oFModel.callFunction("/WIPMSPLIT", {
 				method: "GET",
 				urlParameters: urlParams,
@@ -1554,8 +1640,7 @@ sap.ui.define([
 				}
 			});
 		},
-	
-		
+
 		onUpdateCodes: function() {
 			debugger;
 
@@ -1594,7 +1679,7 @@ sap.ui.define([
 
 				this.selectedRows = new JSONModel(updatesCodes);
 				this.BillEditModel = this.getModel("MatterModel");
-	}
+			}
 
 		},
 		_getupdateCodesDialog: function() {

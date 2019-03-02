@@ -5,7 +5,7 @@
    	<Text text="There are Unsaved record Do you want to continue??"/>
    	<buttons>
 			<Button text="Cancel" press="closeDialog" type="Reject"/>
-			<Button text="SAVE" press="ReloadTable" type="Accept"/>
+			<Button text="OK" press="ReloadTable" type="Accept"/>
 		</buttons>
    </Dialog>
 </core:FragmentDefinition>

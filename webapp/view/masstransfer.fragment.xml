@@ -26,7 +26,7 @@
 			</l:content>
 		</l:Grid>
 		<buttons>
-			<Button text="Transfer" press="onmassTransfer" type="Accept"/>
+			<Button text="Transfer" press="onmassTransferchange" type="Accept"/>
 			<Button text="Cancel" press="closemassDialog" type="Reject"/>
 		</buttons>
 	</Dialog>
