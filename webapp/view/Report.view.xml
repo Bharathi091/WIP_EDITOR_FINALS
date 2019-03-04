@@ -842,7 +842,7 @@
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Reviewed}"/>
 				<Button text="Unreview" press="Unreview" visible="{InputsModel>/Inputs/Toolbar/Unreview}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Unreview}"/>
-				<Button text="Save" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/Save}"/>
+				<Button text="Save" press="onSave" visible="{InputsModel>/Inputs/Toolbar/Save}"/>
 				<Button text="Modify/Reverse" press="onModifyReverse" visible="{InputsModel>/Inputs/Toolbar/Modify_Reverse}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Modify_Reverse}"/>
 				<Button text="Updatecodes" press="onUpdateCodes" visible="{InputsModel>/Inputs/Toolbar/Updatecodes}"

@@ -78,12 +78,11 @@
 						<ColumnListItem>
 							<cells>
 								<smartField:SmartField id="matter" entitySet="WipMattersSet" textLabel="matter" value="{Pspid}" change="onSelectMatter"/>
-								<Select width="11rem" forceSelection="false" id="pCode" selectedKey="{MatterModel>selectedPhaseCode}" change="splitPhaseCodesChange"
+								<Select width="11rem" forceSelection="false" id="pCode"  change="splitPhaseCodesChange"
 									items="{ path: 'JSONModel>/splitPhaseCodes' , templateShareable:false }">
 									<core:Item key="{JSONModel>Phasecode}" text="{JSONModel>Phasecode} {JSONModel>PhasecodeDesc}"/>
 								</Select>
-								<Select width="11rem" forceSelection="false" id="tCode" selectedKey="{MatterModel>selectedTaskCode}"
-									items="{ path: 'JSONModel>/splitTaskCodes' , templateShareable:false }">
+								<Select width="11rem" forceSelection="false" id="tCode" items="{ path: 'JSONModel>/splitTaskCodes' , templateShareable:false }">
 									<core:Item key="{JSONModel>TaskCodes}" text="{JSONModel>TaskCodes} {JSONModel>TaskCodeDesc}"/>
 								</Select>
 								<Select width="11rem" forceSelection="false" id="aCode" selectedKey="{MatterModel>selectedActCode}" change="splitActivityCodesChange"
@@ -98,8 +97,6 @@
 									items="{ path: 'JSONModel>/splitFfActCodes' , templateShareable:false }">
 									<core:Item key="{JSONModel>FfActivityCodes}" text="{JSONModel>FfActivityCodes} {JSONModel>FfActivityCodeDesc}"/>
 								</Select>
-								
-								<!--<Input id="ffaCode" value=""/>-->
 								<Input id="hours" value="" placeholder="Quantity"/>
 								<Input id="per" value="" placeholder="%"/>
 								<Button icon="sap-icon://add" press="onAdd"/>

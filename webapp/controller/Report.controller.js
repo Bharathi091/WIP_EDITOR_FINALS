@@ -22,6 +22,10 @@ sap.ui.define([
 			this.narrativeEditsArr = [];
 			this.lineItemEditsArr = [];
 			this.lineItemTransfers = [];
+			
+			 this.uniqueId = [];
+			 	this.narIndices = [];
+			this.saveObjects = [];
 
 			this.arr = [];
 			this.rowData = [];
@@ -483,14 +487,15 @@ sap.ui.define([
 				that.rowData[i] = o;
 			});
 			this.rowData[index] = obj;
-		},
-		
-		changeCodes: function(oEvent){
-		
-		
-		
 			
+			this.narIndices.push(index);
+		 
+			$.each(this.narIndices, function(i, el) {
+				if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
+			});
 		},
+		
+	
 
 		closeDialog: function() {
 			this._Dialog.close();
@@ -1133,14 +1138,14 @@ sap.ui.define([
 				ffTskCodes.results.unshift("");
 				for (var i = 0; i < Rowdata.length; i++) {
 					that.jsonModel.setProperty("/modelData/" + i + "/phaseCodes", phaseCodes.results);
-					that.jsonModel.setProperty("/modelData/" + i + "/taskCodes", taskCodes.results);
+				    that.jsonModel.setProperty("/modelData/" + i + "/taskCodes", taskCodes.results);
 					that.jsonModel.setProperty("/modelData/" + i + "/activityCodes", activityCodes.results);
 					that.jsonModel.setProperty("/modelData/" + i + "/ffTskCodes", ffTskCodes.results);
 					that.jsonModel.setProperty("/modelData/" + i + "/ffActCodes", ffActCodes.results);
 
 					that.jsonModel.setProperty("/modelData/" + i + "/selectedPhaseCode", that.jsonModel.getProperty("/modelData/" + i +
 						"/ZzPhaseCode"));
-					that.jsonModel.setProperty("/modelData/" + i + "/selectedTaskCode", that.jsonModel.getProperty("/modelData/" + i + "/Zztskcd"));
+				 	that.jsonModel.setProperty("/modelData/" + i + "/selectedTaskCode", that.jsonModel.getProperty("/modelData/" + i + "/Zztskcd"));
 					that.jsonModel.setProperty("/modelData/" + i + "/selectedActCode", that.jsonModel.getProperty("/modelData/" + i + "/Zzactcd"));
 					that.jsonModel.setProperty("/modelData/" + i + "/selectedFFTaskCode", that.jsonModel.getProperty("/modelData/" + i +
 						"/Zzfftskcd"));
@@ -1748,6 +1753,41 @@ sap.ui.define([
 				// }
 
 			}
+		},
+		
+		onSave: function(oEvt) {
+			debugger;
+			var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+			var that = this;
+			$.each(that.uniqueId, function(i) {
+				var narStr = that.rowData[i];
+				that.saveObjects.push(narStr);
+			});
+			var changeObj = this.saveObjects;
+			$.each(changeObj, function(i, obj) {
+				var obj1 = {
+					NarrativeString: obj.NarrativeString
+				};
+			
+				var obj2 = {
+					Pspid: obj.Pspid,
+					Tdid: obj.Tdid,
+					Tdname: obj.Tdname,
+					Tdobject: obj.Tdobject,
+					Pernr: obj.Pernr
+				};
+				var req = {},
+					requestBody = {};
+				var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, true);
+				requestBody = obj1;
+				req = obj2;
+				var sPath = "/WipDetailsSet(Pspid='" + req.Pspid + "',Tdid='" + req.Tdid + "',Tdname='" + req.Tdname + "',Tdobject='" + req.Tdobject +
+					"',Pernr='" + req.Pernr + "')";
+				oModel.update(sPath, requestBody, req);
+				
+			});
+			this.saveObjects = [];
+
 		}
 
 	});
