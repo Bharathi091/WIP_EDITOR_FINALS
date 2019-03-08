@@ -19,6 +19,27 @@ sap.ui.define([
 					Line_Item_Edits: false,
 					Line_Item_Transfers: false
 				},
+				
+				qParms: {
+					ACTION: "?Action=",
+					JSON: "&$format=json"
+				},
+				action: {
+					CONSOLIDATE: "'CONSOLIDATE'"
+				},
+				lsValues: {
+					CONUMBER: "&CoNumber=",
+					Buzei: "&Buzei=",
+					Hours: "&Hours=",
+					Percentage: "&Percentage=",
+					ToActivityCode: "&ToActivityCode=",
+					ToFfActivityCode: "&ToFfActivityCode=",
+					ToFfTaskCode: "&ToFfTaskCode=",
+					ToMatter: "&ToMatter=",
+					ToTaskCode: "&ToTaskCode="
+
+				},
+				
 				Filters: {
 					filters: ["Filter1", "Filter2", "Filter3", "Filter4"],
 					Filter1: {
@@ -396,7 +417,7 @@ sap.ui.define([
 					Mass_Transfer: false,
 					Split_Transfer: false
 				},
-				"services": {
+				services: {
 					"InitialuserDataset": "/UserDataSet(Uname='')",
 					"UpdateduserDataset": "/UserDataSet(Bname='",
 					"Matter": "/Matter",

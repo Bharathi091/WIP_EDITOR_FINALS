@@ -1,12 +1,15 @@
 sap.ui.define([
 	"sap/ui/base/Object",
-	"sap/ui/core/format/DateFormat"
-], function(Object, DateFormat) {
+	"sap/ui/core/format/DateFormat",
+		"wip/model/ReportModel"
+], function(Object, DateFormat, ReportModel) {
 	"use strict";
 	var instance;
 	var LineItemsServices = Object.extend("wip.services.LineItemsServices", {
 		constructor: function() {
-
+             
+             this.getView().setModel(new ReportModel().getModel(), "InputsModel");
+             
 		},
 		
 		selectListItem: function(oModel,aFilter){
@@ -31,6 +34,68 @@ sap.ui.define([
 				return deferred.promise();
 			
 		},
+		
+			onConsolidate: function(selectedConsolidateArray,oModel){
+				alert("asdada");
+				debugger;
+			var deferred = $.Deferred();
+			
+			this.getView().setModel(new ReportModel().getModel(), "InputsModel");
+			
+			var InputFields = this.getView().getModel("InputsModel");
+			
+			var docNumber = "";
+			selectedConsolidateArray.forEach(function(item){
+				
+			docNumber = docNumber + item.Belnr + ',';
+				
+			}	);
+			 var lastIndex = docNumber.lastIndexOf(",");
+            docNumber = docNumber.substring(0, lastIndex);
+            
+     
+			var userServiceUrl = oModel + InputFields.getProperty("/Inputs/services/WIPTRANSFER") + 
+			InputFields.getProperty("/Inputs/qParms/ACTION") +
+			InputFields.getProperty("/Inputs/action/CONSOLIDATE")+
+			InputFields.getProperty("/Inputs/lsValues/CONUMBER")+
+			"'" + docNumber + "'" +
+			InputFields.getProperty("/Inputs/lsValues/Buzei")+ "'" +
+			InputFields.getProperty("/Inputs/lsValues/Hours")+ "'" +
+			InputFields.getProperty("/Inputs/lsValues/Percentage")+ "'" +
+			InputFields.getProperty("/Inputs/lsValues/ToActivityCode")+ "'" +
+			InputFields.getProperty("/Inputs/lsValues/ToFfActivityCode")+ "'" +
+			InputFields.getProperty("/Inputs/lsValues/ToFfTaskCode")+ "'" +
+			InputFields.getProperty("/Inputs/lsValues/ToMatter")+ "'" +
+			InputFields.getProperty("/Inputs/lsValues/ToTaskCode")+ "'" +
+			InputFields.getProperty("/Inputs/qParms/JSON");
+			
+			
+			debugger;
+			
+			jQuery.ajax({
+				type: "GET",
+				url: userServiceUrl,
+				cache: false,
+				contentType: "application/json",
+				dataType: "json",
+				processData: false,
+				success: function(result) {
+					deferred.resolve(result);
+					debugger
+				},
+				error: function() {
+					deferred.reject();
+				}
+
+			});
+
+			return deferred.promise();
+           
+			
+		
+			
+		},
+		
 		getPhaseCodes: function(WipEditModel, pspid, that) {
 		
 			var service = WipEditModel.getProperty("/Inputs");

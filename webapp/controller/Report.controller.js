@@ -34,13 +34,13 @@ sap.ui.define([
 			this.jsonModel = new sap.ui.model.json.JSONModel();
 			this.getView().setModel(this.jsonModel, "JSONModel");
 			this.getView().setModel(new ReportModel().getModel(), "InputsModel");
-			var changeLog = 0;
+		
 
 		},
 
 		onPress: function(oEvent) {
 			debugger;
-			var a = [];
+		
 			var otable = [];
 			var aFilter = [];
 			var Pspid = oEvent.getSource().getProperty("title");
@@ -52,18 +52,18 @@ sap.ui.define([
 
 			//var dataObj = LineItemsServices.getInstance().selectListItem(oModel,aFilter);
 
-			LineItemsServices.getInstance().selectListItem(oModel, aFilter)
-				.done(function(oData) {
+			// LineItemsServices.getInstance().selectListItem(oModel, aFilter)
+			// 	.done(function(oData) {
 
-					var dataObj = oData;
+				
 
-					alert("success");
-				})
-				.fail(function() {
+			// 		alert("success");
+			// 	})
+			// 	.fail(function() {
 
-					alert("Fail");
+			// 		alert("Fail");
 
-				});
+			// 	});
 
 			var that = this;
 			this.byId("idIconTabBar").setSelectedKey("Home");
@@ -1965,6 +1965,42 @@ sap.ui.define([
 			});
 		},
 
+
+        	onConsolidate: function() {
+			debugger;
+			var passingArray = [];
+           
+            var oModel = this.getOwnerComponent().getModel();
+
+			var oTable = this.getView().byId("smartTable_ResponsiveTable3").getTable();
+		
+			oTable.getSelectedIndices().forEach(function(j, o) {
+
+				var ctx = oTable.getContextByIndex(o);
+				var m = ctx.getObject();
+				passingArray.push(m);
+
+			});
+			
+     
+        //consolidate service calling
+        
+        	LineItemsServices.getInstance().onConsolidate(passingArray,oModel)
+				.done(function(oData) {
+
+					alert("success");
+				})
+				.fail(function() {
+
+					alert("Fail");
+
+				});
+          
+          
+
+             
+		},
+		
 		onSave: function(oEvt) {
 			debugger;
 			var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;

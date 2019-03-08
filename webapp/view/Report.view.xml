@@ -849,7 +849,7 @@
 				<Button text="Updatecodes" press="onUpdateCodes" visible="{InputsModel>/Inputs/Toolbar/Updatecodes}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Updatecodes}"/>
 				<Button text="A GlobalSpellCheck" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/GlobalSpellCheck}"/>
-				<Button text="Consolidate" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/Consolidate}"
+				<Button text="Consolidate" press="onConsolidate" visible="{InputsModel>/Inputs/Toolbar/Consolidate}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Consolidate}"/>
 				<Button text="Mass Transfer" press="onmasstransfer" visible="{InputsModel>/Inputs/Toolbar/Mass_Transfer}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Mass_Transfer}"/>
