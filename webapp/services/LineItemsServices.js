@@ -8,7 +8,7 @@ sap.ui.define([
 	var LineItemsServices = Object.extend("wip.services.LineItemsServices", {
 		constructor: function() {
              
-             this.getView().setModel(new ReportModel().getModel(), "InputsModel");
+            
              
 		},
 		
@@ -35,40 +35,11 @@ sap.ui.define([
 			
 		},
 		
-			onConsolidate: function(selectedConsolidateArray,oModel){
-				alert("asdada");
+			onConsolidate: function(userServiceUrl){
+			
 				debugger;
 			var deferred = $.Deferred();
-			
-			this.getView().setModel(new ReportModel().getModel(), "InputsModel");
-			
-			var InputFields = this.getView().getModel("InputsModel");
-			
-			var docNumber = "";
-			selectedConsolidateArray.forEach(function(item){
-				
-			docNumber = docNumber + item.Belnr + ',';
-				
-			}	);
-			 var lastIndex = docNumber.lastIndexOf(",");
-            docNumber = docNumber.substring(0, lastIndex);
-            
-     
-			var userServiceUrl = oModel + InputFields.getProperty("/Inputs/services/WIPTRANSFER") + 
-			InputFields.getProperty("/Inputs/qParms/ACTION") +
-			InputFields.getProperty("/Inputs/action/CONSOLIDATE")+
-			InputFields.getProperty("/Inputs/lsValues/CONUMBER")+
-			"'" + docNumber + "'" +
-			InputFields.getProperty("/Inputs/lsValues/Buzei")+ "'" +
-			InputFields.getProperty("/Inputs/lsValues/Hours")+ "'" +
-			InputFields.getProperty("/Inputs/lsValues/Percentage")+ "'" +
-			InputFields.getProperty("/Inputs/lsValues/ToActivityCode")+ "'" +
-			InputFields.getProperty("/Inputs/lsValues/ToFfActivityCode")+ "'" +
-			InputFields.getProperty("/Inputs/lsValues/ToFfTaskCode")+ "'" +
-			InputFields.getProperty("/Inputs/lsValues/ToMatter")+ "'" +
-			InputFields.getProperty("/Inputs/lsValues/ToTaskCode")+ "'" +
-			InputFields.getProperty("/Inputs/qParms/JSON");
-			
+		
 			
 			debugger;
 			

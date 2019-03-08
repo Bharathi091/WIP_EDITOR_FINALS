@@ -52,18 +52,18 @@ sap.ui.define([
 
 			//var dataObj = LineItemsServices.getInstance().selectListItem(oModel,aFilter);
 
-			// LineItemsServices.getInstance().selectListItem(oModel, aFilter)
-			// 	.done(function(oData) {
+			LineItemsServices.getInstance().selectListItem(oModel, aFilter)
+				.done(function(oData) {
 
 				
 
-			// 		alert("success");
-			// 	})
-			// 	.fail(function() {
+					alert("success");
+				})
+				.fail(function() {
 
-			// 		alert("Fail");
+					alert("Fail");
 
-			// 	});
+				});
 
 			var that = this;
 			this.byId("idIconTabBar").setSelectedKey("Home");
@@ -1970,7 +1970,9 @@ sap.ui.define([
 			debugger;
 			var passingArray = [];
            
-            var oModel = this.getOwnerComponent().getModel();
+            var oModel = this.getOwnerComponent().getModel().sServiceUrl;
+            
+            	var InputFields = this.getView().getModel("InputsModel");
 
 			var oTable = this.getView().byId("smartTable_ResponsiveTable3").getTable();
 		
@@ -1982,16 +1984,44 @@ sap.ui.define([
 
 			});
 			
+            	var docNumber = "";
+			passingArray.forEach(function(item){
+				
+			docNumber = docNumber + item.Belnr + ',';
+				
+			}	);
+			 var lastIndex = docNumber.lastIndexOf(",");
+            docNumber = docNumber.substring(0, lastIndex);
+            
      
+			var userServiceUrl = oModel + InputFields.getProperty("/Inputs/services/WIPTRANSFER") + 
+			InputFields.getProperty("/Inputs/qParms/ACTION") +
+			InputFields.getProperty("/Inputs/action/CONSOLIDATE")+
+			InputFields.getProperty("/Inputs/lsValues/CONUMBER")+
+			"'" + docNumber + "'" +
+			InputFields.getProperty("/Inputs/lsValues/Buzei")+ "''" +
+			InputFields.getProperty("/Inputs/lsValues/Hours")+  "''" +
+			InputFields.getProperty("/Inputs/lsValues/Percentage")+  "''"+
+			InputFields.getProperty("/Inputs/lsValues/ToActivityCode")+  "''"+
+			InputFields.getProperty("/Inputs/lsValues/ToFfActivityCode")+  "''" +
+			InputFields.getProperty("/Inputs/lsValues/ToFfTaskCode")+  "''"+
+			InputFields.getProperty("/Inputs/lsValues/ToMatter")+  "''" +
+			InputFields.getProperty("/Inputs/lsValues/ToTaskCode")+  "''" +
+			InputFields.getProperty("/Inputs/qParms/JSON");
+      
+            
+              console.log(userServiceUrl);
+     
+      
         //consolidate service calling
         
-        	LineItemsServices.getInstance().onConsolidate(passingArray,oModel)
+        	LineItemsServices.getInstance().onConsolidate(userServiceUrl)
 				.done(function(oData) {
-
-					alert("success");
+                 
+					
 				})
 				.fail(function() {
-
+                debugger;
 					alert("Fail");
 
 				});
