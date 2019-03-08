@@ -10,6 +10,7 @@ sap.ui.define([
 
 			this.Inputs = {
 				hideFilterBar: true,
+				isChanged:false,
 				rootPspid: "",
 				masterItems: [],
 				IconTabs: {

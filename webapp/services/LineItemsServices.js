@@ -8,6 +8,29 @@ sap.ui.define([
 		constructor: function() {
 
 		},
+		
+		selectListItem: function(oModel,aFilter){
+	          debugger;
+	          	var deferred = $.Deferred();
+				oModel.read("/WipDetailsSet", {
+				filters: aFilter,
+				success: function(oData) {
+	                deferred.resolve(oData);
+
+				},
+				error: function() {
+					
+				
+					deferred.reject();
+				}
+				
+			} 
+			);
+
+			
+				return deferred.promise();
+			
+		},
 		getPhaseCodes: function(WipEditModel, pspid, that) {
 		
 			var service = WipEditModel.getProperty("/Inputs");

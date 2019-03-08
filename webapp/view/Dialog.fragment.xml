@@ -4,48 +4,42 @@
 			<l:VerticalLayout class="sapUiSmallMargin">
 				<l:HorizontalLayout class="sapUiSmallMargin">
 					<Label class="updateCodeLBL" text="To Phase code:" width="150px"/>
-					<Select  
-					forceSelection="false" width="430px" id="selectedPhaseCode" change="getUpdateTaskcodes">
-					<!--	items="{ path: 'updatesCodesModel>/phaseCodes' , templateShareable:false }" selectedKey="{path:'updatesCodesModel>/selectedPhaseCode'}">-->
-					<!--	<core:Item key="{updatesCodesModel>Phasecode}" text="{updatesCodesModel>Phasecode}-{updatesCodesModel>PhasecodeDesc}"/>-->
+					<Select forceSelection="false" width="430px" id="selectedPhaseCode"
+						items="{ path: 'updatesCodesModel>/phaseCodes' , templateShareable:false }" selectedKey="{path:'updatesCodesModel>/selectedPhaseCode'}">
+						<core:Item key="{updatesCodesModel>Phasecode}" text="{updatesCodesModel>Phasecode}-{updatesCodesModel>PhasecodeDesc}"/>
 					</Select>
 					<CheckBox class="updateCodeCheck" text="Apply" id="phaseCodeChk"/>
 				</l:HorizontalLayout>
-				
 				<l:HorizontalLayout class="sapUiSmallMargin">
 					<Label class="updateCodeLBL" text="To Task Code:" width="150px"/>
-					<Select forceSelection="false" width="430px" id="selectedTaskCode" ></Select> 
-					<!--<Select forceSelection="false"  width="430px"  id="selectedTaskCode" items="{ path: 'updatesCodesModel>/taskCodes' , templateShareable:false }"-->
-					<!--	selectedKey="{path:'updatesCodesModel>/selectedTaskCode'}">-->
-					<!--	<core:Item key="{updatesCodesModel>TaskCodes}" text="{updatesCodesModel>TaskCodes}-{updatesCodesModel>TaskCodeDesc}"/>-->
-					<!--</Select>-->
-					<CheckBox  class="updateCodeCheck" text="Apply" id="taskCodeChk"/>
+					<Select forceSelection="false" width="430px" id="selectedTaskCode"
+						items="{ path: 'updatesCodesModel>/taskCodes' , templateShareable:false }" selectedKey="{path:'updatesCodesModel>/selectedTaskCode'}">
+						<core:Item key="{updatesCodesModel>TaskCodes}" text="{updatesCodesModel>TaskCodes}-{updatesCodesModel>TaskCodeDesc}"/>
+					</Select>
+					<CheckBox class="updateCodeCheck" text="Apply" id="taskCodeChk"/>
 				</l:HorizontalLayout>
 				<l:HorizontalLayout class="sapUiSmallMargin">
 					<Label class="updateCodeLBL" text="To Activity Code:" width="150px"/>
-					<Select forceSelection="false" width="430px" id="selectedActCode"/>
-					<!--<Select forceSelection="false" width="430px" id="selectedActCode" items="{ path: 'updatesCodesModel>/actCodes' , templateShareable:false }"-->
-					<!--	selectedKey="{path:'updatesCodesModel>/selectedActCode'}">-->
-					<!--	<core:Item key="{updatesCodesModel>ActivityCodes}" text="{updatesCodesModel>ActivityCodes}-{updatesCodesModel>ActivityCodeDesc}"/>-->
-					<!--</Select>-->
+					<Select forceSelection="false" width="430px" id="selectedActCode" items="{ path: 'updatesCodesModel>/actCodes' , templateShareable:false }"
+						selectedKey="{path:'updatesCodesModel>/selectedActCode'}">
+						<core:Item key="{updatesCodesModel>ActivityCodes}" text="{updatesCodesModel>ActivityCodes}-{updatesCodesModel>ActivityCodeDesc}"/>
+					</Select>
 					<CheckBox class="updateCodeCheck" text="Apply" id="ActivityCodeChk"/>
 				</l:HorizontalLayout>
 				<l:HorizontalLayout class="sapUiSmallMargin">
 					<Label class="updateCodeLBL" text="To FF Task Code:" width="150px"/>
-					<Select forceSelection="false" width="430px" id="selectdFFTaskCode"></Select>
-					<!--<Select forceSelection="false" width="430px" id="selectedFFTaskCode" change="getUpdateFFactivityCodes"-->
-					<!--	selectedKey="{path:'updatesCodesModel>/selectedFFTaskCode'}" items="{ path: 'updatesCodesModel>/ffTskCodes' , templateShareable:false }">-->
-					<!--	<core:Item key="{updatesCodesModel>FfTaskCodes}" text="{updatesCodesModel>FfTaskCodes}-{updatesCodesModel>FfTaskCodeDesc}"/>-->
-					<!--</Select>-->
+					<Select forceSelection="false" width="430px" id="selectedFFTaskCode" change="UpdateCodesffTaskcodechange" selectedKey="{path:'updatesCodesModel>/selectedFFTaskCode'}"
+						items="{ path: 'updatesCodesModel>/ffTskCodes' , templateShareable:false }" >
+						<core:Item key="{updatesCodesModel>FfTaskCodes}" text="{updatesCodesModel>FfTaskCodes}-{updatesCodesModel>FfTaskCodeDesc}"/>
+					</Select>
 					<CheckBox class="updateCodeCheck" text="Apply" id="FFTaskCodeChk"/>
 				</l:HorizontalLayout>
 				<l:HorizontalLayout class="sapUiSmallMargin">
 					<Label class="updateCodeLBL" text="To FF Activity Code:" width="150px"/>
-					<Select forceSelection="false" width="430px" id="selectedFFActCode"></Select>
-					<!--<Select forceSelection="false" width="430px"  id="selectedFFActCode"-->
-					<!--	items="{ path: 'updatesCodesModel>/ffActCodes' , templateShareable:false }" selectedKey="{updatesCodesModel>/selectedFFActCode}">-->
-					<!--	<core:Item key="{updatesCodesModel>FfActivityCodes}" text="{updatesCodesModel>FfActivityCodes}-{updatesCodesModel>FfActivityCodeDesc}"/>-->
-					<!--</Select>-->
+					<Select forceSelection="false" width="430px" id="selectedFFActCode"
+						items="{ path: 'updatesCodesModel>/ffActCodes' , templateShareable:false }" selectedKey="{updatesCodesModel>/selectedFFActCode}">
+						<core:Item key="{updatesCodesModel>FfActivityCodes}" text="{updatesCodesModel>FfActivityCodes}-{updatesCodesModel>FfActivityCodeDesc}"/>
+					</Select>
 					<CheckBox class="updateCodeCheck" text="Apply" id="FFActCodeChk"/>
 				</l:HorizontalLayout>
 			</l:VerticalLayout>
