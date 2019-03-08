@@ -778,6 +778,7 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
+				this.data(this.rowData);
 			} else {
 				//Visible property set
 				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
@@ -933,7 +934,17 @@ sap.ui.define([
 			return this._oreplaceDialog;
 		},
 		closereplaceDialog: function() {
-			this._oreplaceDialog.close();
+			sap.ui.getCore().byId("replaceword--string0").setValue("");
+			sap.ui.getCore().byId("replaceword--replace0").setValue("");
+			sap.ui.getCore().byId("replaceword--word").setSelected(true);
+			var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+			$.each(tbl.getItems(), function(d, o) {
+				if (d > 0) {
+					var rowid = o.getId();
+					tbl.removeItem(rowid);
+				}
+			});
+			this._getreplaceDialogbox().close();
 		},
 		onreplace: function() {
 			debugger;
@@ -1109,54 +1120,7 @@ sap.ui.define([
 			}
 			return this._omassDialog;
 		},
-		closemassDialog: function() {
-			this._omassDialog.close();
-		},
-
-		onmassTransferchange: function() {
-			debugger;
-			var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
-			this.WipEditModel = this.getModel("InputsModel");
-			this.serviceInstance = LineItemsServices.getInstance();
-			var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
-			var oTable = this.getView().byId("WipDetailsSet3");
-			var Pspid = matter;
-
-			var that = this;
-
-			$.when(
-				that.serviceInstance.getPhaseCodes(that.WipEditModel, Pspid, that),
-				that.serviceInstance.getTaskcodes(that.WipEditModel, "", that),
-				that.serviceInstance.getActivitycodes(that.WipEditModel, Pspid, that),
-				that.serviceInstance.getFFtaskcodes(that.WipEditModel, Pspid, that),
-				that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
-
-			.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
-				debugger;
-				phaseCodes.results.unshift("");
-				activityCodes.results.unshift("");
-				taskCodes.results.unshift("");
-				ffTskCodes.results.unshift("");
-				ffActCodes.results.unshift("");
-
-				$.each(oTable.getSelectedIndices(), function(j, o) {
-
-					that.masstransfer = that.jsonModel.getProperty("/modelData");
-					that.masstransfer[o].ToMatter = matter;
-					that.masstransfer[o].Percent = percent;
-					that.jsonModel.setProperty("/modelData/" + o + "/phaseCodes", phaseCodes.results);
-					that.jsonModel.setProperty("/modelData/" + o + "/taskCodes", taskCodes.results);
-					that.jsonModel.setProperty("/modelData/" + o + "/activityCodes", activityCodes.results);
-					that.jsonModel.setProperty("/modelData/" + o + "/ffTskCodes", ffTskCodes.results);
-					that.jsonModel.setProperty("/modelData/" + o + "/ffActCodes", ffActCodes.results);
-
-				});
-
-				that.getView().setModel(that.jsonModel);
-				oTable.bindRows("/modelData");
-
-			});
-			sap.ui.core.Fragment.byId("masstransfer", "masspspid").setValue("");
+			closemassDialog: function() {
 			sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
 			var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
 			$.each(tbl.getItems(), function(i, o) {
@@ -1165,6 +1129,132 @@ sap.ui.define([
 			});
 			this._omassDialog.close();
 		},
+		onmassTransferchange: function() {
+		
+			var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
+			this.WipEditModel = this.getModel("InputsModel");
+			this.serviceInstance = LineItemsServices.getInstance();
+			var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
+			var oTable1 = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+			var items = oTable1.getItems();
+			console.log("items");
+			console.log(items);
+			var Docno = [];
+			$.each(items, function(l, obj) {
+			
+				var cells = obj.getCells();
+				var string = cells[0].getText();
+				Docno.push(string);
+			});
+			console.log("Docno");
+			console.log(Docno);
+			var check = false;
+			var oView = this.getView(),
+				oTable = oView.byId("WipDetailsSet3");
+			var selectindex = oTable.getSelectedIndices();
+			if (matter != "") {
+				var Pspid = matter;
+				var lineItems = this.homeArr;
+				var that = this;
+
+				$.when(
+					that.serviceInstance.getPhaseCodes(that.WipEditModel, Pspid, that),
+					that.serviceInstance.getTaskcodes(that.WipEditModel, "", that),
+					that.serviceInstance.getActivitycodes(that.WipEditModel, "", Pspid, that),
+					that.serviceInstance.getFFtaskcodes(that.WipEditModel, "", Pspid, that),
+					that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
+
+				.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
+				
+					$.each(oTable.getSelectedIndices(), function(j, o) {
+						
+						var ctx = oTable.getContextByIndex(o);
+						var m = ctx.getObject();
+						var docno = m.Belnr;
+						check = Docno.includes(docno);
+						if (check) {
+							
+								lineItems[o].ToMatter = matter;
+								lineItems[o].Percent = percent;
+								lineItems[o].taskCodes = lineItems[o].Zztskcd.length ? [{
+									TaskCodes: "",
+									TaskCodeDesc: ""
+								}].concat(taskCodes.results) : taskCodes.results;
+								lineItems[o].actCodes = lineItems[o].Zzactcd.length ? [{
+									ActivityCodes: "",
+									ActivityCodeDesc: ""
+								}].concat(activityCodes.results) : activityCodes.results;
+								lineItems[o].ffTskCodes = lineItems[o].Zzfftskcd.length ? [{
+									FfTaskCodes: "",
+									FfTaskCodeDesc: ""
+								}].concat(ffTskCodes.results) : ffTskCodes.results;
+								lineItems[o].ffActCodes = lineItems[o].Zzffactcd.length ? [{
+									FfActivityCodes: "",
+									FfActivityCodeDesc: ""
+								}].concat(ffActCodes.results) : ffActCodes.results;
+								lineItems[o].index = o;
+								lineItems[o].indeces = o;
+								debugger;
+								// lineItems[o].selectedTaskCode = lineItems[o].Zztskcd;
+								// lineItems[o].selectedActCode = lineItems[o].Zzactcd;
+								// lineItems[o].selectedFFTaskCode = lineItems[o].Zzfftskcd;
+								// lineItems[o].selectedFFActCode = lineItems[o].Zzffactcd;
+								lineItems[o].isRowEdited = true;
+
+							} else {
+								// check = false;
+								var indes = selectindex.indexOf(o);
+								selectindex[indes] = "";
+							}
+					
+				});
+					that.getView().setModel(that.jsonModel);
+					oTable.bindRows("/modelData");
+					console.log(selectindex);
+					// for (var s = 0; s < selectindex.length; s++) {
+					// 	debugger;
+					// 	var value = selectindex[s];
+					// 	if (value !== "") {
+					// 		oTable.setSelectedIndex(value);
+					// 	}
+						
+						
+					// }
+					that.onEditTable(selectindex);
+				});
+			}
+			sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
+			var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+			$.each(tbl.getItems(), function(i, o) {
+				var rowid = o.getId();
+				tbl.removeItem(rowid);
+			});
+		
+			this._omassDialog.close();
+				var InputFields = this.getView().getModel("InputsModel");
+				
+				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", false);
+				InputFields.setProperty("/Inputs/Toolbar/Updatecodestransfers", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodestransfers", true);
+		},
+		onEditTable: function(selindexes) {
+			debugger;
+			var oView = this.getView(),
+				oTable = oView.byId("WipDetailsSet3");
+			
+			for (var i = 0; i < selindexes.length; i++) {
+				var value = selindexes[i];
+				if (value != "") {
+					var ctx = oTable.getContextByIndex(value);
+					var m = ctx.getModel(ctx.getPath());
+					m.setProperty(ctx.getPath() + "/Edit", true);
+					oTable.addSelectionInterval(value,value);
+				
+				}
+			}
+
+		},
+		
 
 		data: function(odata) {
 			debugger;
@@ -1216,7 +1306,7 @@ sap.ui.define([
 						}].concat(ffActCodes.results) : ffActCodes.results;
 						lineItems[i].index = i;
 						lineItems[i].indeces = i;
-						// lineItems[i].selectedPhaseCode = lineItems[i].Zzphasecode ;
+						lineItems[i].selectedPhaseCode = lineItems[i].Zzphasecode ;
 						lineItems[i].selectedTaskCode = lineItems[i].Zztskcd;
 						lineItems[i].selectedActCode = lineItems[i].Zzactcd;
 						lineItems[i].selectedFFTaskCode = lineItems[i].Zzfftskcd;
@@ -1225,9 +1315,12 @@ sap.ui.define([
 					}
 				}
 				that.jsonModel.setProperty("/modelData", lineItems);
-				var Otable = that.getView().byId("WipDetailsSet2");
-				Otable.setModel(that.jsonModel);
-				Otable.bindRows("/modelData");
+				var Otable1 = that.getView().byId("WipDetailsSet2");
+				var Otable2 = that.getView().byId("WipDetailsSet3");
+				Otable1.setModel(that.jsonModel);
+				Otable1.bindRows("/modelData");
+				Otable2.setModel(that.jsonModel);
+				Otable2.bindRows("/modelData");
 			});
 
 		},

@@ -606,7 +606,7 @@
 										</smartTable:customToolbar>
 										<uitbl:Table id="WipDetailsSet3" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemTransferSelection">
 											<uitbl:columns>
-												<uitbl:Column width="8rem" filterProperty="ToMatter" sortProperty="ToMatter" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:Column width="8rem" filterProperty="ToMatter" sortProperty="ToMatter" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "ToMatter" , "maxLength": "5","columnIndex":"1", "leadingProperty": "ToMatter" }'/>
 													</uitbl:customData>
@@ -614,7 +614,7 @@
 														<Text text="ToMatter"/>
 													</uitbl:label>
 													<uitbl:template>
-														<smartField:SmartField editable="false" id="ToMatter" value="{ToMatter}"/>
+														<smartField:SmartField editable="true" id="ToMatter" change="ChangeTransfer" value="{ToMatter}" />
 													</uitbl:template>
 												</uitbl:Column>
 												<uitbl:Column width="8rem" filterProperty="Percent" sortProperty="Percent" showSortMenuEntry="true" autoResizable="true">
@@ -625,9 +625,10 @@
 														<Text text="%"/>
 													</uitbl:label>
 													<uitbl:template>
-														<smartField:SmartField editable="false" id="Percent" value="{Percent}"/>
+														<smartField:SmartField editable="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" id="Percent" change="ChangeTransfer" value="{Percent}"/>
 													</uitbl:template>
 												</uitbl:Column>
+										
 												<uitbl:Column width="8rem" filterProperty="Belnr" sortProperty="Belnr" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "Belnr" , "maxLength": "5","columnIndex":"3", "leadingProperty": "Belnr" }'/>
@@ -746,38 +747,29 @@
 												<!--	<uitbl:template>-->
 												<!--		<smartField:SmartField editable="false" id="ZzfepgrpDesc3" value="{ZzfepgrpDesc}"/></uitbl:template>-->
 												<!--</uitbl:Column>-->
-												<uitbl:Column width="8rem" filterProperty="ToZzactcd" sortProperty="ToZzactcd" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "ToZzactcd" , "maxLength": "5","columnIndex":"17", "leadingProperty": "ToZzactcd" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Phase Code"/></uitbl:label>
-													<uitbl:template>
-														<Select enabled="false">
-															<core:ListItem key="{ToZzactcd}" text="{ToZzactcd}"/>
-														</Select>
-													</uitbl:template>
-												</uitbl:Column>
 												<uitbl:Column width="8rem" filterProperty="Zztskcd" sortProperty="Zztskcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "Zztskcd" , "maxLength": "5","columnIndex":"18", "leadingProperty": "Zztskcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Task Code"/></uitbl:label>
 													<uitbl:template>
-														<Select enabled="false">
-															<core:ListItem key="{Zztskcd}" text="{Zztskcd}"/>
-														</Select>
+														<m:Select width="11rem" forceSelection="false" enabled="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}"  selectedKey="{selectedTaskCode}" items="{ path: 'taskCodes',  templateShareable:false}">
+															<core:Item key="{TaskCodes}" text="{TaskCodes} {TaskCodeDesc}"/>
+														</m:Select>
+														
 													</uitbl:template>
 												</uitbl:Column>
-												
-													<uitbl:Column width="8rem" filterProperty="Zzactcd" sortProperty="Zzactcd" showSortMenuEntry="true" autoResizable="true">
+											
+												<uitbl:Column width="8rem" filterProperty="Zzactcd" sortProperty="Zzactcd" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzactcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "Zzactcd" }'/></uitbl:customData>
+														<core:CustomData key="p13nData"  value='\{"columnKey": "Zzactcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "Zzactcd" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Activity Code"/></uitbl:label>
 													<uitbl:template>
-														<Select enabled="false">
-															<core:ListItem key="{Zzactcd}" text="{Zzactcd}"/>
-														</Select>
+														<m:Select width="11rem" forceSelection="false" enabled="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" change="CodesChange" selectedKey="{selectedActCode}"
+															items="{ path: 'actCodes' , templateShareable:false }">
+															<core:Item key="{ActivityCodes}" text="{ActivityCodes} {ActivityCodeDesc}"/>
+														</m:Select>
 													</uitbl:template>
 												</uitbl:Column>
 												
@@ -789,9 +781,10 @@
 													<uitbl:label>
 														<Text text="Flat Fee Task Code"/></uitbl:label>
 													<uitbl:template>
-														<Select enabled="false">
-															<core:ListItem key="{Zzfftskcd}" text="{Zzfftskcd}"/>
-														</Select>
+															<m:Select width="11rem" forceSelection="false" enabled="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" change="fftaskCodeChange" items="{ path: 'ffTskCodes',  templateShareable:false }"
+															selectedKey="{selectedFFTaskCode}">
+															<core:Item key="{FfTaskCodes}" text="{FfTaskCodes} {FfTaskCodes}"/>
+														</m:Select>
 													</uitbl:template>
 												</uitbl:Column>
 												<uitbl:Column width="8rem" filterProperty="Zzffactcd " sortProperty="Zzffactcd " showSortMenuEntry="true" autoResizable="true">
@@ -801,13 +794,14 @@
 													<uitbl:label>
 														<Text text="Flat Fee Activity Code"/></uitbl:label>
 													<uitbl:template>
-														<!--<smartField:SmartField editable="false" id="ToZzffactcd1" value="{ToZzffactcd}"/>-->
-														<Select enabled="false">
-															<core:ListItem key="{Zzffactcd}" text="{Zzffactcd}"/>
-														</Select>
+													
+														<m:Select width="11rem" forceSelection="false" enabled="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" items="{ path: 'ffActCodes',  templateShareable:false}" selectedKey="{selectedFFActCode}">
+															<core:Item key="{FfActivityCodes}" text="{FfActivityCodes} {FfActivityCodeDesc}"/>
+														</m:Select>
 													</uitbl:template>
 												</uitbl:Column>
-											</uitbl:columns>
+										
+										</uitbl:columns>
 										</uitbl:Table>
 									</smartTable:SmartTable>
 								</IconTabFilter>
@@ -850,6 +844,8 @@
 				<Button text="Save" press="onSave" visible="{InputsModel>/Inputs/Toolbar/Save}"/>
 				<Button text="Modify/Reverse" press="onModifyReverse" visible="{InputsModel>/Inputs/Toolbar/Modify_Reverse}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Modify_Reverse}"/>
+				<Button text="Updatecodes" press="ontransferUpdateCodes" visible="{InputsModel>/Inputs/Toolbar/Updatecodestransfers}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/Updatecodestransfers}"/>
 				<Button text="Updatecodes" press="onUpdateCodes" visible="{InputsModel>/Inputs/Toolbar/Updatecodes}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Updatecodes}"/>
 				<Button text="A GlobalSpellCheck" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/GlobalSpellCheck}"/>

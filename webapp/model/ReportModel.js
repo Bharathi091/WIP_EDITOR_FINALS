@@ -378,6 +378,7 @@ sap.ui.define([
 					Modify_Reverse: false,
 					Consolidate: false,
 					Updatecodes: false,
+					Updatecodestransfers: false,
 					GlobalSpellCheck: false,
 					Mass_Transfer: false,
 					Split_Transfer: false,
@@ -390,6 +391,7 @@ sap.ui.define([
 					Replace_Words: false,
 					Modify_Reverse: false,
 					Updatecodes: false,
+					Updatecodestransfers: false,
 					Consolidate: false,
 					Mass_Transfer: false,
 					Split_Transfer: false

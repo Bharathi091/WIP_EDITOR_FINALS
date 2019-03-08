@@ -16,7 +16,14 @@ sap.ui.define([
 				}
 				return parseFloat(sValue).toFixed(2);
 			},
+				editablefunction: function(sValue) {
 			
+			if (sValue) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 			isReviewByStatus :function(svalue){
 				var value = "";
 				if(svalue){
