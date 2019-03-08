@@ -606,6 +606,17 @@
 										</smartTable:customToolbar>
 										<uitbl:Table id="WipDetailsSet3" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemTransferSelection">
 											<uitbl:columns>
+												
+													<uitbl:Column width="8rem" filterProperty="Zzwiprate" sortProperty="Zzwiprate" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:label>
+														<Text text="Info"/>
+													</uitbl:label>
+													<uitbl:template>
+													<core:Icon src="sap-icon://alert" class="size3" visible = "false" id="alert1" color="green"/>
+													</uitbl:template>
+												</uitbl:Column>
+												
+												
 														<uitbl:Column width="8rem" filterProperty="ToMatter" sortProperty="ToMatter" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "ToMatter" , "maxLength": "5","columnIndex":"1", "leadingProperty": "ToMatter" }'/>
