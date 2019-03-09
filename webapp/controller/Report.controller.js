@@ -680,8 +680,7 @@ sap.ui.define([
 
 			this.byId("searchText").setValue("");
 
-
-         
+          
                
                
 			var InputFields = this.getView().getModel("InputsModel");
@@ -759,6 +758,15 @@ sap.ui.define([
 
 				}
 				this.getView(0).byId("WipDetailsSet2").getModel().refresh(true);
+				
+				 var tableLineEdits1 = this.getView().byId("WipDetailsSet3");
+           
+           var len = tableLineEdits1.getRows().length;
+           for ( var q = 0; q < len;  q++)
+           {
+         tableLineEdits1.getRows()[q].getCells()[0].setVisible(false);
+				
+           }
 				//Visible property set
 				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
 				InputFields.setProperty("/Inputs/Toolbar/Unreview", false);
@@ -2012,12 +2020,56 @@ sap.ui.define([
             
               console.log(userServiceUrl);
      
+             var that = this;
       
         //consolidate service calling
         
         	LineItemsServices.getInstance().onConsolidate(userServiceUrl)
 				.done(function(oData) {
-                 
+                debugger;
+                
+                var tableLineEdits = that.getView().byId("WipDetailsSet3");
+			     var index = tableLineEdits.getSelectedIndices();
+			     
+			   
+			 //    for (var i = 0; i < index.length; i++) {
+				// tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(true);
+				
+				// if (text === "Reviewed") {
+				// 	tableLineEdits.getRows()[index[i]].getCells()[0].setTooltip("Reviewed");
+				// } else {
+				// 	tableLineEdits.getRows()[index[i]].getCells()[0].setTooltip("Unreviewed");
+				// }
+
+			 //   }
+                
+                var i = 0;
+                
+                	$.each(index,function(k,o){
+                // we can access the row wise context for the table
+                 var errorDefined = oData.d.results[i].Message;
+                tableLineEdits.getRows()[o].getCells()[0].setVisible(true);
+                
+                if (errorDefined.includes("ERROR")){
+                	
+                 tableLineEdits.getRows()[o].getCells()[0].setProperty("color","red");     
+                 tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);  
+                
+                }
+                else{
+                	
+                	tableLineEdits.getRows()[o].getCells()[0].setProperty("color","red");
+                    tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);
+                	
+                }
+                  		
+                		
+                	i++;	
+                		
+                	});
+                
+                
+                
 					
 				})
 				.fail(function() {
