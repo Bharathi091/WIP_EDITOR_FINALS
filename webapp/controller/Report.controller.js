@@ -34,13 +34,12 @@ sap.ui.define([
 			this.jsonModel = new sap.ui.model.json.JSONModel();
 			this.getView().setModel(this.jsonModel, "JSONModel");
 			this.getView().setModel(new ReportModel().getModel(), "InputsModel");
-		
 
 		},
 
 		onPress: function(oEvent) {
 			debugger;
-		
+
 			var otable = [];
 			var aFilter = [];
 			var Pspid = oEvent.getSource().getProperty("title");
@@ -54,8 +53,6 @@ sap.ui.define([
 
 			LineItemsServices.getInstance().selectListItem(oModel, aFilter)
 				.done(function(oData) {
-
-				
 
 					alert("success");
 				})
@@ -130,7 +127,7 @@ sap.ui.define([
 			}
 		},
 
-  	ReviewUnreview: function(oEvent) {
+		ReviewUnreview: function(oEvent) {
 			debugger;
 			var text = oEvent.getSource().getText();
 			var tableLineEdits = this.getView().byId("WipDetailsSet2");
@@ -655,20 +652,20 @@ sap.ui.define([
 
 				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
+
 				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", true);
 
 			} else if (rowCount.length > 1) {
 
 				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", true);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
+
 				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
 			} else {
 
 				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
+
 				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
 
 			}
@@ -680,9 +677,6 @@ sap.ui.define([
 
 			this.byId("searchText").setValue("");
 
-          
-               
-               
 			var InputFields = this.getView().getModel("InputsModel");
 			var change = oEvent.getSource();
 
@@ -696,7 +690,7 @@ sap.ui.define([
 					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
 
 				}
-			
+
 				//Visible property set
 				InputFields.setProperty("/Inputs/Toolbar/Reviewed", true);
 				InputFields.setProperty("/Inputs/Toolbar/Unreview", true);
@@ -715,10 +709,6 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
-				
-			
-               
-				
 
 			} else if (value === "LineItemEdits") {
 				var tableLineEdits = this.getView().byId("WipDetailsSet2");
@@ -728,7 +718,7 @@ sap.ui.define([
 					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
 
 				}
-			
+
 				InputFields.setProperty("/Inputs/Toolbar/Reviewed", true);
 				InputFields.setProperty("/Inputs/Toolbar/Unreview", true);
 				InputFields.setProperty("/Inputs/Toolbar/Save", true);
@@ -747,6 +737,7 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
+				this.tableId = "WipDetailsSet2";
 				this.data(this.rowData);
 
 			} else if (value === "LineItemTransfers") {
@@ -758,15 +749,14 @@ sap.ui.define([
 
 				}
 				this.getView(0).byId("WipDetailsSet2").getModel().refresh(true);
-				
-				 var tableLineEdits1 = this.getView().byId("WipDetailsSet3");
-           
-           var len = tableLineEdits1.getRows().length;
-           for ( var q = 0; q < len;  q++)
-           {
-         tableLineEdits1.getRows()[q].getCells()[0].setVisible(false);
-				
-           }
+
+				var tableLineEdits1 = this.getView().byId("WipDetailsSet3");
+
+				var len = tableLineEdits1.getRows().length;
+				for (var q = 0; q < len; q++) {
+					tableLineEdits1.getRows()[q].getCells()[0].setVisible(false);
+
+				}
 				//Visible property set
 				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
 				InputFields.setProperty("/Inputs/Toolbar/Unreview", false);
@@ -786,6 +776,7 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
+				this.tableId = "WipDetailsSet3";
 				this.data(this.rowData);
 			} else {
 				//Visible property set
@@ -1128,7 +1119,7 @@ sap.ui.define([
 			}
 			return this._omassDialog;
 		},
-			closemassDialog: function() {
+		closemassDialog: function() {
 			sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
 			var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
 			$.each(tbl.getItems(), function(i, o) {
@@ -1138,7 +1129,7 @@ sap.ui.define([
 			this._omassDialog.close();
 		},
 		onmassTransferchange: function() {
-		
+
 			var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
 			this.WipEditModel = this.getModel("InputsModel");
 			this.serviceInstance = LineItemsServices.getInstance();
@@ -1149,7 +1140,7 @@ sap.ui.define([
 			console.log(items);
 			var Docno = [];
 			$.each(items, function(l, obj) {
-			
+
 				var cells = obj.getCells();
 				var string = cells[0].getText();
 				Docno.push(string);
@@ -1173,49 +1164,44 @@ sap.ui.define([
 					that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
 
 				.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
-				
+
 					$.each(oTable.getSelectedIndices(), function(j, o) {
-						
+
 						var ctx = oTable.getContextByIndex(o);
 						var m = ctx.getObject();
 						var docno = m.Belnr;
 						check = Docno.includes(docno);
 						if (check) {
-							
-								lineItems[o].ToMatter = matter;
-								lineItems[o].Percent = percent;
-								lineItems[o].taskCodes = lineItems[o].Zztskcd.length ? [{
-									TaskCodes: "",
-									TaskCodeDesc: ""
-								}].concat(taskCodes.results) : taskCodes.results;
-								lineItems[o].actCodes = lineItems[o].Zzactcd.length ? [{
-									ActivityCodes: "",
-									ActivityCodeDesc: ""
-								}].concat(activityCodes.results) : activityCodes.results;
-								lineItems[o].ffTskCodes = lineItems[o].Zzfftskcd.length ? [{
-									FfTaskCodes: "",
-									FfTaskCodeDesc: ""
-								}].concat(ffTskCodes.results) : ffTskCodes.results;
-								lineItems[o].ffActCodes = lineItems[o].Zzffactcd.length ? [{
-									FfActivityCodes: "",
-									FfActivityCodeDesc: ""
-								}].concat(ffActCodes.results) : ffActCodes.results;
-								lineItems[o].index = o;
-								lineItems[o].indeces = o;
-								debugger;
-								// lineItems[o].selectedTaskCode = lineItems[o].Zztskcd;
-								// lineItems[o].selectedActCode = lineItems[o].Zzactcd;
-								// lineItems[o].selectedFFTaskCode = lineItems[o].Zzfftskcd;
-								// lineItems[o].selectedFFActCode = lineItems[o].Zzffactcd;
-								lineItems[o].isRowEdited = true;
 
-							} else {
-								// check = false;
-								var indes = selectindex.indexOf(o);
-								selectindex[indes] = "";
-							}
-					
-				});
+							lineItems[o].ToMatter = matter;
+							lineItems[o].Percent = percent;
+							lineItems[o].taskCodes = lineItems[o].Zztskcd.length ? [{
+								TaskCodes: "",
+								TaskCodeDesc: ""
+							}].concat(taskCodes.results) : taskCodes.results;
+							lineItems[o].actCodes = lineItems[o].Zzactcd.length ? [{
+								ActivityCodes: "",
+								ActivityCodeDesc: ""
+							}].concat(activityCodes.results) : activityCodes.results;
+							lineItems[o].ffTskCodes = lineItems[o].Zzfftskcd.length ? [{
+								FfTaskCodes: "",
+								FfTaskCodeDesc: ""
+							}].concat(ffTskCodes.results) : ffTskCodes.results;
+							lineItems[o].ffActCodes = lineItems[o].Zzffactcd.length ? [{
+								FfActivityCodes: "",
+								FfActivityCodeDesc: ""
+							}].concat(ffActCodes.results) : ffActCodes.results;
+							lineItems[o].index = o;
+							lineItems[o].indeces = o;
+							lineItems[o].isRowEdited = true;
+
+						} else {
+							// check = false;
+							var indes = selectindex.indexOf(o);
+							selectindex[indes] = " ";
+						}
+
+					});
 					that.getView().setModel(that.jsonModel);
 					oTable.bindRows("/modelData");
 					console.log(selectindex);
@@ -1225,8 +1211,7 @@ sap.ui.define([
 					// 	if (value !== "") {
 					// 		oTable.setSelectedIndex(value);
 					// 	}
-						
-						
+
 					// }
 					that.onEditTable(selectindex);
 				});
@@ -1237,32 +1222,28 @@ sap.ui.define([
 				var rowid = o.getId();
 				tbl.removeItem(rowid);
 			});
-		
+
 			this._omassDialog.close();
-				var InputFields = this.getView().getModel("InputsModel");
-				
-				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", false);
-				InputFields.setProperty("/Inputs/Toolbar/Updatecodestransfers", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodestransfers", true);
+			var InputFields = this.getView().getModel("InputsModel");
+			InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
 		},
 		onEditTable: function(selindexes) {
 			debugger;
 			var oView = this.getView(),
 				oTable = oView.byId("WipDetailsSet3");
-			
+
 			for (var i = 0; i < selindexes.length; i++) {
 				var value = selindexes[i];
-				if (value != "") {
+				if (value !== " ") {
 					var ctx = oTable.getContextByIndex(value);
 					var m = ctx.getModel(ctx.getPath());
 					m.setProperty(ctx.getPath() + "/Edit", true);
-					oTable.addSelectionInterval(value,value);
-				
+					oTable.addSelectionInterval(value, value);
+
 				}
 			}
 
 		},
-		
 
 		data: function(odata) {
 			debugger;
@@ -1314,7 +1295,7 @@ sap.ui.define([
 						}].concat(ffActCodes.results) : ffActCodes.results;
 						lineItems[i].index = i;
 						lineItems[i].indeces = i;
-						lineItems[i].selectedPhaseCode = lineItems[i].Zzphasecode ;
+						lineItems[i].selectedPhaseCode = lineItems[i].Zzphasecode;
 						lineItems[i].selectedTaskCode = lineItems[i].Zztskcd;
 						lineItems[i].selectedActCode = lineItems[i].Zzactcd;
 						lineItems[i].selectedFFTaskCode = lineItems[i].Zzfftskcd;
@@ -1838,53 +1819,237 @@ sap.ui.define([
 			});
 		},
 
+		// onUpdateCodes: function() {
+		// 	debugger;
+
+		// 	this.aIndices = this.getView().byId("WipDetailsSet2").getSelectedIndices();
+		// 	var sMsg;
+		// 	if (this.aIndices.length < 1) {
+		// 		sMsg = "Please Select Atleast One item";
+		// 		this.showAlert("WIP Edit", sMsg);
+		// 	} else {
+
+		// 		var oView = this.getView();
+		// 		var oDialog = this._getupdateCodesDialog();
+		// 		oView.addDependent(oDialog);
+		// 		oDialog.open();
+
+		// 		sap.ui.core.Fragment.byId("update", "phaseCodeChk").setSelected(false);
+		// 		sap.ui.core.Fragment.byId("update", "taskCodeChk").setSelected(false);
+		// 		sap.ui.core.Fragment.byId("update", "ActivityCodeChk").setSelected(false);
+		// 		sap.ui.core.Fragment.byId("update", "FFTaskCodeChk").setSelected(false);
+		// 		sap.ui.core.Fragment.byId("update", "FFActCodeChk").setSelected(false);
+
+		// 		this.updatesCodes = {
+		// 			rowData: {},
+		// 			phaseCodes: {},
+		// 			taskCodes: {},
+		// 			actCodes: {},
+		// 			ffTskCodes: {},
+		// 			ffActCodes: {},
+		// 			selectedPhaseCode: "",
+		// 			selectedTaskCode: "",
+		// 			selectedActCode: "",
+		// 			selectedFFTaskCode: "",
+		// 			selectedFFActCode: ""
+
+		// 		};
+
+		// 		this.selectedRows = new JSONModel(this.updatesCodes);
+
+		// 		var selectedrow = this.jsonModel.getProperty("/modelData/" + this.aIndices[0]);
+
+		// 		//this.selectedRows.setProperty("/phaseCodes", selectedrow.phaseCodes);
+		// 		this.selectedRows.setProperty("/taskCodes", selectedrow.taskCodes);
+		// 		this.selectedRows.setProperty("/actCodes", selectedrow.actCodes);
+		// 		this.selectedRows.setProperty("/ffTskCodes", selectedrow.ffTskCodes);
+		// 		this.selectedRows.setProperty("/ffActCodes", selectedrow.ffActCodes);
+		// 		this.selectedRows.setProperty("/rowData", selectedrow);
+		// 		this._UpdateCodesDialog.setModel(this.selectedRows, "updatesCodesModel");
+		// 	}
+
+		// },
+		// _getupdateCodesDialog: function() {
+		// 	if (!this._UpdateCodesDialog) {
+		// 		this._UpdateCodesDialog = sap.ui.xmlfragment("update", "wip.view.Dialog", this.getView().getController());
+		// 	}
+		// 	return this._UpdateCodesDialog;
+
+		// },
+		// UpdateCodesCancel: function() {
+		// 	this._UpdateCodesDialog.close();
+		// },
+		// UpdateCodes: function() {
+
+		// 	debugger;
+		// 	var selectedLines = this.getView().byId("WipDetailsSet2").getSelectedIndices();
+		// 	this.UpdateCodesCancel();
+		// 	for (var c = 0; c < selectedLines.length; c++) {
+
+		// 		var phaseCodeChk = sap.ui.core.Fragment.byId("update", "phaseCodeChk").getSelected();
+		// 		var taskCodeChk = sap.ui.core.Fragment.byId("update", "taskCodeChk").getSelected();
+		// 		var ActivityCodeChk = sap.ui.core.Fragment.byId("update", "ActivityCodeChk").getSelected();
+		// 		var FFTaskCodeChk = sap.ui.core.Fragment.byId("update", "FFTaskCodeChk").getSelected();
+		// 		var FFActCodeChk = sap.ui.core.Fragment.byId("update", "FFActCodeChk").getSelected();
+
+		// 		// if (phaseCodeChk === true) {
+		// 		// 	this.jsonModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/phaseCodes", this.selectedRows.getProperty(
+		// 		// 		"/phaseCodes"));
+		// 		// 	this.jsonModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/selectedPhaseCode", sap.ui.core.Fragment.byId("update",
+		// 		// 		"selectedPhaseCode").getSelectedKey());
+		// 		// 	this.BillEditModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/isRowEdited", true);
+
+		// 		// }
+		// 		if (taskCodeChk === true && phaseCodeChk === true) {
+
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/taskCodes", this.selectedRows.getProperty(
+		// 				"/taskCodes"));
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedTaskCode", sap.ui.core.Fragment.byId("update",
+		// 				"selectedTaskCode").getSelectedKey());
+		// 			//this.BillEditModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/isRowEdited", true);
+		// 		}
+		// 		if (ActivityCodeChk === true) {
+
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/actCodes", this.selectedRows.getProperty(
+		// 				"/actCodes"));
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedActCode", sap.ui.core.Fragment.byId("update",
+		// 				"selectedActCode").getSelectedKey());
+
+		// 		}
+		// 		if (FFTaskCodeChk === true) {
+
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/ffTskCodes", this.selectedRows.getProperty(
+		// 				"/ffTskCodes"));
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedFFTaskCode", sap.ui.core.Fragment.byId("update",
+		// 				"selectedFFTaskCode").getSelectedKey());
+
+		// 		}
+		// 		if (FFActCodeChk === true && FFTaskCodeChk === true) {
+
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/ffActCodes", this.selectedRows.getProperty(
+		// 				"/ffActCodes"));
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedFFActCode", sap.ui.core.Fragment.byId("update",
+		// 				"selectedFFActCode").getSelectedKey());
+		// 		}
+
+		// 	}
+		// },
+		// UpdateCodesffTaskcodechange: function(oEvent) {
+		// 	debugger;
+		// 	var ffTaskcodeselected = oEvent.getSource().getSelectedItem().getKey();
+
+		// 	var InputFields = this.getView().getModel("InputsModel");
+		// 	var pspid = InputFields.getProperty("/Inputs/rootPspid");
+		// 	sap.ui.core.BusyIndicator.show(0);
+		// 	var that = this;
+
+		// 	$.when(
+		// 		that.serviceInstance.getFFActivitycodes(that.WipEditModel, ffTaskcodeselected, pspid, that)
+		// 	)
+
+		// 	.done(function(updateffActCodes) {
+		// 		debugger;
+		// 		that.selectedRows.setProperty("/ffActCodes", updateffActCodes.results);
+
+		// 	});
+		// },
 		onUpdateCodes: function() {
 			debugger;
-
-			this.aIndices = this.getView().byId("WipDetailsSet2").getSelectedIndices();
+			this.aIndices = this.getView().byId(this.tableId).getSelectedIndices();
 			var sMsg;
+			var check = false;
 			if (this.aIndices.length < 1) {
 				sMsg = "Please Select Atleast One item";
 				this.showAlert("WIP Edit", sMsg);
+
 			} else {
 
 				var oView = this.getView();
-				var oDialog = this._getupdateCodesDialog();
-				oView.addDependent(oDialog);
-				oDialog.open();
+				if (this.tableId === "WipDetailsSet2") {
+					var oDialog = this._getupdateCodesDialog();
+					oView.addDependent(oDialog);
+					oDialog.open();
+					var i = 0;
+					check = true;
+				} else {
 
-				sap.ui.core.Fragment.byId("update", "phaseCodeChk").setSelected(false);
-				sap.ui.core.Fragment.byId("update", "taskCodeChk").setSelected(false);
-				sap.ui.core.Fragment.byId("update", "ActivityCodeChk").setSelected(false);
-				sap.ui.core.Fragment.byId("update", "FFTaskCodeChk").setSelected(false);
-				sap.ui.core.Fragment.byId("update", "FFActCodeChk").setSelected(false);
+					var Tomatters = [];
+					var check = false;
+					var oTable = this.getView().byId(this.tableId);
+					$.each(oTable.getSelectedIndices(), function(j, o) {
+						var ctx = oTable.getContextByIndex(o);
+						var m = ctx.getObject();
+						var ToMatter = m.ToMatter;
+						Tomatters.push(ToMatter);
+					});
+					for (var j = 1; j < Tomatters.length; j++) {
+						if (Tomatters[j] !== Tomatters[0]) {
+							check = false;
+							alert("please check the matter numbers");
+						} else {
+							check = true;
+							var oTDialog = this._gettransferupdateCodesDialog();
+							oView.addDependent(oTDialog);
+							oTDialog.open();
+							var i = 1;
 
-				this.updatesCodes = {
-					rowData: {},
-					phaseCodes: {},
-					taskCodes: {},
-					actCodes: {},
-					ffTskCodes: {},
-					ffActCodes: {},
-					selectedPhaseCode: "",
-					selectedTaskCode: "",
-					selectedActCode: "",
-					selectedFFTaskCode: "",
-					selectedFFActCode: ""
+						}
+					}
 
-				};
+				}
+				if (check) {
+					sap.ui.core.Fragment.byId("update", "phaseCodeChk" + i).setSelected(false);
+					sap.ui.core.Fragment.byId("update", "taskCodeChk" + i).setSelected(false);
+					sap.ui.core.Fragment.byId("update", "ActivityCodeChk" + i).setSelected(false);
+					sap.ui.core.Fragment.byId("update", "FFTaskCodeChk" + i).setSelected(false);
+					sap.ui.core.Fragment.byId("update", "FFActCodeChk" + i).setSelected(false);
 
-				this.selectedRows = new JSONModel(this.updatesCodes);
+					this.updatesCodes = {
+						rowData: {},
+						phaseCodes: {},
+						taskCodes: {},
+						actCodes: {},
+						ffTskCodes: {},
+						ffActCodes: {},
+						selectedPhaseCode: "",
+						selectedTaskCode: "",
+						selectedActCode: "",
+						selectedFFTaskCode: "",
+						selectedFFActCode: ""
 
-				var selectedrow = this.jsonModel.getProperty("/modelData/" + this.aIndices[0]);
+					};
+					this.updatesCodes1 = {
+						rowData: {},
+						phaseCodes: {},
+						taskCodes: {},
+						actCodes: {},
+						ffTskCodes: {},
+						ffActCodes: {},
+						selectedPhaseCode: "",
+						selectedTaskCode: "",
+						selectedActCode: "",
+						selectedFFTaskCode: "",
+						selectedFFActCode: ""
 
-				//this.selectedRows.setProperty("/phaseCodes", selectedrow.phaseCodes);
-				this.selectedRows.setProperty("/taskCodes", selectedrow.taskCodes);
-				this.selectedRows.setProperty("/actCodes", selectedrow.actCodes);
-				this.selectedRows.setProperty("/ffTskCodes", selectedrow.ffTskCodes);
-				this.selectedRows.setProperty("/ffActCodes", selectedrow.ffActCodes);
-				this.selectedRows.setProperty("/rowData", selectedrow);
-				this._UpdateCodesDialog.setModel(this.selectedRows, "updatesCodesModel");
+					};
+
+					this.selectedRows = new JSONModel(this.updatesCodes);
+
+					var selectedrow = this.jsonModel.getProperty("/modelData/" + this.aIndices[0]);
+
+					//this.selectedRows.setProperty("/phaseCodes", selectedrow.phaseCodes);
+					this.selectedRows.setProperty("/taskCodes", selectedrow.taskCodes);
+					this.selectedRows.setProperty("/actCodes", selectedrow.actCodes);
+					this.selectedRows.setProperty("/ffTskCodes", selectedrow.ffTskCodes);
+					this.selectedRows.setProperty("/ffActCodes", selectedrow.ffActCodes);
+					this.selectedRows.setProperty("/rowData", selectedrow);
+					if (this.tableId === "WipDetailsSet3") {
+						this._transferUpdateCodesDialog.setModel(this.selectedRows, "updatesCodesModel1");
+					} else {
+						this._UpdateCodesDialog.setModel(this.selectedRows, "updatesCodesModel");
+					}
+
+				}
 			}
 
 		},
@@ -1895,21 +2060,39 @@ sap.ui.define([
 			return this._UpdateCodesDialog;
 
 		},
+		_gettransferupdateCodesDialog: function() {
+			if (!this._transferUpdateCodesDialog) {
+				this._transferUpdateCodesDialog = sap.ui.xmlfragment("update", "wip.view.LineitemTransferDialog", this.getView().getController());
+			}
+			return this._transferUpdateCodesDialog;
+
+		},
 		UpdateCodesCancel: function() {
-			this._UpdateCodesDialog.close();
+			if (this.tableId === "WipDetailsSet2") {
+				this._UpdateCodesDialog.close();
+			} else {
+				this._transferUpdateCodesDialog.close();
+			}
+
 		},
 		UpdateCodes: function() {
 
 			debugger;
-			var selectedLines = this.getView().byId("WipDetailsSet2").getSelectedIndices();
+			var selectedLines = this.getView().byId(this.tableId).getSelectedIndices();
 			this.UpdateCodesCancel();
+			if (this.tableId === "WipDetailsSet2") {
+				var i = 0;
+
+			} else {
+				var i = 1;
+			}
 			for (var c = 0; c < selectedLines.length; c++) {
 
-				var phaseCodeChk = sap.ui.core.Fragment.byId("update", "phaseCodeChk").getSelected();
-				var taskCodeChk = sap.ui.core.Fragment.byId("update", "taskCodeChk").getSelected();
-				var ActivityCodeChk = sap.ui.core.Fragment.byId("update", "ActivityCodeChk").getSelected();
-				var FFTaskCodeChk = sap.ui.core.Fragment.byId("update", "FFTaskCodeChk").getSelected();
-				var FFActCodeChk = sap.ui.core.Fragment.byId("update", "FFActCodeChk").getSelected();
+				var phaseCodeChk = sap.ui.core.Fragment.byId("update", "phaseCodeChk" + i).getSelected();
+				var taskCodeChk = sap.ui.core.Fragment.byId("update", "taskCodeChk" + i).getSelected();
+				var ActivityCodeChk = sap.ui.core.Fragment.byId("update", "ActivityCodeChk" + i).getSelected();
+				var FFTaskCodeChk = sap.ui.core.Fragment.byId("update", "FFTaskCodeChk" + i).getSelected();
+				var FFActCodeChk = sap.ui.core.Fragment.byId("update", "FFActCodeChk" + i).getSelected();
 
 				// if (phaseCodeChk === true) {
 				// 	this.jsonModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/phaseCodes", this.selectedRows.getProperty(
@@ -1924,7 +2107,7 @@ sap.ui.define([
 					this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/taskCodes", this.selectedRows.getProperty(
 						"/taskCodes"));
 					this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedTaskCode", sap.ui.core.Fragment.byId("update",
-						"selectedTaskCode").getSelectedKey());
+						"selectedTaskCode" + i).getSelectedKey());
 					//this.BillEditModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/isRowEdited", true);
 				}
 				if (ActivityCodeChk === true) {
@@ -1932,7 +2115,7 @@ sap.ui.define([
 					this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/actCodes", this.selectedRows.getProperty(
 						"/actCodes"));
 					this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedActCode", sap.ui.core.Fragment.byId("update",
-						"selectedActCode").getSelectedKey());
+						"selectedActCode" + i).getSelectedKey());
 
 				}
 				if (FFTaskCodeChk === true) {
@@ -1940,7 +2123,7 @@ sap.ui.define([
 					this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/ffTskCodes", this.selectedRows.getProperty(
 						"/ffTskCodes"));
 					this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedFFTaskCode", sap.ui.core.Fragment.byId("update",
-						"selectedFFTaskCode").getSelectedKey());
+						"selectedFFTaskCode" + i).getSelectedKey());
 
 				}
 				if (FFActCodeChk === true && FFTaskCodeChk === true) {
@@ -1948,10 +2131,11 @@ sap.ui.define([
 					this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/ffActCodes", this.selectedRows.getProperty(
 						"/ffActCodes"));
 					this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedFFActCode", sap.ui.core.Fragment.byId("update",
-						"selectedFFActCode").getSelectedKey());
+						"selectedFFActCode" + i).getSelectedKey());
 				}
 
 			}
+
 		},
 		UpdateCodesffTaskcodechange: function(oEvent) {
 			debugger;
@@ -1973,17 +2157,16 @@ sap.ui.define([
 			});
 		},
 
-
-        	onConsolidate: function() {
+		onConsolidate: function() {
 			debugger;
 			var passingArray = [];
-           
-            var oModel = this.getOwnerComponent().getModel().sServiceUrl;
-            
-            	var InputFields = this.getView().getModel("InputsModel");
+
+			var oModel = this.getOwnerComponent().getModel().sServiceUrl;
+
+			var InputFields = this.getView().getModel("InputsModel");
 
 			var oTable = this.getView().byId("smartTable_ResponsiveTable3").getTable();
-		
+
 			oTable.getSelectedIndices().forEach(function(j, o) {
 
 				var ctx = oTable.getContextByIndex(o);
@@ -1991,98 +2174,87 @@ sap.ui.define([
 				passingArray.push(m);
 
 			});
-			
-            	var docNumber = "";
-			passingArray.forEach(function(item){
-				
-			docNumber = docNumber + item.Belnr + ',';
-				
-			}	);
-			 var lastIndex = docNumber.lastIndexOf(",");
-            docNumber = docNumber.substring(0, lastIndex);
-            
-     
-			var userServiceUrl = oModel + InputFields.getProperty("/Inputs/services/WIPTRANSFER") + 
-			InputFields.getProperty("/Inputs/qParms/ACTION") +
-			InputFields.getProperty("/Inputs/action/CONSOLIDATE")+
-			InputFields.getProperty("/Inputs/lsValues/CONUMBER")+
-			"'" + docNumber + "'" +
-			InputFields.getProperty("/Inputs/lsValues/Buzei")+ "''" +
-			InputFields.getProperty("/Inputs/lsValues/Hours")+  "''" +
-			InputFields.getProperty("/Inputs/lsValues/Percentage")+  "''"+
-			InputFields.getProperty("/Inputs/lsValues/ToActivityCode")+  "''"+
-			InputFields.getProperty("/Inputs/lsValues/ToFfActivityCode")+  "''" +
-			InputFields.getProperty("/Inputs/lsValues/ToFfTaskCode")+  "''"+
-			InputFields.getProperty("/Inputs/lsValues/ToMatter")+  "''" +
-			InputFields.getProperty("/Inputs/lsValues/ToTaskCode")+  "''" +
-			InputFields.getProperty("/Inputs/qParms/JSON");
-      
-            
-              console.log(userServiceUrl);
-     
-             var that = this;
-      
-        //consolidate service calling
-        
-        	LineItemsServices.getInstance().onConsolidate(userServiceUrl)
-				.done(function(oData) {
-                debugger;
-                
-                var tableLineEdits = that.getView().byId("WipDetailsSet3");
-			     var index = tableLineEdits.getSelectedIndices();
-			     
-			   
-			 //    for (var i = 0; i < index.length; i++) {
-				// tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(true);
-				
-				// if (text === "Reviewed") {
-				// 	tableLineEdits.getRows()[index[i]].getCells()[0].setTooltip("Reviewed");
-				// } else {
-				// 	tableLineEdits.getRows()[index[i]].getCells()[0].setTooltip("Unreviewed");
-				// }
 
-			 //   }
-                
-                var i = 0;
-                
-                	$.each(index,function(k,o){
-                // we can access the row wise context for the table
-                 var errorDefined = oData.d.results[i].Message;
-                tableLineEdits.getRows()[o].getCells()[0].setVisible(true);
-                
-                if (errorDefined.includes("ERROR")){
-                	
-                 tableLineEdits.getRows()[o].getCells()[0].setProperty("color","red");     
-                 tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);  
-                
-                }
-                else{
-                	
-                	tableLineEdits.getRows()[o].getCells()[0].setProperty("color","red");
-                    tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);
-                	
-                }
-                  		
-                		
-                	i++;	
-                		
-                	});
-                
-                
-                
-					
+			var docNumber = "";
+			passingArray.forEach(function(item) {
+
+				docNumber = docNumber + item.Belnr + ',';
+
+			});
+			var lastIndex = docNumber.lastIndexOf(",");
+			docNumber = docNumber.substring(0, lastIndex);
+
+			var userServiceUrl = oModel + InputFields.getProperty("/Inputs/services/WIPTRANSFER") +
+				InputFields.getProperty("/Inputs/qParms/ACTION") +
+				InputFields.getProperty("/Inputs/action/CONSOLIDATE") +
+				InputFields.getProperty("/Inputs/lsValues/CONUMBER") +
+				"'" + docNumber + "'" +
+				InputFields.getProperty("/Inputs/lsValues/Buzei") + "''" +
+				InputFields.getProperty("/Inputs/lsValues/Hours") + "''" +
+				InputFields.getProperty("/Inputs/lsValues/Percentage") + "''" +
+				InputFields.getProperty("/Inputs/lsValues/ToActivityCode") + "''" +
+				InputFields.getProperty("/Inputs/lsValues/ToFfActivityCode") + "''" +
+				InputFields.getProperty("/Inputs/lsValues/ToFfTaskCode") + "''" +
+				InputFields.getProperty("/Inputs/lsValues/ToMatter") + "''" +
+				InputFields.getProperty("/Inputs/lsValues/ToTaskCode") + "''" +
+				InputFields.getProperty("/Inputs/qParms/JSON");
+
+			console.log(userServiceUrl);
+
+			var that = this;
+
+			//consolidate service calling
+
+			LineItemsServices.getInstance().onConsolidate(userServiceUrl)
+				.done(function(oData) {
+					debugger;
+
+					var tableLineEdits = that.getView().byId("WipDetailsSet3");
+					var index = tableLineEdits.getSelectedIndices();
+
+					//    for (var i = 0; i < index.length; i++) {
+					// tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(true);
+
+					// if (text === "Reviewed") {
+					// 	tableLineEdits.getRows()[index[i]].getCells()[0].setTooltip("Reviewed");
+					// } else {
+					// 	tableLineEdits.getRows()[index[i]].getCells()[0].setTooltip("Unreviewed");
+					// }
+
+					//   }
+
+					var i = 0;
+
+					$.each(index, function(k, o) {
+						// we can access the row wise context for the table
+						var errorDefined = oData.d.results[i].Message;
+						tableLineEdits.getRows()[o].getCells()[0].setVisible(true);
+
+						if (errorDefined.includes("ERROR")) {
+
+							tableLineEdits.getRows()[o].getCells()[0].setProperty("color", "red");
+							tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);
+
+						} else {
+
+							tableLineEdits.getRows()[o].getCells()[0].setProperty("color", "red");
+							tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);
+
+						}
+
+						i++;
+
+					});
+
 				})
 				.fail(function() {
-                debugger;
+					debugger;
 					alert("Fail");
 
 				});
-          
-          
 
-             
 		},
-		
+
 		onSave: function(oEvt) {
 			debugger;
 			var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
