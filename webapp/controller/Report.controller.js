@@ -145,20 +145,24 @@ sap.ui.define([
 			var oTable = [];
 			var InputFields = this.getView().getModel("InputsModel");
 			var filters = InputFields.getProperty("/Inputs/Filters/filters");
+		
 			for (var j = 1; j <= filters.length; j++) {
 				var table = this.getView().getModel("InputsModel").getProperty("/Inputs/Filters/Filter" + j + "/uitbale");
-
+                
 				var otable = this.byId(table);
 
 				$.each(otable.getSelectedIndices(), function(k, o) {
 					var selContext = otable.getContextByIndex(o);
-					selContext.getModel().setProperty(selContext.getPath() + "/ReviewComplete", "X");
+
 					var obj = selContext.getObject();
 					if (text === "Reviewed") {
+						selContext.getModel().setProperty(selContext.getPath() + "/ReviewComplete", "X");
 						obj.ReviewComplete = "X";
-
+                       
 					} else {
+						selContext.getModel().setProperty(selContext.getPath() + "/ReviewComplete", "");
 						obj.ReviewComplete = "";
+					
 
 					}
 					oTable.push(obj);
@@ -168,13 +172,16 @@ sap.ui.define([
 			}
 
 			this.makeBatchCallsReviewUnreview(oTable);
-			this.jsonModel.setProperty("/modelData", this.homeArr);
+		    this.jsonModel.setProperty("/modelData", this.homeArr);
 
 			this.getView().setModel(this.jsonModel);
-			var Otable = this.getView().byId("WipDetailsSet1");
-			Otable.bindRows("/modelData");
+			 var Otable = this.getView().byId("WipDetailsSet1");
+			// // Otable.setModel(this.jsonModel);
+			 Otable.bindRows("/modelData");
 			// var Otable1 = this.getView().byId("WipDetailsSet2");
+			// Otable1.setModel(this.jsonModel);
 			// Otable1.bindRows("/modelData");
+
 		},
 		makeBatchCallsReviewUnreview: function(oList) {
 
@@ -681,8 +688,18 @@ sap.ui.define([
 			var change = oEvent.getSource();
 
 			var value = change.getSelectedKey();
+			
+			
 
 			if (value === "NarrativeEdits") {
+				
+				this.jsonModel.setProperty("/modelData", this.homeArr);
+
+				this.getView().setModel(this.jsonModel);
+				var Otable = this.getView().byId("WipDetailsSet1");
+				Otable.bindRows("/modelData");
+				
+				
 				var tableLineEdits = this.getView().byId("WipDetailsSet2");
 				var index = tableLineEdits.getSelectedIndices();
 				for (var i = 0; i < index.length; i++) {
@@ -738,6 +755,16 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
 				this.tableId = "WipDetailsSet2";
+                debugger;
+				var that = this;
+				this.rowData = [];
+				this.jsonModel.getData()["modelData"].forEach(function(item, f) {
+
+					that.rowData[f] = item;
+
+				});
+
+				//	console.log(this.jsonModel.getData()["modelData"]);
 				this.data(this.rowData);
 
 			} else if (value === "LineItemTransfers") {
