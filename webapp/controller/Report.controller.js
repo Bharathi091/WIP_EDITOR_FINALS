@@ -54,11 +54,11 @@ sap.ui.define([
 			LineItemsServices.getInstance().selectListItem(oModel, aFilter)
 				.done(function(oData) {
 
-					alert("success");
+					// alert("success");
 				})
 				.fail(function() {
 
-					alert("Fail");
+					// alert("Fail");
 
 				});
 
@@ -76,6 +76,8 @@ sap.ui.define([
 					that.jsonModel.setProperty("/Matter", oData.results[0].Pspid);
 					that.jsonModel.setProperty("/LeadPartner", oData.results[1].Sname);
 					that.jsonModel.setProperty("/BillingOffice", oData.results[0].Werks);
+					
+						// that.byId("smartTable_ResponsiveTable3").setIgnoreFromPersonalisation("Zzwiprate");
 
 					that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
@@ -100,6 +102,8 @@ sap.ui.define([
 			InputFields.setProperty("/Inputs/IconTabs/Narrative_Edits", true);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Edits", true);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Transfers", true);
+			
+			
 
 		},
 
@@ -173,8 +177,14 @@ sap.ui.define([
 
 			this.makeBatchCallsReviewUnreview(oTable);
 		    this.jsonModel.setProperty("/modelData", this.homeArr);
+		    
+		   
 
 			this.getView().setModel(this.jsonModel);
+			
+			 var Otable0 = this.getView().byId("WipDetailsSet");
+			Otable0.bindRows("/modelData");
+			
 			 var Otable = this.getView().byId("WipDetailsSet1");
 			// // Otable.setModel(this.jsonModel);
 			 Otable.bindRows("/modelData");
@@ -299,7 +309,7 @@ sap.ui.define([
 
 			this.jsonModel.setProperty("/modelData", data);
 
-			this.getView().setModel(this.jsonModel);
+			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
 			Otable.bindRows("/modelData");
 		},
 
@@ -341,7 +351,7 @@ sap.ui.define([
 			this.jsonModel.setProperty("/modelData", res);
 			var Otable = this.getView().byId("WipDetailsSet1");
 			// this.jsonModel.setData(res);
-			this.getView().setModel(this.jsonModel);
+			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
 			Otable.bindRows("/modelData");
 
 		},
@@ -484,7 +494,104 @@ sap.ui.define([
 			this.jsonModel.setProperty("/BillingOffice", this.billingpartner);
 
 		},
-		Reload: function(oEvent) {
+		// Reload: function(oEvent) {
+
+		// 	debugger;
+
+		// 	this.filter = oEvent.getSource().getParent().getParent().getParent().getText();
+
+		// 	var InputFields = this.getView().getModel("InputsModel");
+		// 	var change = InputFields.getProperty("/Inputs/isChanged");
+		// 	console.log(change);
+		// 	if (change === true) {
+		// 		this._Dialog = sap.ui.xmlfragment("wip.view.Fragment", this);
+		// 		this._Dialog.open();
+		// 	} else {
+		// 		this.ReloadTable();
+
+		// 	}
+
+		// },
+
+		// closeDialog: function() {
+		// 	this._Dialog.close();
+
+		// },
+
+		// ReloadTable: function(oEvent) {
+
+		// 	var InputFields = this.getView().getModel("InputsModel");
+
+		// 	var value = this.filter;
+
+		// 	if (value === " ") {
+		// 		this.getView().byId("WipDetailsSet").getModel().refresh(true);
+		// 	} else if (value === "Narrative_Edits") {
+		// 		sap.ui.core.BusyIndicator.show(0);
+		// 		this.getView().byId("WipDetailsSet1").getModel().refresh(true);
+		// 		var pspid = this.jsonModel.getProperty("/Matter");
+		// 		var oModel = this.getOwnerComponent().getModel();
+		// 		var aFilter = [];
+		// 		aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
+
+		// 		var that = this;
+		// 		oModel.read("/WipDetailsSet", {
+		// 			filters: aFilter,
+		// 			success: function(oData) {
+		// 				sap.ui.core.BusyIndicator.hide(0);
+
+		// 				debugger;
+
+		// 				that.jsonModel.setProperty("/modelData", oData.results);
+
+		// 			}
+		// 		});
+
+		// 	} else if (value === "Line_Item_Edits") {
+		// 		sap.ui.core.BusyIndicator.show(0);
+		// 		this.data(this.rowData);
+
+		// 	} else {
+				
+				
+		// 		sap.ui.core.BusyIndicator.show(0);
+
+		// 		var pspid = this.jsonModel.getProperty("/Matter");
+		// 		var oModel = this.getOwnerComponent().getModel();
+		// 		var aFilter = [];
+		// 		aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
+
+		// 		var that = this;
+		// 		oModel.read("/WipDetailsSet", {
+		// 			filters: aFilter,
+		// 			success: function(oData) {
+		// 				sap.ui.core.BusyIndicator.hide(0);
+
+		// 				debugger;
+
+		// 				that.jsonModel.setProperty("/modelData", oData.results);
+		// 				that.jsonModel.setProperty("/modelData", that.homeArr);
+
+		// 				that.getView().byId("WipDetailsSet3").setModel(that.jsonModel);
+		// 				var Otable = that.getView().byId("WipDetailsSet3");
+		// 				Otable.bindRows("/modelData");
+
+		// 			}
+		// 		});
+				
+				
+		// 	}
+
+		// 	if (this._Dialog) {
+
+		// 		this._Dialog.close();
+
+		// 	}
+		// 	InputFields.setProperty("/Inputs/isChanged", false);
+
+		// },
+
+        Reload: function(oEvent) {
 
 			debugger;
 
@@ -505,18 +612,110 @@ sap.ui.define([
 
 		closeDialog: function() {
 			this._Dialog.close();
+			
+		
+			
 
 		},
 
-		ReloadTable: function(oEvent) {
+		// ReloadTable: function(oEvent) {
+		// 	debugger;
+		// 	var InputFields = this.getView().getModel("InputsModel");
 
+		// 	var value = this.filter;
+
+		// 	if (value === " ") {
+		// 		this.getView().byId("WipDetailsSet").getModel().refresh(true);
+		// 	} else if (value === "Narrative_Edits") {
+		// 		sap.ui.core.BusyIndicator.show(0);
+		// 		this.getView().byId("WipDetailsSet1").getModel().refresh(true);
+		// 		var pspid = this.jsonModel.getProperty("/Matter");
+		// 		var oModel = this.getOwnerComponent().getModel();
+		// 		var aFilter = [];
+		// 		aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
+
+		// 		var that = this;
+		// 		oModel.read("/WipDetailsSet", {
+		// 			filters: aFilter,
+		// 			success: function(oData) {
+		// 				sap.ui.core.BusyIndicator.hide(0);
+
+		// 				debugger;
+  //                         that.homeArr = oData.results;
+		// 				that.jsonModel.setProperty("/modelData", oData.results);
+		// 				//that.jsonModel.setProperty("/modelData", that.homeArr);
+						
+		// 					that.homeArr.forEach(function(o, k) {
+		// 				that.rowData[k] = o;
+		// 		        	});
+
+		// 				// that.jsonModel.setProperty("/modelData", that.homeArr);
+
+		// 				// that.getView().byId("WipDetailsSet1").setModel(that.jsonModel);
+		// 				// var Otable = this.getView().byId("WipDetailsSet1");
+		// 				// Otable.bindRows("/modelData");
+
+		// 			}
+		// 		});
+
+		// 	} else if (value === "Line_Item_Edits") {
+		// 		sap.ui.core.BusyIndicator.show(0);
+		// 		this.data(this.homeArr);
+
+		// 	} else {
+		// 		sap.ui.core.BusyIndicator.show(0);
+
+		// 		var pspid = this.jsonModel.getProperty("/Matter");
+		// 		var oModel = this.getOwnerComponent().getModel();
+		// 		var aFilter = [];
+		// 		aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
+
+		// 		var that = this;
+		// 		oModel.read("/WipDetailsSet", {
+		// 			filters: aFilter,
+		// 			success: function(oData) {
+		// 				sap.ui.core.BusyIndicator.hide(0);
+
+		// 				debugger;
+  //                      that.homeArr = oData.results;
+		// 				that.jsonModel.setProperty("/modelData", oData.results);
+		// 				//that.jsonModel.setProperty("/modelData", that.homeArr);
+						
+		// 					that.homeArr.forEach(function(o, k) {
+		// 				that.rowData[k] = o;
+		// 			});
+
+		// 				that.getView().byId("WipDetailsSet3").setModel(that.jsonModel);
+		// 				var Otable = that.getView().byId("WipDetailsSet3");
+		// 				Otable.bindRows("/modelData");
+
+		// 			}
+		// 		});
+		// 	}
+
+		// 	if (this._Dialog) {
+
+		// 		this._Dialog.close();
+
+		// 	}
+		// 	InputFields.setProperty("/Inputs/isChanged", false);
+			
+			
+		
+			
+
+		// },
+      
+      
+      
+      ReloadTable: function(oEvent) {
+			debugger;
 			var InputFields = this.getView().getModel("InputsModel");
-
-			var value = this.filter;
-
-			if (value === " ") {
-				this.getView().byId("WipDetailsSet").getModel().refresh(true);
-			} else if (value === "Narrative_Edits") {
+				var filter = this.getView().byId("idIconTabBar").getSelectedKey();
+				if(filter === "Home"){
+						this.getView().byId("WipDetailsSet").getModel().refresh(true);
+				}
+			if (filter === "NarrativeEdits") {
 				sap.ui.core.BusyIndicator.show(0);
 				this.getView().byId("WipDetailsSet1").getModel().refresh(true);
 				var pspid = this.jsonModel.getProperty("/Matter");
@@ -531,66 +730,105 @@ sap.ui.define([
 						sap.ui.core.BusyIndicator.hide(0);
 
 						debugger;
+						that.homeArr=oData.results;
 
 						that.jsonModel.setProperty("/modelData", oData.results);
 
+						that.homeArr.forEach(function(o, k) {
+						that.rowData[k] = o;
+					});
+
+
 					}
 				});
-
-			} else if (value === "Line_Item_Edits") {
+			} else if (filter === "LineItemEdits") {
 				sap.ui.core.BusyIndicator.show(0);
-				this.data(this.rowData);
-
+				this.data(this.homeArr);
 			} else {
-				this.getView().byId("WipDetailsSet3").getModel().refresh(true);
-			}
+			sap.ui.core.BusyIndicator.show(0);
 
+				var pspid = this.jsonModel.getProperty("/Matter");
+				var oModel = this.getOwnerComponent().getModel();
+				var aFilter = [];
+				aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
+
+				var that = this;
+				oModel.read("/WipDetailsSet", {
+					filters: aFilter,
+					success: function(oData) {
+						sap.ui.core.BusyIndicator.hide(0);
+
+						debugger;
+						that.homeArr=oData.results;
+						that.jsonModel.setProperty("/modelData", oData.results);
+						
+						that.homeArr.forEach(function(o, k) {
+						that.rowData[k] = o;
+					});
+
+					
+					}
+				});
+					this.data(this.homeArr);
+			}
 			if (this._Dialog) {
 
 				this._Dialog.close();
 
 			}
 			InputFields.setProperty("/Inputs/isChanged", false);
+			
+			
+		
+			
 
 		},
-
-		changeNarrative: function() {
+      
+      
+		changeNarrative: function(oEvent) {
 
 			debugger;
 			var InputFields = this.getView().getModel("InputsModel");
 
 			InputFields.setProperty("/Inputs/isChanged", true);
 
-			// var changedRow = oEvent.getSource().getBindingContext();
-			// // changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
-			// var obj = changedRow.getObject();
-			// obj.NarrativeString = oEvent.getParameters().value;
-			// var idx = oEvent.getSource().getParent();
-			// var index = oEvent.getSource().getParent().getParent().indexOfRow(idx);
-			// var that = this;
-			// this.homeArr.forEach(function(o, i) {
-			// 	that.rowData[i] = o;
-			// });
-			// this.rowData[index] = obj;
+			var changedRow = oEvent.getSource().getBindingContext();
+			// changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
+			var obj = changedRow.getObject();
+			obj.NarrativeString = oEvent.getParameters().value;
+			var idx = oEvent.getSource().getParent();
+			var index = idx.getIndex();
+			var that = this;
+			this.homeArr.forEach(function(o, i) {
+				that.rowData[i] = o;
+			});
+			this.rowData[index] = obj;
 
-			// this.narIndices.push(index);
+			this.narIndices.push(index);
 
-			// $.each(this.narIndices, function(i, el) {
-			// 	if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
-			// });
+			$.each(this.narIndices, function(i, el) {
+				if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
+			});
 		},
 		CodesChange: function(oEvent) {
 			debugger;
 			var InputFields = this.getView().getModel("InputsModel");
+			
+			  var item = oEvent.getSource().getParent();
+			var idx = oEvent.getSource().getParent().getParent().indexOfRow(item);
+			this.narIndices.push(idx);
 
 			InputFields.setProperty("/Inputs/isChanged", true);
+			
+			
+			
 			// var changedRow = oEvent.getSource().getBindingContext();
 			// // changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
 			// var obj = jQuery.extend({}, changedRow.getObject());
 
 			// obj.Zzactcd = oEvent.getSource().getSelectedItem().getText();
 			// var idx = oEvent.getSource().getParent();
-			// var index = oEvent.getSource().getParent().getParent().indexOfRow(idx);
+			// var index = idx.getIndex();
 			// var that = this;
 
 			// debugger;
@@ -689,13 +927,13 @@ sap.ui.define([
 
 			var value = change.getSelectedKey();
 			
-			
+			this.ReloadTable();
 
 			if (value === "NarrativeEdits") {
 				
 				this.jsonModel.setProperty("/modelData", this.homeArr);
 
-				this.getView().setModel(this.jsonModel);
+				this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
 				var Otable = this.getView().byId("WipDetailsSet1");
 				Otable.bindRows("/modelData");
 				
@@ -765,8 +1003,9 @@ sap.ui.define([
 				});
 
 				//	console.log(this.jsonModel.getData()["modelData"]);
+				if(this.jsonModel.getProperty("/Matter")!==""){
 				this.data(this.rowData);
-
+				}
 			} else if (value === "LineItemTransfers") {
 				var tableLineEdits = this.getView().byId("WipDetailsSet2");
 				var index = tableLineEdits.getSelectedIndices();
@@ -804,7 +1043,10 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
 				this.tableId = "WipDetailsSet3";
+				
+					if(this.jsonModel.getProperty("/Matter")!==""){
 				this.data(this.rowData);
+				}
 			} else {
 				//Visible property set
 				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
@@ -930,12 +1172,153 @@ sap.ui.define([
 			if (sPreviousHash !== undefined) {
 				window.history.go(-1);
 			} else {
-
+e
 				this.getOwnerComponent().getRouter().navTo("woklist", null, true);
 			}
 		},
 
-		onReplacewords: function(evt) {
+		// onReplacewords: function(evt) {
+		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+		// 	if (oTable.getSelectedIndices().length === 0) {
+		// 		debugger;
+		// 		MessageBox.show(
+		// 			"Select atleast one item!", {
+		// 				icon: sap.m.MessageBox.Icon.WARNING,
+		// 				title: "Replace",
+		// 				actions: [sap.m.MessageBox.Action.OK]
+		// 			}
+		// 		);
+		// 		return;
+		// 	} else {
+		// 		var odialog = this._getreplaceDialogbox();
+		// 		odialog.open();
+		// 	}
+		// },
+		// _getreplaceDialogbox: function() {
+		// 	if (!this._oreplaceDialog) {
+		// 		this._oreplaceDialog = sap.ui.xmlfragment("replaceword", "wip.view.popup", this);
+		// 		this.getView().addDependent(this._oreplaceDialog);
+		// 	}
+		// 	return this._oreplaceDialog;
+		// },
+		// closereplaceDialog: function() {
+		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
+		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
+		// 	sap.ui.getCore().byId("replaceword--word").setSelected(true);
+		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+		// 	$.each(tbl.getItems(), function(d, o) {
+		// 		if (d > 0) {
+		// 			var rowid = o.getId();
+		// 			tbl.removeItem(rowid);
+		// 		}
+		// 	});
+		// 	this._getreplaceDialogbox().close();
+		// },
+		// onreplace: function() {
+		// 	debugger;
+		// 	var InputFields = this.getView().getModel("InputsModel");
+
+		// 	InputFields.setProperty("/Inputs/isChanged", true);
+		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+		// 	// console.log(oTable.getRows());
+		// 	var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+		// 	var index = oTable1.getItems().length;
+		// 	console.log(index);
+
+		// 	var that = this;
+		// 	$.each(oTable.getSelectedIndices(), function(i, o) {
+
+		// 		var ctx = oTable.getContextByIndex(o);
+		// 		var m = ctx.getObject();
+		// 		var str = m.NarrativeString;
+		// 		var items = oTable1.getItems();
+		// 		$.each(items, function(l, obj) {
+		// 			var cells = obj.getCells();
+		// 			// var string = sap.ui.getCore().byId("replaceword--string" + j).getValue();
+		// 			// var replacewith = sap.ui.getCore().byId("replaceword--replace" + j).getValue();
+		// 			var string = cells[0].getValue();
+		// 			var replacewith = cells[1].getValue();
+		// 			var searchindex = str.search(string);
+		// 			if (searchindex >= 0) {
+
+		// 				var res = str.replace(string, replacewith);
+		// 				that.replaceItems = that.jsonModel.getProperty("/modelData");
+		// 				that.replaceItems[o].NarrativeString = res;
+		// 				// console.log(that.replaceItems);
+		// 					if(str !== res){
+						
+		// 					that.saveObjects.push(that.replaceItems[o]);
+		// 				}
+		// 				str = that.replaceItems[o].NarrativeString;
+
+		// 			}
+
+		// 		});
+		// 		that.jsonModel.setProperty("/modelData", that.replaceItems);
+		// 	that.getView().byId("WipDetailsSet1").setModel(that.jsonModel);
+		// 		oTable.bindRows("/modelData");
+
+		// 	});
+		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
+		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
+		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+		// 	$.each(tbl.getItems(), function(d, o) {
+		// 		if (d > 0) {
+		// 			var rowid = o.getId();
+		// 			tbl.removeItem(rowid);
+		// 		}
+		// 	});
+		// 	this._getreplaceDialogbox().close();
+		// },
+		// replaceall: function() {
+		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+		// 	var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+		// 	var replaceItems = this.jsonModel.getProperty("/modelData");
+		// 	var that = this;
+		// 	var result = $.each(replaceItems, function(i, o) {
+
+		// 		var m = o;
+		// 		var str = m.NarrativeString;
+		// 		var items = oTable1.getItems();
+		// 		$.each(items, function(l, obj) {
+		// 			var cells = obj.getCells();
+		// 			var string = cells[0].getValue();
+		// 			var replacewith = cells[1].getValue();
+		// 			var searchindex = str.search(string);
+		// 			if (searchindex >= 0) {
+		// 				var res = str.replace(string, replacewith);
+		// 				that.replace = that.jsonModel.getProperty("/modelData");
+		// 				that.replace[i].NarrativeString = res;
+						
+		// 					if(str !== res)
+		// 				{
+		// 					that.saveObjects.push(that.replace[i]);
+		// 				}
+						
+		// 				str = that.replace[i].NarrativeString;
+		// 			}
+		// 		});
+		// 		return that.replace;
+
+		// 	});
+
+		// 	this.jsonModel.setProperty("/modelData", result);
+		// 	this.getView().setModel(this.jsonModel);
+		// 	oTable.bindRows("/modelData");
+		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
+		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
+		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+		// 	$.each(tbl.getItems(), function(d, o) {
+		// 		if (d > 0) {
+		// 			var rowid = o.getId();
+		// 			tbl.removeItem(rowid);
+		// 		}
+		// 	});
+		// 	this._getreplaceDialogbox().close();
+		// },
+		
+		
+			onReplacewords: function(evt) {
 			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			if (oTable.getSelectedIndices().length === 0) {
 				debugger;
@@ -970,51 +1353,78 @@ sap.ui.define([
 					tbl.removeItem(rowid);
 				}
 			});
-			this._getreplaceDialogbox().close();
+			this._oreplaceDialog.close();
 		},
 		onreplace: function() {
-			debugger;
-			var InputFields = this.getView().getModel("InputsModel");
-
-			InputFields.setProperty("/Inputs/isChanged", true);
 			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			// console.log(oTable.getRows());
 			var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-			var index = oTable1.getItems().length;
-			console.log(index);
 
 			var that = this;
 			$.each(oTable.getSelectedIndices(), function(i, o) {
-
+				debugger;
 				var ctx = oTable.getContextByIndex(o);
 				var m = ctx.getObject();
 				var str = m.NarrativeString;
+				var res;
+				debugger;
 				var items = oTable1.getItems();
 				$.each(items, function(l, obj) {
+					debugger;
 					var cells = obj.getCells();
-					// var string = sap.ui.getCore().byId("replaceword--string" + j).getValue();
-					// var replacewith = sap.ui.getCore().byId("replaceword--replace" + j).getValue();
 					var string = cells[0].getValue();
 					var replacewith = cells[1].getValue();
-					var searchindex = str.search(string);
-					if (searchindex >= 0) {
-
-						var res = str.replace(string, replacewith);
-						that.replaceItems = that.jsonModel.getProperty("/modelData");
-						that.replaceItems[o].NarrativeString = res;
-						// console.log(that.replaceItems);
-						str = that.replaceItems[o].NarrativeString;
-
+					var check = cells[3].getSelected();
+					if (check) {
+                         
+                         var pullstop = str.lastIndexOf(".");
+                         if(pullstop){
+			            str = str.substring(0, pullstop);
+                         }
+						var stringarr = str.split(" ");
+					
+						var startindex = stringarr.indexOf(string);
+						if (startindex >= 0) {
+							stringarr[startindex] = replacewith;
+						}
+						if(pullstop){
+						stringarr.push(".");
+						}
+						res = stringarr.join(" ");
+						
+						if(pullstop){
+						res = that.remove_character(res, res.length-2);
+						}
+						
+				
+						
+							} else {
+						debugger;
+						var searchindex = str.search(string);
+						if (searchindex >= 0) {
+							res = str.replace(string, replacewith);
+						}
 					}
+
+					that.replaceItems = that.jsonModel.getProperty("/modelData");
+					that.replaceItems[o].NarrativeString = res;
+					
+						if(str != res)
+						{
+							that.saveObjects.push(that.replaceItems[o]);
+						}
+					
+					str = that.replaceItems[o].NarrativeString;
 
 				});
 				that.jsonModel.setProperty("/modelData", that.replaceItems);
-				that.getView().setModel(that.jsonModel);
+				oTable.setModel(that.jsonModel);
 				oTable.bindRows("/modelData");
 
 			});
 			sap.ui.getCore().byId("replaceword--string0").setValue("");
 			sap.ui.getCore().byId("replaceword--replace0").setValue("");
+			sap.ui.getCore().byId("replaceword--word").setSelected(true);
 			var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
 			$.each(tbl.getItems(), function(d, o) {
 				if (d > 0) {
@@ -1024,6 +1434,9 @@ sap.ui.define([
 			});
 			this._getreplaceDialogbox().close();
 		},
+		
+		
+		
 		replaceall: function() {
 			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
@@ -1033,28 +1446,65 @@ sap.ui.define([
 
 				var m = o;
 				var str = m.NarrativeString;
+				var res;
 				var items = oTable1.getItems();
 				$.each(items, function(l, obj) {
 					var cells = obj.getCells();
 					var string = cells[0].getValue();
 					var replacewith = cells[1].getValue();
-					var searchindex = str.search(string);
-					if (searchindex >= 0) {
-						var res = str.replace(string, replacewith);
+					var check = cells[3].getSelected();
+					if (check) {
+						
+						 var pullstop = str.lastIndexOf(".");
+                         if(pullstop){
+			            str = str.substring(0, pullstop);
+                         }
+
+						var stringarr = str.split(" ");
+						var startindex = stringarr.indexOf(string);
+						if (startindex >= 0) {
+							stringarr[startindex] = replacewith;
+						}
+							if(pullstop){
+						stringarr.push(".");
+						}
+						
+						res = stringarr.join(" ");
+						
+							if(pullstop){
+						res = that.remove_character(res, res.length-2);
+						}
 						that.replace = that.jsonModel.getProperty("/modelData");
 						that.replace[i].NarrativeString = res;
+						
+							if(str != res)
+						{
+							that.saveObjects.push(that.replace[i]);
+						}
+						
 						str = that.replace[i].NarrativeString;
+
+					} else {
+
+						var searchindex = str.search(string);
+						if (searchindex >= 0) {
+							res = str.replace(string, replacewith);
+							that.replace = that.jsonModel.getProperty("/modelData");
+							that.replace[i].NarrativeString = res;
+							str = that.replace[i].NarrativeString;
+						}
 					}
+
 				});
 				return that.replace;
-
 			});
 
 			this.jsonModel.setProperty("/modelData", result);
-			this.getView().setModel(this.jsonModel);
+			oTable.setModel(this.jsonModel);
 			oTable.bindRows("/modelData");
 			sap.ui.getCore().byId("replaceword--string0").setValue("");
 			sap.ui.getCore().byId("replaceword--replace0").setValue("");
+			sap.ui.getCore().byId("replaceword--word").setSelected(true);
 			var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
 			$.each(tbl.getItems(), function(d, o) {
 				if (d > 0) {
@@ -1064,6 +1514,8 @@ sap.ui.define([
 			});
 			this._getreplaceDialogbox().close();
 		},
+		
+		
 		addbuttonToReplace: function(evt) {
 
 			var oTable = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
@@ -1104,9 +1556,181 @@ sap.ui.define([
 			}));
 
 		},
+		
+		// onmasstransfer: function() {
+
+		// 	var odialog = this._getDialogmass();
+		// 	odialog.open();
+		// 	var oTable = this.getView().byId("WipDetailsSet3");
+		// 	var ofrag = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+		// 	$.each(oTable.getSelectedIndices(), function(i, o) {
+
+		// 		var tableContext = oTable.getContextByIndex(o);
+		// 		var obj = tableContext.getObject();
+		// 		var itemno = obj.Buzei;
+		// 		var docno = obj.Belnr;
+		// 		ofrag.addItem(new sap.m.ColumnListItem({
+		// 			cells: [new sap.m.Text({
+		// 					width: "100%",
+		// 					text: docno
+		// 				}),
+		// 				new sap.m.Text({
+		// 					width: "100%",
+		// 					text: itemno
+		// 				}),
+		// 				new sap.m.Button({
+		// 					text: "delete",
+		// 					press: function(oEvent) {
+		// 						var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+		// 						var src = oEvent.getSource().getParent();
+		// 						var rowid = src.getId();
+		// 						tbl.removeItem(rowid);
+		// 					}
+		// 				})
+
+		// 			]
+		// 		}));
+		// 	});
+		// },
+		// _getDialogmass: function() {
+		// 	if (!this._omassDialog) {
+		// 		this._omassDialog = sap.ui.xmlfragment("masstransfer", "wip.view.masstransfer", this);
+		// 		this.getView().addDependent(this._omassDialog);
+		// 	}
+		// 	return this._omassDialog;
+		// },
+		// closemassDialog: function() {
+		// 	sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
+		// 	var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+		// 	$.each(tbl.getItems(), function(i, o) {
+		// 		var rowid = o.getId();
+		// 		tbl.removeItem(rowid);
+		// 	});
+		// 	this._omassDialog.close();
+		// },
+		// onmassTransferchange: function() {
+
+		// 	var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
+		// 	this.WipEditModel = this.getModel("InputsModel");
+		// 	this.serviceInstance = LineItemsServices.getInstance();
+		// 	var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
+		// 	var oTable1 = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+		// 	var items = oTable1.getItems();
+		// 	console.log("items");
+		// 	console.log(items);
+		// 	var Docno = [];
+		// 	$.each(items, function(l, obj) {
+
+		// 		var cells = obj.getCells();
+		// 		var string = cells[0].getText();
+		// 		Docno.push(string);
+		// 	});
+		// 	console.log("Docno");
+		// 	console.log(Docno);
+		// 	var check = false;
+		// 	var oView = this.getView(),
+		// 		oTable = oView.byId("WipDetailsSet3");
+		// 	var selectindex = oTable.getSelectedIndices();
+		// 	if (matter != "") {
+		// 		var Pspid = matter;
+		// 		var lineItems = this.homeArr;
+		// 		var that = this;
+
+		// 		$.when(
+		// 			that.serviceInstance.getPhaseCodes(that.WipEditModel, Pspid, that),
+		// 			that.serviceInstance.getTaskcodes(that.WipEditModel, "", that),
+		// 			that.serviceInstance.getActivitycodes(that.WipEditModel, "", Pspid, that),
+		// 			that.serviceInstance.getFFtaskcodes(that.WipEditModel, "", Pspid, that),
+		// 			that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
+
+		// 		.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
+
+		// 			$.each(oTable.getSelectedIndices(), function(j, o) {
+
+		// 				var ctx = oTable.getContextByIndex(o);
+		// 				var m = ctx.getObject();
+		// 				var docno = m.Belnr;
+		// 				check = Docno.includes(docno);
+		// 				if (check) {
+
+		// 					lineItems[o].ToMatter = matter;
+		// 					lineItems[o].Percent = percent;
+		// 					lineItems[o].taskCodes = lineItems[o].Zztskcd.length ? [{
+		// 						TaskCodes: "",
+		// 						TaskCodeDesc: ""
+		// 					}].concat(taskCodes.results) : taskCodes.results;
+		// 					lineItems[o].actCodes = lineItems[o].Zzactcd.length ? [{
+		// 						ActivityCodes: "",
+		// 						ActivityCodeDesc: ""
+		// 					}].concat(activityCodes.results) : activityCodes.results;
+		// 					lineItems[o].ffTskCodes = lineItems[o].Zzfftskcd.length ? [{
+		// 						FfTaskCodes: "",
+		// 						FfTaskCodeDesc: ""
+		// 					}].concat(ffTskCodes.results) : ffTskCodes.results;
+		// 					lineItems[o].ffActCodes = lineItems[o].Zzffactcd.length ? [{
+		// 						FfActivityCodes: "",
+		// 						FfActivityCodeDesc: ""
+		// 					}].concat(ffActCodes.results) : ffActCodes.results;
+		// 					lineItems[o].index = o;
+		// 					lineItems[o].indeces = o;
+		// 					lineItems[o].isRowEdited = true;
+
+		// 				} else {
+		// 					// check = false;
+		// 					var indes = selectindex.indexOf(o);
+		// 					selectindex[indes] = " ";
+		// 				}
+
+		// 			});
+		// 			that.getView().setModel(that.jsonModel);
+		// 			oTable.bindRows("/modelData");
+		// 			console.log(selectindex);
+		// 			// for (var s = 0; s < selectindex.length; s++) {
+		// 			// 	debugger;
+		// 			// 	var value = selectindex[s];
+		// 			// 	if (value !== "") {
+		// 			// 		oTable.setSelectedIndex(value);
+		// 			// 	}
+
+		// 			// }
+		// 			that.onEditTable(selectindex);
+		// 		});
+		// 	}
+		// 	sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
+		// 	var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+		// 	$.each(tbl.getItems(), function(i, o) {
+		// 		var rowid = o.getId();
+		// 		tbl.removeItem(rowid);
+		// 	});
+
+		// 	this._omassDialog.close();
+		// 	var InputFields = this.getView().getModel("InputsModel");
+		// 	InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
+		// },
+		// onEditTable: function(selindexes) {
+		// 	debugger;
+		// 	var oView = this.getView(),
+		// 		oTable = oView.byId("WipDetailsSet3");
+
+		// 	for (var i = 0; i < selindexes.length; i++) {
+		// 		var value = selindexes[i];
+		// 		if (value !== " ") {
+		// 			var ctx = oTable.getContextByIndex(value);
+		// 			var m = ctx.getModel(ctx.getPath());
+		// 			m.setProperty(ctx.getPath() + "/Edit", true);
+		// 			oTable.addSelectionInterval(value, value);
+
+		// 		}
+		// 	}
+
+		// },
+		
+		
 		onmasstransfer: function() {
 
 			var odialog = this._getDialogmass();
+
+			//sap.ui.core.Fragment.byId("masstransfer", "masspspid").setValue("1500008011");
 			odialog.open();
 			var oTable = this.getView().byId("WipDetailsSet3");
 			var ofrag = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
@@ -1153,18 +1777,23 @@ sap.ui.define([
 				var rowid = o.getId();
 				tbl.removeItem(rowid);
 			});
+
 			this._omassDialog.close();
+
 		},
 		onmassTransferchange: function() {
-
+			debugger;
 			var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
+			// var InputFields = this.getView().getModel("InputsModel");
+
+			// InputFields.setProperty("/Inputs/matter", matter);
+			// this.masstransfer(matter);
 			this.WipEditModel = this.getModel("InputsModel");
+			// var matter = this.WipEditModel.getProperty("/Inputs/matter");
 			this.serviceInstance = LineItemsServices.getInstance();
 			var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
 			var oTable1 = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
 			var items = oTable1.getItems();
-			console.log("items");
-			console.log(items);
 			var Docno = [];
 			$.each(items, function(l, obj) {
 
@@ -1172,8 +1801,8 @@ sap.ui.define([
 				var string = cells[0].getText();
 				Docno.push(string);
 			});
-			console.log("Docno");
-			console.log(Docno);
+			// console.log("Docno");
+			// console.log(Docno);
 			var check = false;
 			var oView = this.getView(),
 				oTable = oView.byId("WipDetailsSet3");
@@ -1193,7 +1822,7 @@ sap.ui.define([
 				.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
 
 					$.each(oTable.getSelectedIndices(), function(j, o) {
-
+						debugger;
 						var ctx = oTable.getContextByIndex(o);
 						var m = ctx.getObject();
 						var docno = m.Belnr;
@@ -1229,20 +1858,26 @@ sap.ui.define([
 						}
 
 					});
-					that.getView().setModel(that.jsonModel);
+					that.jsonModel.setProperty("/modelData", lineItems);
+
+					that.getView().byId("WipDetailsSet3").setModel(that.jsonModel);
 					oTable.bindRows("/modelData");
 					console.log(selectindex);
-					// for (var s = 0; s < selectindex.length; s++) {
-					// 	debugger;
-					// 	var value = selectindex[s];
-					// 	if (value !== "") {
-					// 		oTable.setSelectedIndex(value);
-					// 	}
+					for (var s = 0; s < selectindex.length; s++) {
+						debugger;
+						var value = selectindex[s];
+						if (value !== "") {
+							oTable.setSelectedIndex(value);
+						}
 
-					// }
+					}
+
 					that.onEditTable(selectindex);
 				});
 			}
+			var InputFields = this.getView().getModel("InputsModel");
+			InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
+			InputFields.setProperty("/Inputs/isChanged", true);
 			sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
 			var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
 			$.each(tbl.getItems(), function(i, o) {
@@ -1251,11 +1886,105 @@ sap.ui.define([
 			});
 
 			this._omassDialog.close();
-			var InputFields = this.getView().getModel("InputsModel");
-			InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
 		},
+		// masstransfer:function(pspid){
+		// 	this.WipEditModel = this.getModel("InputsModel");
+		// 	var matter = this.WipEditModel.getProperty("/Inputs/matter");
+		// 	this.serviceInstance = LineItemsServices.getInstance();
+		// 	var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
+		// 	var oTable1 = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+		// 	var items = oTable1.getItems();
+		// 	var Docno = [];
+		// 	$.each(items, function(l, obj) {
+
+		// 		var cells = obj.getCells();
+		// 		var string = cells[0].getText();
+		// 		Docno.push(string);
+		// 	});
+		// 	// console.log("Docno");
+		// 	// console.log(Docno);
+		// 	var check = false;
+		// 	var oView = this.getView(),
+		// 		oTable = oView.byId("WipDetailsSet3");
+		// 	var selectindex = oTable.getSelectedIndices();
+		// 	if (matter != "") {
+		// 		var Pspid = matter;
+		// 		var lineItems = this.homeArr;
+		// 		var that = this;
+
+		// 		$.when(
+		// 			that.serviceInstance.getPhaseCodes(that.WipEditModel, Pspid, that),
+		// 			that.serviceInstance.getTaskcodes(that.WipEditModel, "", that),
+		// 			that.serviceInstance.getActivitycodes(that.WipEditModel, "", Pspid, that),
+		// 			that.serviceInstance.getFFtaskcodes(that.WipEditModel, "", Pspid, that),
+		// 			that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
+
+		// 		.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
+
+		// 			$.each(oTable.getSelectedIndices(), function(j, o) {
+		// 				debugger;
+		// 				var ctx = oTable.getContextByIndex(o);
+		// 				var m = ctx.getObject();
+		// 				var docno = m.Belnr;
+		// 				check = Docno.includes(docno);
+		// 				if (check) {
+
+		// 					lineItems[o].ToMatter = matter;
+		// 					lineItems[o].Percent = percent;
+		// 					lineItems[o].taskCodes = lineItems[o].Zztskcd.length ? [{
+		// 						TaskCodes: "",
+		// 						TaskCodeDesc: ""
+		// 					}].concat(taskCodes.results) : taskCodes.results;
+		// 					lineItems[o].actCodes = lineItems[o].Zzactcd.length ? [{
+		// 						ActivityCodes: "",
+		// 						ActivityCodeDesc: ""
+		// 					}].concat(activityCodes.results) : activityCodes.results;
+		// 					lineItems[o].ffTskCodes = lineItems[o].Zzfftskcd.length ? [{
+		// 						FfTaskCodes: "",
+		// 						FfTaskCodeDesc: ""
+		// 					}].concat(ffTskCodes.results) : ffTskCodes.results;
+		// 					lineItems[o].ffActCodes = lineItems[o].Zzffactcd.length ? [{
+		// 						FfActivityCodes: "",
+		// 						FfActivityCodeDesc: ""
+		// 					}].concat(ffActCodes.results) : ffActCodes.results;
+		// 					lineItems[o].index = o;
+		// 					lineItems[o].indeces = o;
+		// 					lineItems[o].isRowEdited = true;
+
+		// 				} else {
+		// 					// check = false;
+		// 					var indes = selectindex.indexOf(o);
+		// 					selectindex[indes] = " ";
+		// 				}
+
+		// 			});
+		// 			that.jsonModel.setProperty("/modelData", lineItems);
+
+		// 			that.getView().byId("WipDetailsSet3").setModel(that.jsonModel);
+		// 			oTable.bindRows("/modelData");
+		// 			console.log(selectindex);
+
+		// 			that.onEditTable(selectindex);
+		// 		});
+		// 	}
+		// 	var InputFields = this.getView().getModel("InputsModel");
+		// 	InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
+		// 	InputFields.setProperty("/Inputs/isChanged", true);
+		// 	sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
+		// 	var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
+		// 	$.each(tbl.getItems(), function(i, o) {
+		// 		var rowid = o.getId();
+		// 		tbl.removeItem(rowid);
+		// 	});
+
+		// 	this._omassDialog.close();
+
+		// },
 		onEditTable: function(selindexes) {
 			debugger;
+			var InputFields = this.getView().getModel("InputsModel");
+
+			InputFields.setProperty("/Inputs/isChanged", true);
 			var oView = this.getView(),
 				oTable = oView.byId("WipDetailsSet3");
 
@@ -1271,6 +2000,14 @@ sap.ui.define([
 			}
 
 		},
+		
+		
+		
+	
+
+
+		
+		
 
 		data: function(odata) {
 			debugger;
@@ -1343,9 +2080,9 @@ sap.ui.define([
 		phaseCodesChange: function(oEvent) {
 			debugger;
 			var item = oEvent.getSource().getParent();
-			var idx = oEvent.getSource().getParent().getParent().indexOfRow(item);
+			var idx = item.getIndex();
 			var thisRow = oEvent.getSource().getParent().getParent().getContextByIndex(idx).getObject();
-
+            this.narIndices.push(idx);
 			var phaseCodeSelected = oEvent.getSource().getSelectedItem().getKey();
 			var InputFields = this.getView().getModel("InputsModel");
 
@@ -1401,9 +2138,9 @@ sap.ui.define([
 
 			InputFields.setProperty("/Inputs/isChanged", true);
 			var item = oEvent.getSource().getParent();
-			var idx = oEvent.getSource().getParent().getParent().indexOfRow(item);
+			var idx = item.getIndex();
 			var thisRow = oEvent.getSource().getParent().getParent().getContextByIndex(idx).getObject();
-
+	        this.narIndices.push(idx);
 			var ffTaskcodeselected = oEvent.getSource().getSelectedItem().getKey();
 			var InputFields = this.getView().getModel("InputsModel");
 			var pspid = InputFields.getProperty("/Inputs/rootPspid");
@@ -1980,9 +2717,128 @@ sap.ui.define([
 
 		// 	});
 		// },
+		// onUpdateCodes: function() {
+		// 	debugger;
+		// 	this.aIndices = this.getView().byId(this.tableId).getSelectedIndices();
+		// 	var sMsg;
+		// 	var check = false;
+		// 	if (this.aIndices.length < 1) {
+		// 		sMsg = "Please Select Atleast One item";
+		// 		this.showAlert("WIP Edit", sMsg);
+
+		// 	} else {
+
+		// 		var oView = this.getView();
+		// 		if (this.tableId === "WipDetailsSet2") {
+		// 			var oDialog = this._getupdateCodesDialog();
+		// 			oView.addDependent(oDialog);
+		// 			oDialog.open();
+		// 			var i = 0;
+		// 			check = true;
+		// 		} else {
+
+		// 			var Tomatters = [];
+		// 			var check = false;
+		// 			var oTable = this.getView().byId(this.tableId);
+		// 			$.each(oTable.getSelectedIndices(), function(j, o) {
+		// 				var ctx = oTable.getContextByIndex(o);
+		// 				var m = ctx.getObject();
+		// 				var ToMatter = m.ToMatter;
+		// 				Tomatters.push(ToMatter);
+		// 			});
+		// 			for (var j = 1; j < Tomatters.length; j++) {
+		// 				if (Tomatters[j] !== Tomatters[0]) {
+		// 					check = false;
+		// 					alert("please check the matter numbers");
+		// 				} else {
+		// 					check = true;
+		// 					var oTDialog = this._gettransferupdateCodesDialog();
+		// 					oView.addDependent(oTDialog);
+		// 					oTDialog.open();
+		// 					var i = 1;
+
+		// 				}
+		// 			}
+
+		// 		}
+		// 		if (check) {
+		// 			sap.ui.core.Fragment.byId("update", "phaseCodeChk" + i).setSelected(false);
+		// 			sap.ui.core.Fragment.byId("update", "taskCodeChk" + i).setSelected(false);
+		// 			sap.ui.core.Fragment.byId("update", "ActivityCodeChk" + i).setSelected(false);
+		// 			sap.ui.core.Fragment.byId("update", "FFTaskCodeChk" + i).setSelected(false);
+		// 			sap.ui.core.Fragment.byId("update", "FFActCodeChk" + i).setSelected(false);
+
+		// 			this.updatesCodes = {
+		// 				rowData: {},
+		// 				phaseCodes: {},
+		// 				taskCodes: {},
+		// 				actCodes: {},
+		// 				ffTskCodes: {},
+		// 				ffActCodes: {},
+		// 				selectedPhaseCode: "",
+		// 				selectedTaskCode: "",
+		// 				selectedActCode: "",
+		// 				selectedFFTaskCode: "",
+		// 				selectedFFActCode: ""
+
+		// 			};
+		// 			this.updatesCodes1 = {
+		// 				rowData: {},
+		// 				phaseCodes: {},
+		// 				taskCodes: {},
+		// 				actCodes: {},
+		// 				ffTskCodes: {},
+		// 				ffActCodes: {},
+		// 				selectedPhaseCode: "",
+		// 				selectedTaskCode: "",
+		// 				selectedActCode: "",
+		// 				selectedFFTaskCode: "",
+		// 				selectedFFActCode: ""
+
+		// 			};
+
+		// 			this.selectedRows = new JSONModel(this.updatesCodes);
+
+		// 			var selectedrow = this.jsonModel.getProperty("/modelData/" + this.aIndices[0]);
+
+		// 			//this.selectedRows.setProperty("/phaseCodes", selectedrow.phaseCodes);
+		// 			this.selectedRows.setProperty("/taskCodes", selectedrow.taskCodes);
+		// 			this.selectedRows.setProperty("/actCodes", selectedrow.actCodes);
+		// 			this.selectedRows.setProperty("/ffTskCodes", selectedrow.ffTskCodes);
+		// 			this.selectedRows.setProperty("/ffActCodes", selectedrow.ffActCodes);
+		// 			this.selectedRows.setProperty("/rowData", selectedrow);
+		// 			if (this.tableId === "WipDetailsSet3") {
+		// 				this._transferUpdateCodesDialog.setModel(this.selectedRows, "updatesCodesModel1");
+		// 			} else {
+		// 				this._UpdateCodesDialog.setModel(this.selectedRows, "updatesCodesModel");
+		// 			}
+
+		// 		}
+		// 	}
+
+		// },
+		
 		onUpdateCodes: function() {
 			debugger;
-			this.aIndices = this.getView().byId(this.tableId).getSelectedIndices();
+			if (this.tableId === "WipDetailsSet3") {
+				var modelValues = this.jsonModel.oData.modelData;
+				var tomatteridx = [];
+				var tomatters=[];
+				for (var i = 0; i < modelValues.length; i++) {
+					var tomatter = modelValues[i].ToMatter;
+					if (tomatter !== "") {
+						tomatteridx.push(i);
+						tomatters.push(tomatter);
+					}
+
+				}
+				this.aIndices = tomatteridx;
+			}
+			else
+			{
+				this.aIndices = this.getView().byId(this.tableId).getSelectedIndices();
+			}
+			
 			var sMsg;
 			var check = false;
 			if (this.aIndices.length < 1) {
@@ -2000,27 +2856,31 @@ sap.ui.define([
 					check = true;
 				} else {
 
-					var Tomatters = [];
+					var Tomatters = tomatters;
 					var check = false;
-					var oTable = this.getView().byId(this.tableId);
-					$.each(oTable.getSelectedIndices(), function(j, o) {
-						var ctx = oTable.getContextByIndex(o);
-						var m = ctx.getObject();
-						var ToMatter = m.ToMatter;
-						Tomatters.push(ToMatter);
-					});
+					// var oTable = this.getView().byId(this.tableId);
+					// $.each(oTable.getSelectedIndices(), function(j, o) {
+					// 	var ctx = oTable.getContextByIndex(o);
+					// 	var m = ctx.getObject();
+					// 	var ToMatter = m.ToMatter;
+					// 	Tomatters.push(ToMatter);
+					// });
+					var matter = [];
 					for (var j = 1; j < Tomatters.length; j++) {
 						if (Tomatters[j] !== Tomatters[0]) {
 							check = false;
-							alert("please check the matter numbers");
-						} else {
-							check = true;
-							var oTDialog = this._gettransferupdateCodesDialog();
-							oView.addDependent(oTDialog);
-							oTDialog.open();
-							var i = 1;
-
+							matter.push(Tomatters[j]);
 						}
+
+					}
+					if (matter.length === 0) {
+						check = true;
+						var oTDialog = this._gettransferupdateCodesDialog();
+						oView.addDependent(oTDialog);
+						oTDialog.open();
+						var i = 1;
+					} else {
+						alert("please check the matter number");
 					}
 
 				}
@@ -2080,6 +2940,7 @@ sap.ui.define([
 			}
 
 		},
+		
 		_getupdateCodesDialog: function() {
 			if (!this._UpdateCodesDialog) {
 				this._UpdateCodesDialog = sap.ui.xmlfragment("update", "wip.view.Dialog", this.getView().getController());
@@ -2102,16 +2963,82 @@ sap.ui.define([
 			}
 
 		},
+		// UpdateCodes: function() {
+
+		// 	debugger;
+		// 	var selectedLines = this.getView().byId(this.tableId).getSelectedIndices();
+		// 	this.UpdateCodesCancel();
+		// 	if (this.tableId === "WipDetailsSet2") {
+		// 		var i = 0;
+
+		// 	} else {
+		// 		var i = 1;
+		// 	}
+		// 	for (var c = 0; c < selectedLines.length; c++) {
+
+		// 		var phaseCodeChk = sap.ui.core.Fragment.byId("update", "phaseCodeChk" + i).getSelected();
+		// 		var taskCodeChk = sap.ui.core.Fragment.byId("update", "taskCodeChk" + i).getSelected();
+		// 		var ActivityCodeChk = sap.ui.core.Fragment.byId("update", "ActivityCodeChk" + i).getSelected();
+		// 		var FFTaskCodeChk = sap.ui.core.Fragment.byId("update", "FFTaskCodeChk" + i).getSelected();
+		// 		var FFActCodeChk = sap.ui.core.Fragment.byId("update", "FFActCodeChk" + i).getSelected();
+
+		// 		// if (phaseCodeChk === true) {
+		// 		// 	this.jsonModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/phaseCodes", this.selectedRows.getProperty(
+		// 		// 		"/phaseCodes"));
+		// 		// 	this.jsonModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/selectedPhaseCode", sap.ui.core.Fragment.byId("update",
+		// 		// 		"selectedPhaseCode").getSelectedKey());
+		// 		// 	this.BillEditModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/isRowEdited", true);
+
+		// 		// }
+		// 		if (taskCodeChk === true && phaseCodeChk === true) {
+
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/taskCodes", this.selectedRows.getProperty(
+		// 				"/taskCodes"));
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedTaskCode", sap.ui.core.Fragment.byId("update",
+		// 				"selectedTaskCode" + i).getSelectedKey());
+		// 			//this.BillEditModel.setProperty("/LineItemEdits/" + selectedLines[c] + "/isRowEdited", true);
+		// 		}
+		// 		if (ActivityCodeChk === true) {
+
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/actCodes", this.selectedRows.getProperty(
+		// 				"/actCodes"));
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedActCode", sap.ui.core.Fragment.byId("update",
+		// 				"selectedActCode" + i).getSelectedKey());
+
+		// 		}
+		// 		if (FFTaskCodeChk === true) {
+
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/ffTskCodes", this.selectedRows.getProperty(
+		// 				"/ffTskCodes"));
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedFFTaskCode", sap.ui.core.Fragment.byId("update",
+		// 				"selectedFFTaskCode" + i).getSelectedKey());
+
+		// 		}
+		// 		if (FFActCodeChk === true && FFTaskCodeChk === true) {
+
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/ffActCodes", this.selectedRows.getProperty(
+		// 				"/ffActCodes"));
+		// 			this.jsonModel.setProperty("/modelData/" + selectedLines[c] + "/selectedFFActCode", sap.ui.core.Fragment.byId("update",
+		// 				"selectedFFActCode" + i).getSelectedKey());
+		// 		}
+
+		// 	}
+
+		// },
+		
+		
 		UpdateCodes: function() {
 
 			debugger;
-			var selectedLines = this.getView().byId(this.tableId).getSelectedIndices();
+		
 			this.UpdateCodesCancel();
 			if (this.tableId === "WipDetailsSet2") {
 				var i = 0;
+					var selectedLines = this.getView().byId(this.tableId).getSelectedIndices();
 
 			} else {
 				var i = 1;
+				var selectedLines=this.aIndices;
 			}
 			for (var c = 0; c < selectedLines.length; c++) {
 
@@ -2164,6 +3091,7 @@ sap.ui.define([
 			}
 
 		},
+		
 		UpdateCodesffTaskcodechange: function(oEvent) {
 			debugger;
 			var ffTaskcodeselected = oEvent.getSource().getSelectedItem().getKey();
@@ -2310,12 +3238,98 @@ sap.ui.define([
 				req = obj2;
 				var sPath = "/WipDetailsSet(Pspid='" + req.Pspid + "',Tdid='" + req.Tdid + "',Tdname='" + req.Tdname + "',Tdobject='" + req.Tdobject +
 					"',Pernr='" + req.Pernr + "')";
+				
 				oModel.update(sPath, requestBody, req);
 
 			});
 			this.saveObjects = [];
 
 		}
+		// onSave: function(oEvt) {
+		// 	var that = this;
+		// 	$.each(this.narIndices, function(i, el) {
+		// 		if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
+		// 	});
+		// 	var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+		// 	$.each(that.uniqueId, function(i) {
+		// 		var rowdat = that.rowData[i];
+		// 		that.saveObjects.push(rowdat);
+		// 	});
+		// 	var finalArray = this.saveObjects;
+		// 	this.saveObjects = [];
+		
+		// 	var oComponent = this.getOwnerComponent(),
+
+		// 		oFModel = oComponent.getModel(),
+		// 		tData = $.extend(true, [], finalArray),
+		// 		urlParams,
+		// 		CoNumber = [],
+		// 		Hours = [],
+		// 		Percentage = [],
+		// 		ToActivityCode = [],
+		// 		ToFfActivityCode = [],
+		// 		ToFfTaskCode = [],
+		// 		ToMatter = [],
+		// 		ToTaskCode = [],
+		// 		ToPhaseCode = [],
+		// 		Buzei = [];
+
+		// 	$.each(tData, function(i, o) {
+		// 		CoNumber.push(o.Belnr);
+
+		// 		Hours.push(o.Megbtr);
+		// 		Percentage.push(o.Percent);
+		// 		ToActivityCode.push(o.Zzactcd);
+		// 		ToFfActivityCode.push(o.Zzffactcd);
+		// 		ToFfTaskCode.push(o.Zzfftskcd);
+		// 		ToMatter.push(o.Pspid);
+		// 		ToTaskCode.push(o.Zztskcd);
+		// 		ToPhaseCode.push(o.Zzphase);
+		// 		Buzei.push(o.Buzei);
+		// 	});
+
+		// 	urlParams = {
+
+		// 		Action: "EDIT",
+		// 		CoNumber: CoNumber,
+		// 		Hours: Hours,
+		// 		Percentage: Percentage,
+		// 		ToActivityCode: ToActivityCode,
+		// 		ToFfActivityCode: ToFfActivityCode,
+		// 		ToFfTaskCode: ToFfTaskCode,
+		// 		ToMatter: ToMatter,
+		// 		ToTaskCode: ToTaskCode,
+		// 		ToPhaseCode: ToPhaseCode,
+		// 		Buzei: Buzei
+
+		// 	};
+	     
+		
+		// 	var jsonModel = that.getView().getModel("JSONModel");
+
+		// 	oFModel.callFunction("/WIPTRANSFER", {
+		// 		method: "GET",
+		// 		urlParameters: urlParams,
+		// 		success: function(oData) {
+
+		// 			sap.ui.core.BusyIndicator.hide();
+		// 			var res = oData.results;
+		// 			for (var i = 0; i < res.length; i++) {
+		// 				that.msgTxt = res[i].Message;
+		// 				/*	msgs.push(msgTxt);*/
+		// 				// if (that.msgTxt !== "") {
+		// 				// 	var cells = rows[i + 1].getCells();
+		// 				// 	cells[9].setProperty("visible", true);
+		// 				// 	cells[9].setTooltip(that.msgTxt);
+		// 				// }
+
+		// 			}
+		// 			// jsonModel.setProperty("/modelData", oData.results);
+
+		// 		}
+		// 	});
+
+		// }
 
 	});
 

@@ -382,6 +382,11 @@
 									<uitbl:Table id="WipDetailsSet2" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemEditsSelection">
 											<uitbl:columns>
 												<uitbl:Column width="8rem" filterProperty="Zzwiprate" sortProperty="Zzwiprate" showSortMenuEntry="true" autoResizable="true">
+												   	<uitbl:customData>
+														<core:CustomData key="p13nData"
+															value='\{"columnKey": "Zzwiprate" , "maxLength": "5","columnIndex":"2", "leadingProperty": "Zzwiprate" }'/>
+													</uitbl:customData>
+												
 													<uitbl:label>
 														<Text text="Info"/>
 													</uitbl:label>
@@ -511,18 +516,18 @@
 												<!--	<uitbl:template>-->
 												<!--		<smartField:SmartField editable="false" id="ZzfepgrpDesc2" value="{ZzfepgrpDesc}"/></uitbl:template>-->
 												<!--</uitbl:Column>-->
-												<uitbl:Column width="8rem" showSortMenuEntry="true" autoResizable="true">
-													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "" , "maxLength": "5","columnIndex":"17", "leadingProperty": "" }'/></uitbl:customData>
-													<uitbl:label>
-														<Text text="Phase Code"/></uitbl:label>
-													<uitbl:template>
-														<m:Select width="11rem" forceSelection="false" id="phaseCodeId" change="phaseCodesChange" selectedKey="{selectedPhaseCode}"
-															items="{ path:'phaseCodes',  templateShareable:false}">
-															<core:Item key="{Phasecode}" text="{Phasecode} {PhasecodeDesc}"/>
-														</m:Select>
-													</uitbl:template>
-												</uitbl:Column>
+												<!--<uitbl:Column width="8rem" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:customData>-->
+												<!--		<core:CustomData key="p13nData" value='\{"columnKey": "" , "maxLength": "5","columnIndex":"17", "leadingProperty": "" }'/></uitbl:customData>-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Phase Code"/></uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--		<m:Select width="11rem" forceSelection="false" id="phaseCodeId" change="phaseCodesChange" selectedKey="{selectedPhaseCode}"-->
+												<!--			items="{ path:'phaseCodes',  templateShareable:false}">-->
+												<!--			<core:Item key="{Phasecode}" text="{Phasecode} {PhasecodeDesc}"/>-->
+												<!--		</m:Select>-->
+												<!--	</uitbl:template>-->
+												<!--</uitbl:Column>-->
 												<uitbl:Column width="8rem" filterProperty="Zztskcd " sortProperty="Zztskcd " showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
 														<core:CustomData key="p13nData" value='\{"columnKey": "Zztskcd" , "maxLength": "5","columnIndex":"18", "leadingProperty": "Zztskcd" }'/></uitbl:customData>
@@ -607,12 +612,25 @@
 										<uitbl:Table id="WipDetailsSet3" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemTransferSelection">
 											<uitbl:columns>
 												
+												<!--	<uitbl:Column width="8rem" filterProperty="Zzwiprate" sortProperty="Zzwiprate" showSortMenuEntry="true" autoResizable="true">-->
+												<!--	<uitbl:label>-->
+												<!--		<Text text="Info"/>-->
+												<!--	</uitbl:label>-->
+												<!--	<uitbl:template>-->
+												<!--	<core:Icon src="sap-icon://alert" class="size3" visible = "false" id="alert1" color="green"/>-->
+												<!--	</uitbl:template>-->
+												<!--</uitbl:Column>-->
+												
 													<uitbl:Column width="8rem" filterProperty="Zzwiprate" sortProperty="Zzwiprate" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Zzwiprate" , "maxLength": "5","columnIndex":"1", "leadingProperty": "Zzwiprate" }'/>
+													</uitbl:customData>
 													<uitbl:label>
 														<Text text="Info"/>
 													</uitbl:label>
 													<uitbl:template>
-													<core:Icon src="sap-icon://alert" class="size3" visible = "false" id="alert1" color="green"/>
+														<!--<smartField:SmartField editable="true" id="Zzwiprate" change="ChangeTransfer" value="{Zzwiprate}" />-->
+																<core:Icon src="sap-icon://alert" class="size3" visible = "false" id="alert1" color="green"/>
 													</uitbl:template>
 												</uitbl:Column>
 												
