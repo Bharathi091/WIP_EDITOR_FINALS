@@ -128,6 +128,9 @@ sap.ui.define([
 			if (masterItems.length > 0) {
 				var reversedMasteredItems = masterItems.reverse();
 				InputsModel.setProperty("/Inputs/masterItems", reversedMasteredItems);
+				
+			    	this.getView().byId("list").getModel("InputFields").setData(reversedMasteredItems);
+				
 			}
 		},
 
@@ -1106,9 +1109,10 @@ sap.ui.define([
 						that.arr = oData.results;
 						console.log(oData.results);
 
-						// var InputFields = that.getView().getModel("InputsModel");
-						// debugger;
-						// InputFields.setProperty("/Inputs/masterItems", oData.results);
+						var InputFields = that.getView().getModel("InputsModel");
+						debugger;
+						InputFields.setProperty("/Inputs/masterItems", oData.results);
+						
 						var oModel1 = new sap.ui.model.json.JSONModel();
 
 						oModel1.setData(oData);
