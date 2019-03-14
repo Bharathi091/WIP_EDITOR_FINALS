@@ -381,10 +381,10 @@
 									
 									<uitbl:Table id="WipDetailsSet2" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemEditsSelection">
 											<uitbl:columns>
-												<uitbl:Column width="8rem" filterProperty="Zzwiprate" sortProperty="Zzwiprate" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="" sortProperty="" showSortMenuEntry="true" autoResizable="true">
 												   	<uitbl:customData>
 														<core:CustomData key="p13nData"
-															value='\{"columnKey": "Zzwiprate" , "maxLength": "5","columnIndex":"2", "leadingProperty": "Zzwiprate" }'/>
+															value='\{"columnKey": "" , "maxLength": "5","columnIndex":"2", "leadingProperty": "" }'/>
 													</uitbl:customData>
 												
 													<uitbl:label>
@@ -621,9 +621,9 @@
 												<!--	</uitbl:template>-->
 												<!--</uitbl:Column>-->
 												
-													<uitbl:Column width="8rem" filterProperty="Zzwiprate" sortProperty="Zzwiprate" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:Column width="8rem" filterProperty="" sortProperty="" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Zzwiprate" , "maxLength": "5","columnIndex":"1", "leadingProperty": "Zzwiprate" }'/>
+														<core:CustomData key="p13nData" value='\{"columnKey": "" , "maxLength": "5","columnIndex":"1", "leadingProperty": "" }'/>
 													</uitbl:customData>
 													<uitbl:label>
 														<Text text="Info"/>

@@ -78,7 +78,7 @@ sap.ui.define([
 					that.jsonModel.setProperty("/BillingOffice", oData.results[0].Werks);
 					
 						// that.byId("smartTable_ResponsiveTable3").setIgnoreFromPersonalisation("Zzwiprate");
-
+                     that.rowData = [];
 					that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
 					});
@@ -375,7 +375,9 @@ sap.ui.define([
 
 				this.homeArr.forEach(
 					function(value, index) {
-
+                           
+                        debugger;   
+                           
 						var myJSON = JSON.stringify(jQuery.extend({}, value));
 						var obj1 = myJSON;
 
@@ -736,7 +738,7 @@ sap.ui.define([
 						that.homeArr=oData.results;
 
 						that.jsonModel.setProperty("/modelData", oData.results);
-
+                         that.rowData = [];
 						that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
 					});
@@ -764,7 +766,7 @@ sap.ui.define([
 						debugger;
 						that.homeArr=oData.results;
 						that.jsonModel.setProperty("/modelData", oData.results);
-						
+						that.rowData = [];
 						that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
 					});
@@ -802,6 +804,7 @@ sap.ui.define([
 			var idx = oEvent.getSource().getParent();
 			var index = idx.getIndex();
 			var that = this;
+			this.rowData = [];
 			this.homeArr.forEach(function(o, i) {
 				that.rowData[i] = o;
 			});
