@@ -102,14 +102,14 @@
 												<!--	<uitbl:template>-->
 												<!--		<smartField:SmartField editable="false" id="Audat1" value="{ZzbgrpDesc}"/></uitbl:template>-->
 												<!--</uitbl:Column>-->
-												<uitbl:Column width="8rem" filterProperty="Bldat" sortProperty="Bldat" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="Budat" sortProperty="Budat" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" , "maxLength": "5","columnIndex":"4", "leadingProperty": "Bldat" }'/></uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Budat" , "maxLength": "5","columnIndex":"4", "leadingProperty": "Budat" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Work Date"/></uitbl:label>
 													<uitbl:template>
 														<!--<smartField:SmartField editable="false" id="Blda1t" value="{Bldat}"/>-->
-														<m:Text width="100%" text="{ path: 'Bldat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
+														<m:Text width="100%" text="{ path: 'Budat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
 													</uitbl:template>
 												</uitbl:Column>
 												<uitbl:Column width="8rem" filterProperty="Tdid" sortProperty="Tdid" showSortMenuEntry="true" autoResizable="true">
@@ -309,7 +309,7 @@
 													</uitbl:label>
 													<uitbl:template>
 														<!--<smartField:SmartField editable="false" id="Belnr0" value="{Budat}"/>-->
-															<m:Text width="100%" text="{ path: 'Bldat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
+															<m:Text width="100%" text="{ path: 'Budat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
 													</uitbl:template>
 												</uitbl:Column>
 												<uitbl:Column width="8rem" filterProperty="Sname" sortProperty="Sname" showSortMenuEntry="true" autoResizable="true">
@@ -425,14 +425,14 @@
 													<uitbl:template>
 														<smartField:SmartField editable="false" id="Awtyp2" value="{Awtyp}"/></uitbl:template>
 												</uitbl:Column>
-												<uitbl:Column width="8rem" filterProperty="Bldat" sortProperty="Bldat" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="Budat" sortProperty="Budat" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Bldat" }'/></uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Budat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Budat" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Work Date"/></uitbl:label>
 													<uitbl:template>
 														<!--<smartField:SmartField editable="false" id="Blda2t" value="{Bldat}"/>-->
-														<m:Text width="100%" text="{ path: 'Bldat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
+														<m:Text width="100%" text="{ path: 'Budat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
 													</uitbl:template>
 												</uitbl:Column>
 												<uitbl:Column width="8rem" filterProperty="Tdid" sortProperty="Tdid" showSortMenuEntry="true" autoResizable="true">
@@ -685,14 +685,14 @@
 												<!--	<uitbl:template>-->
 												<!--		<smartField:SmartField editable="false" id="Audat3" value="{ZzbgrpDesc}"/></uitbl:template>-->
 												<!--</uitbl:Column>-->
-												<uitbl:Column width="8rem" filterProperty="Bldat" sortProperty="Bldat" showSortMenuEntry="true" autoResizable="true">
+												<uitbl:Column width="8rem" filterProperty="Budat" sortProperty="Budat" showSortMenuEntry="true" autoResizable="true">
 													<uitbl:customData>
-														<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Bldat" }'/></uitbl:customData>
+														<core:CustomData key="p13nData" value='\{"columnKey": "Budat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Budat" }'/></uitbl:customData>
 													<uitbl:label>
 														<Text text="Work Date"/></uitbl:label>
 													<uitbl:template>
 														<!--<smartField:SmartField editable="false" id="Blda3t" value="{Bldat}"/>-->
-														<m:Text width="100%" text="{ path: 'Bldat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
+														<m:Text width="100%" text="{ path: 'Budat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
 													</uitbl:template>
 												</uitbl:Column>
 												<uitbl:Column width="8rem" filterProperty="Tdid" sortProperty="Tdid" showSortMenuEntry="true" autoResizable="true">

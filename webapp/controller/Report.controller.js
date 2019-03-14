@@ -376,10 +376,15 @@ sap.ui.define([
 				this.homeArr.forEach(
 					function(value, index) {
                            
+                          var date = value.Budat; 
+                          
+                          var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "dd.MM.yyyy" });   
+                          var dateFormatted = dateFormat.format(date).toString();
+                          
                         debugger;   
                            
 						var myJSON = JSON.stringify(jQuery.extend({}, value));
-						var obj1 = myJSON;
+						var obj1 = myJSON+dateFormatted;
 
 						if (obj1.toLowerCase().includes(searchValue.toLowerCase())) {
 							result.push(value);
@@ -417,9 +422,14 @@ sap.ui.define([
 
 				this.homeArr.forEach(
 					function(value, index) {
+						
+						  var date = value.Budat; 
+                          
+                          var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "dd.MM.yyyy" });   
+                          var dateFormatted = dateFormat.format(date).toString();
 
 						var myJSON = JSON.stringify(jQuery.extend({}, value));
-						var obj1 = myJSON;
+						var obj1 = myJSON + dateFormatted;
 
 						if (obj1.toLowerCase().includes(searchValue.toLowerCase())) {
 							result1.push(value);
@@ -444,9 +454,14 @@ sap.ui.define([
 
 				this.homeArr.forEach(
 					function(value, index) {
+						
+							  var date = value.Budat; 
+                          
+                          var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "dd.MM.yyyy" });   
+                          var dateFormatted = dateFormat.format(date).toString();
 
 						var myJSON = JSON.stringify(jQuery.extend({}, value));
-						var obj1 = myJSON;
+						var obj1 = myJSON + dateFormatted;
 
 						if (obj1.toLowerCase().includes(searchValue.toLowerCase())) {
 							result2.push(value);
@@ -471,9 +486,14 @@ sap.ui.define([
 
 				this.homeArr.forEach(
 					function(value, index) {
+						
+					      var date = value.Budat; 
+                          
+                          var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "dd.MM.yyyy" });   
+                          var dateFormatted = dateFormat.format(date).toString();
 
 						var myJSON = JSON.stringify(jQuery.extend({}, value));
-						var obj1 = myJSON;
+						var obj1 = myJSON + dateFormatted;
 
 						if (obj1.toLowerCase().includes(searchValue.toLowerCase())) {
 							result3.push(value);
@@ -493,10 +513,10 @@ sap.ui.define([
 				otable3.bindRows("/modelData");
 
 			}
-
-			this.jsonModel.setProperty("/Matter", this.matter);
-			this.jsonModel.setProperty("/LeadPartner", this.leadpartner);
-			this.jsonModel.setProperty("/BillingOffice", this.billingpartner);
+             
+           	this.jsonModel.setProperty("/Matter", this.homeArr[0].Pspid);
+			this.jsonModel.setProperty("/LeadPartner", this.homeArr[0].Sname);
+			this.jsonModel.setProperty("/BillingOffice", this.homeArr[0].Werks);
 
 		},
 		// Reload: function(oEvent) {
