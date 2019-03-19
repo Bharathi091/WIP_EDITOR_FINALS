@@ -166,16 +166,12 @@
 				"async": true
 			},
 			"routes": [{
-				"pattern": "",
-				"name": "worklist",
-				"target": ["worklist"]
-			}, {
 				"pattern": "AddWordsToDictionarySet/{objectId}",
 				"name": "object",
 				"target": ["object"]
 			}, {
 				"name": "Report",
-				"pattern": "Categories/{objectId}",
+				"pattern": "",
 				"titleTarget": "",
 				"greedy": false,
 				"target": ["Report"]
@@ -187,11 +183,6 @@
 				"target": ["splitapp"]
 			}],
 			"targets": {
-				"worklist": {
-					"viewName": "Worklist",
-					"viewId": "worklist",
-					"viewLevel": 1
-				},
 				"object": {
 					"viewName": "Object",
 					"viewId": "object",
@@ -210,7 +201,7 @@
 					"transition": "slide",
 					"clearAggregation": true,
 					"viewName": "Report",
-					"viewLevel": 2
+					"viewLevel": 1
 				},
 				"splitapp": {
 					"viewType": "XML",

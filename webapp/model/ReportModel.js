@@ -19,7 +19,87 @@ sap.ui.define([
 					Line_Item_Edits: false,
 					Line_Item_Transfers: false
 				},
-				
+					editableIndexes: [0],
+				currentCol: {},
+				createcontrols: [
+					{
+								"key": "Pspid",
+								"type": "smartfield",
+								"userCol": "To Matter",
+								 "width" : "90px"
+							},
+							{
+								"key": "Zzphase",
+								"type": "Select",
+								"userCol": "Phase Code",
+							    "width" : "80px"
+							
+							},
+						 {
+								"key": "Zztskcd",
+								"type": "Select",
+								"userCol": "Task Code",
+								"width" : "80px"
+							},
+								{
+								"key": "Zzactcd",
+								"type": "Select",
+								"userCol": "Activity Code",
+							    "width" : "80px"
+							},{
+								"key": "Zzfftskcd",
+								"type": "Select",
+								"userCol": "Flat Fee taskCode",
+								"width" : "80px"
+							},
+
+							{
+								"key": "Zzffactcd",
+								"type": "Select",
+								"userCol": "Flat Fee ActivityCode",
+								"width" : "80px"
+							},
+							 {
+								"key": "Megbtr",
+								"type": "Input",
+								"userCol": "Hours/Quantity",
+								"width" : "80px"
+							},
+							{
+								"key": "Percent",
+								"type": "Input",
+								"userCol": "Percentage",
+								"width" : "60px"
+							},
+							{
+								"type": "Button",
+								"userCol": "",
+								"width" : "50px"
+							},
+							{
+								"type": "Icon",
+								"userCol": "",
+								 "width" :"50px"
+							}
+							
+
+						],
+						Columns:[{
+							Pspid: "",
+							Zzphase:[],
+							Zzactcd: [],
+							Zztskcd: [],
+							Zzfftskcd: [],
+							Zzffactcd: [],
+							Megbtr: "",
+							Percent: "",
+				            selPhaseKey:"",
+				            selTskKey:"",
+				            selActKey:"", 
+				            selFfTskKey:"",
+				            selFfActKey:""
+
+						}],
 				qParms: {
 					ACTION: "?Action=",
 					JSON: "&$format=json"
