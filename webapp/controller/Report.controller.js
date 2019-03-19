@@ -383,6 +383,7 @@ sap.ui.define([
 			var iconTabKey = this.byId("idIconTabBar").getSelectedKey();
 
 			if (iconTabKey === "Home") {
+				
 
 				debugger;
 
@@ -435,6 +436,7 @@ sap.ui.define([
 				//	this.byId("smartTable_ResponsiveTable0").rebindTable();
 			} else if (iconTabKey === "NarrativeEdits") {
 
+                 searchValue = this.byId("searchText1").getValue();
 				var result1 = [];
 
 				this.homeArr.forEach(
@@ -468,6 +470,8 @@ sap.ui.define([
 				otable1.bindRows("/modelData");
 
 			} else if (iconTabKey === "LineItemEdits") {
+				
+				searchValue = this.byId("searchText2").getValue();
 
 				var result2 = [];
 
@@ -502,6 +506,8 @@ sap.ui.define([
 				otable2.bindRows("/modelData");
 
 			} else {
+				
+				searchValue = this.byId("searchText3").getValue();
 
 				var result3 = [];
 
