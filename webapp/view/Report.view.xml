@@ -344,6 +344,10 @@
 														<Text text="Narrative"/></uitbl:label>
 													<uitbl:template>
 														<TextArea value="{NarrativeString}" growing="true" width="100%" liveChange="changeNarrative"/>
+														
+											<!--				<core:HTML-->
+											<!--content=" &lt;div class='fulcrum-editor-textarea {path:'NarrativeString'}' contenteditable='true' rows='4' fulcrum-editor&gt;{path:'NarrativeString'}&lt;/div&gt;"></core:HTML>-->
+														
 													</uitbl:template>
 												</uitbl:Column>
 											</uitbl:columns>
@@ -643,7 +647,7 @@
 														<Text text="ToMatter"/>
 													</uitbl:label>
 													<uitbl:template>
-														<smartField:SmartField editable="true" id="ToMatter" change="ChangeTransfer" value="{ToMatter}" />
+														<smartField:SmartField editable="true" id="ToMatter" change="changeTransferToMatter" value="{ToMatter}" />
 													</uitbl:template>
 												</uitbl:Column>
 												<uitbl:Column width="8rem" filterProperty="Percent" sortProperty="Percent" showSortMenuEntry="true" autoResizable="true">
@@ -654,7 +658,7 @@
 														<Text text="%"/>
 													</uitbl:label>
 													<uitbl:template>
-														<smartField:SmartField editable="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" id="Percent" change="ChangeTransfer" value="{Percent}"/>
+														<smartField:SmartField editable="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" id="Percent" change="changeTransferPercentage" value="{Percent}"/>
 													</uitbl:template>
 												</uitbl:Column>
 										

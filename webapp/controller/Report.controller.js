@@ -6,10 +6,11 @@ sap.ui.define([
 	"sap/ui/model/Filter",
 	"wip/model/ReportModel",
 	"sap/ui/model/FilterOperator",
+	
 	"wip/services/LineItemsServices",
 	"sap/m/MessageBox"
 
-], function(BaseController, JSONModel, formatter, History, Filter, ReportModel, FilterOperator, LineItemsServices, MessageBox) {
+], function(BaseController, JSONModel, formatter, History, Filter, ReportModel, FilterOperator,  LineItemsServices, MessageBox) {
 	"use strict";
 
 	return BaseController.extend("wip.controller.Report", {
@@ -31,6 +32,18 @@ sap.ui.define([
 			this.rowData = [];
 			this.aFilter = [];
 			this._oGlobalFilter = [];
+			 
+			 
+	
+			// for transfer save oninit
+			this.uniqueIdTransfer = [];
+			this.index = [];
+			this.indexes = [];
+			this.transferArray = [];
+			this.idxToPass = [];
+			
+			
+			
 			this.jsonModel = new sap.ui.model.json.JSONModel();
 			this.getView().setModel(this.jsonModel, "JSONModel");
 			this.getView().setModel(new ReportModel().getModel(), "InputsModel");
@@ -296,6 +309,7 @@ sap.ui.define([
 			var endChars = [".", "?", "!", "\"", "'"];
 
 			res = $.each(data, function(item) {
+					var narString = data[item].NarrativeString;
 				NarStr = that.capitalizeFirstLetter(data[item].NarrativeString);
 				data[item].NarrativeString = NarStr;
 				if (NarStr !== "") {
@@ -305,6 +319,13 @@ sap.ui.define([
 						data[item].NarrativeString = NarStr;
 
 					}
+					
+						if (narString != data[item].NarrativeString)
+							{
+									that.saveObjects.push(data[item]);
+							}
+					
+					
 					return data[item].NarrativeString;
 				}
 
@@ -337,6 +358,7 @@ sap.ui.define([
 			var that = this;
 			var res = [];
 			res = $.each(data, function(item) {
+				var narStr = data[item].NarrativeString;
 				result = data[item].NarrativeString.replace(/\s+/g, " ").trim();
 				var lastChar = result.charAt(result.length - 1);
 				var spaceLastChar = result.charAt(result.length - 2);
@@ -348,6 +370,9 @@ sap.ui.define([
 				}
 
 				data[item].NarrativeString = result;
+					if (narStr != result) {
+					that.saveObjects.push(data[item]);
+				}
 
 				return data[item].NarrativeString;
 			});
@@ -769,9 +794,12 @@ sap.ui.define([
 			} else if (filter === "LineItemEdits") {
 				sap.ui.core.BusyIndicator.show(0);
 				this.data(this.homeArr);
-			} else {
-			sap.ui.core.BusyIndicator.show(0);
-
+			} 
+			else {
+			// sap.ui.core.BusyIndicator.show(0);
+				// debugger;
+				sap.ui.core.BusyIndicator.show(0);
+				// this.getView().byId("WipDetailsSet3").getModel().refresh(true);
 				var pspid = this.jsonModel.getProperty("/Matter");
 				var oModel = this.getOwnerComponent().getModel();
 				var aFilter = [];
@@ -785,17 +813,50 @@ sap.ui.define([
 
 						debugger;
 						that.homeArr=oData.results;
+
 						that.jsonModel.setProperty("/modelData", oData.results);
-						that.rowData = [];
+                         that.rowData = [];
 						that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
 					});
+							that.data(that.rowData);
 
-					
 					}
 				});
-					this.data(this.homeArr);
+			
+				
+				
+					
+					
 			}
+			
+			// else {
+			// sap.ui.core.BusyIndicator.show(0);
+
+			// 	var pspid = this.jsonModel.getProperty("/Matter");
+			// 	var oModel = this.getOwnerComponent().getModel();
+			// 	var aFilter = [];
+			// 	aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
+
+			// 	var that = this;
+			// 	oModel.read("/WipDetailsSet", {
+			// 		filters: aFilter,
+			// 		success: function(oData) {
+			// 			sap.ui.core.BusyIndicator.hide(0);
+
+			// 			debugger;
+			// 			that.homeArr=oData.results;
+			// 			that.jsonModel.setProperty("/modelData", oData.results);
+			// 			that.rowData = [];
+			// 			that.homeArr.forEach(function(o, k) {
+			// 			that.rowData[k] = o;
+			// 		});
+
+					
+			// 		}
+			// 	});
+			// 		this.data(this.homeArr);
+			// }
 			if (this._Dialog) {
 
 				this._Dialog.close();
@@ -990,6 +1051,21 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
+				
+				
+				
+				Otable.onAfterRendering = function() {
+
+					console.log("onAfterRendering");
+
+					$(".fulcrum-editor-textarea").keyup(function(evt) {
+						debugger;
+
+						console.log(evt.key);
+
+					});
+				};
+				
 
 			} else if (value === "LineItemEdits") {
 				var tableLineEdits = this.getView().byId("WipDetailsSet2");
@@ -2866,6 +2942,10 @@ e
 				this.aIndices = this.getView().byId(this.tableId).getSelectedIndices();
 			}
 			
+				for(var k = 0; k < this.aIndices.length ; k++){
+				this.narIndices.push(this.aIndices[k]);
+			}
+			
 			var sMsg;
 			var check = false;
 			if (this.aIndices.length < 1) {
@@ -3194,16 +3274,7 @@ e
 					var tableLineEdits = that.getView().byId("WipDetailsSet3");
 					var index = tableLineEdits.getSelectedIndices();
 
-					//    for (var i = 0; i < index.length; i++) {
-					// tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(true);
-
-					// if (text === "Reviewed") {
-					// 	tableLineEdits.getRows()[index[i]].getCells()[0].setTooltip("Reviewed");
-					// } else {
-					// 	tableLineEdits.getRows()[index[i]].getCells()[0].setTooltip("Unreviewed");
-					// }
-
-					//   }
+				
 
 					var i = 0;
 
@@ -3236,9 +3307,19 @@ e
 				});
 
 		},
-
+        //Teju 
 		onSave: function(oEvt) {
-			debugger;
+			var filter = this.getView().byId("idIconTabBar").getSelectedKey();
+			if (filter === "NarrativeEdits") {
+				this.onNarrativeEditsSave();
+			} else if (filter === "LineItemEdits") {
+				this.onLineItemEditsSave();
+			} else {
+				this.onLineItemTransfersSave();
+			}
+
+		},
+		onNarrativeEditsSave: function(oEvt) {
 			var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
 			var that = this;
 			$.each(that.uniqueId, function(i) {
@@ -3246,117 +3327,419 @@ e
 				that.saveObjects.push(narStr);
 			});
 			var changeObj = this.saveObjects;
-			$.each(changeObj, function(i, obj) {
-				var obj1 = {
-					NarrativeString: obj.NarrativeString
-				};
 
-				var obj2 = {
-					Pspid: obj.Pspid,
-					Tdid: obj.Tdid,
-					Tdname: obj.Tdname,
-					Tdobject: obj.Tdobject,
-					Pernr: obj.Pernr
-				};
-				var req = {},
-					requestBody = {};
-				var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, true);
-				requestBody = obj1;
-				req = obj2;
-				var sPath = "/WipDetailsSet(Pspid='" + req.Pspid + "',Tdid='" + req.Tdid + "',Tdname='" + req.Tdname + "',Tdobject='" + req.Tdobject +
-					"',Pernr='" + req.Pernr + "')";
-				
-				oModel.update(sPath, requestBody, req);
+			if (this.saveObjects.length === 0) {
+				MessageBox.show(
+					"No changes exists please verify and save.", {
+						icon: sap.m.MessageBox.Icon.INFORMATION,
+						title: "Narrative Edits",
+						actions: [sap.m.MessageBox.Action.OK]
+					}
+				);
+			} else {
+				sap.ui.core.BusyIndicator.show(0);
+				$.each(changeObj, function(i, obj) {
+					var obj1 = {
+						NarrativeString: obj.NarrativeString
+					};
+					var obj2 = {
+						Pspid: obj.Pspid,
+						Tdid: obj.Tdid,
+						Tdname: obj.Tdname,
+						Tdobject: obj.Tdobject,
+						Pernr: obj.Pernr
+					};
+					var req = {},
+						requestBody = {};
+					var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, true);
+					requestBody = obj1;
+					req = obj2;
+					var sPath = "/WipDetailsSet(Pspid='" + req.Pspid + "',Tdid='" + req.Tdid + "',Tdname='" + req.Tdname + "',Tdobject='" + req.Tdobject +
+						"',Pernr='" + req.Pernr + "')";
 
-			});
+					oModel.update(sPath, requestBody, req);
+
+				});
+				sap.ui.core.BusyIndicator.hide(0);
+				MessageBox.show(
+					"Narrative Updated Successfully", {
+						icon: sap.m.MessageBox.Icon.SUCCESS,
+						title: "Success",
+						actions: [sap.m.MessageBox.Action.OK]
+					}
+				);
+
+			}
+
 			this.saveObjects = [];
+			this.uniqueId = [];
+			var InputFields = this.getView().getModel("InputsModel");
+			InputFields.setProperty("/Inputs/isChanged", false);
+
+		},
+		onLineItemEditsSave: function(oEvt) {
+			var that = this;
+			$.each(this.narIndices, function(i, el) {
+				if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
+			});
+			// var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+			$.each(that.uniqueId, function(i) {
+				var rowdat = that.rowData[i];
+				that.saveObjects.push(rowdat);
+			});
+			var finalArray;
+		finalArray = this.saveObjects;
+			if (this.saveObjects.length === 0) {
+				MessageBox.show(
+					"No changes exists please verify and save.", {
+						icon: sap.m.MessageBox.Icon.INFORMATION,
+						title: "Line Item Edits",
+						actions: [sap.m.MessageBox.Action.OK]
+					}
+				);
+			}
+			this.saveObjects = [];
+			this.uniqueId = [];
+			this.narIndices = [];
+
+			var oComponent = this.getOwnerComponent(),
+
+				oFModel = oComponent.getModel(),
+				tData = $.extend(true, [], finalArray),
+				urlParams,
+				CoNumber = [],
+				Hours = [],
+				Percentage = [],
+				ToActivityCode = [],
+				ToFfActivityCode = [],
+				ToFfTaskCode = [],
+				ToMatter = [],
+				ToTaskCode = [],
+				ToPhaseCode = [],
+				Buzei = [];
+
+			$.each(tData, function(i, o) {
+				CoNumber.push(o.Belnr);
+
+				Hours.push(o.Megbtr);
+				Percentage.push(o.Percent);
+				ToActivityCode.push(o.Zzactcd);
+				ToFfActivityCode.push(o.Zzffactcd);
+				ToFfTaskCode.push(o.Zzfftskcd);
+				ToMatter.push(o.Pspid);
+				ToTaskCode.push(o.Zztskcd);
+				ToPhaseCode.push(o.Zzphase);
+				Buzei.push(o.Buzei);
+			});
+
+			urlParams = {
+
+				Action: "EDIT",
+				CoNumber: CoNumber,
+				Hours: Hours,
+				Percentage: Percentage,
+				ToActivityCode: ToActivityCode,
+				ToFfActivityCode: ToFfActivityCode,
+				ToFfTaskCode: ToFfTaskCode,
+				ToMatter: ToMatter,
+				ToTaskCode: ToTaskCode,
+				ToPhaseCode: ToPhaseCode,
+				Buzei: Buzei
+
+			};
+
+			// var jsonModel = that.getView().getModel("JSONModel");
+
+			oFModel.callFunction("/WIPTRANSFER", {
+				method: "GET",
+				urlParameters: urlParams,
+				success: function(oData) {
+					sap.ui.core.BusyIndicator.hide();
+					var res = oData.results;
+					var msgTxt = res[0].Message;
+					MessageBox.show(
+						msgTxt, {
+							icon: sap.m.MessageBox.Icon.ERROR,
+							title: "Error",
+							actions: [sap.m.MessageBox.Action.OK]
+						}
+					);
+					// jsonModel.setProperty("/modelData", oData.results);
+
+				}
+			});
+          
+          	var InputFields = this.getView().getModel("InputsModel");
+			InputFields.setProperty("/Inputs/isChanged", false);
+          finalArray = [];
+		},
+		
+		//valli
+		
+	
+		
+		
+		changeTransferToMatter: function(oEvent) {
+			debugger;
+
+			var InputFields = this.getView().getModel("InputsModel");
+			InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
+			InputFields.setProperty("/Inputs/isChanged", true);
+			var oView = this.getView(),
+				oTable = oView.byId("WipDetailsSet3");
+
+			var idx = oEvent.getSource().getParent();
+			var o = idx.getIndex();
+			this.index.push(o);
+			this.indexes = this.removeDups(this.index);
+			var ctx = oTable.getContextByIndex(o);
+			var m = ctx.getModel(ctx.getPath());
+			var obj = ctx.getObject();
+			this.transferArray.push(obj);
+			var matter = obj.ToMatter;
+			if (matter !== "") {
+				var Pspid = matter;
+				var lineItems = this.homeArr;
+				var that = this;
+				$.when(
+					that.serviceInstance.getPhaseCodes(that.WipEditModel, Pspid, that),
+					that.serviceInstance.getTaskcodes(that.WipEditModel, "", that),
+					that.serviceInstance.getActivitycodes(that.WipEditModel, "", Pspid, that),
+					that.serviceInstance.getFFtaskcodes(that.WipEditModel, "", Pspid, that),
+					that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
+
+				.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
+
+					lineItems[o].ToMatter = matter;
+					lineItems[o].taskCodes = lineItems[o].Zztskcd.length ? [{
+						TaskCodes: "",
+						TaskCodeDesc: ""
+					}].concat(taskCodes.results) : taskCodes.results;
+					lineItems[o].actCodes = lineItems[o].Zzactcd.length ? [{
+						ActivityCodes: "",
+						ActivityCodeDesc: ""
+					}].concat(activityCodes.results) : activityCodes.results;
+					lineItems[o].ffTskCodes = lineItems[o].Zzfftskcd.length ? [{
+						FfTaskCodes: "",
+						FfTaskCodeDesc: ""
+					}].concat(ffTskCodes.results) : ffTskCodes.results;
+					lineItems[o].ffActCodes = lineItems[o].Zzffactcd.length ? [{
+						FfActivityCodes: "",
+						FfActivityCodeDesc: ""
+					}].concat(ffActCodes.results) : ffActCodes.results;
+					lineItems[o].index = o;
+					lineItems[o].indeces = o;
+					lineItems[o].isRowEdited = true;
+
+					that.jsonModel.setProperty("/modelData", lineItems);
+					that.getView().byId("WipDetailsSet3").setModel(that.jsonModel);
+					oTable.bindRows("/modelData");
+					m.setProperty(ctx.getPath() + "/Edit", true);
+				});
+			}
+
+		},
+
+		changeTransferPercentage: function(oEvent, oModel) {
+
+			debugger;
+
+			this.valueModifyedPercent = oEvent.getParameter("value");
+			var tableBindingContext = oEvent.getSource().getBindingContext();
+			tableBindingContext.getModel().setProperty(tableBindingContext.getPath() + "/Percent", this.valueModifyedPercent);
+
+		},
+
+		removeDups: function(indexs) {
+			var unique = {};
+			indexs.forEach(function(i) {
+				if (!unique[i]) {
+					unique[i] = true;
+				}
+			});
+			return Object.keys(unique);
+		},
+		onLineItemTransfersSave: function(oModel) {
+			debugger;
+			// alert("onLineItemsTransferSave");
+
+			debugger;
+
+			if (this.indexes.length === 0) {
+
+				MessageBox.show(
+					"No changes exists please verify and save!", {
+						title: "Save",
+						actions: [sap.m.MessageBox.Action.OK],
+						onClose: function(oAction) {
+							if (oAction === "OK") {
+
+							}
+
+						}
+					}
+				);
+
+			} else {
+				debugger;
+
+				var oTable = this.getView().byId("smartTable_ResponsiveTable3").getTable();
+
+				var oBinding = oTable.getBinding("rows");
+
+				this.selectedIndexTransferSave = [];
+				this.ctxTransferSave = [];
+				this.mTransferSave = [];
+
+				this.selectedIndexTransferSave = oTable.getSelectedIndices();
+
+				for (var i = 0; i < this.selectedIndexTransferSave.length; i++) {
+					this.ctxTransferSave = oTable.getContextByIndex(this.selectedIndexTransferSave[i]);
+					this.transferArray.push(this.ctxTransferSave.getObject());
+				}
+
+				for (var q = 0; q < this.transferArray.length; q++) {
+					if (this.transferArray[q].Percent === "" || this.transferArray[q].Percent === "0.000") {
+
+						MessageBox.show(
+							"Enter either Percentage or Hours", {
+								title: "Save",
+								actions: [sap.m.MessageBox.Action.OK],
+								onClose: function(oAction) {
+									if (oAction === "OK") {
+
+									}
+
+								}
+							}
+						);
+
+					} else {
+
+						this.TransferSave(this.transferArray, oModel);
+					}
+				}
+
+			}
+
+		},
+		TransferSave: function(oList, oModel1) {
+			var that = this;
+			this.idxToPass = this.indexes.concat(this.selectedIndexTransferSave);
+			$.each(this.idxToPass, function(i, el) {
+				if ($.inArray(el, that.uniqueIdTransfer) === -1) that.uniqueIdTransfer.push(el);
+			});
+			// var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+
+			var finalArray;
+			finalArray = oList;
+			if (this.uniqueIdTransfer.length === 0) {
+				MessageBox.show(
+					"No changes exists please verify and save.", {
+						icon: sap.m.MessageBox.Icon.INFORMATION,
+						title: "Line Item Edits",
+						actions: [sap.m.MessageBox.Action.OK]
+					}
+				);
+			}
+
+			this.transferArray = [];
+			this.uniqueIdTransfer = [];
+			this.idxToPass = [];
+			this.index = [];
+			this.indexes = [];
+
+			sap.ui.core.BusyIndicator.show();
+
+			var oComponent = this.getOwnerComponent(),
+
+				oFModel = oComponent.getModel(),
+
+				tData = $.extend(true, [], finalArray),
+				tbl = this.getView().byId("WipDetailsSet3"),
+				urlParams,
+
+				CoNumber = [],
+
+				Hours = [],
+				Percentage = [],
+				ToActivityCode = [],
+				ToFfActivityCode = [],
+				ToFfTaskCode = [],
+				ToMatter = [],
+				ToTaskCode = [],
+				ToPhaseCode = [],
+				Buzei = [];
+
+			$.each(tData, function(i, o) {
+
+				CoNumber.push(o.Belnr);
+				Percentage.push(o.Percent);
+				ToActivityCode.push(o.selectedActCode);
+				ToFfActivityCode.push(o.selectedFFActCode);
+				ToFfTaskCode.push(o.selectedFFTaskCode);
+				ToMatter.push(o.ToMatter);
+				ToTaskCode.push(o.selectedTaskCode);
+				ToPhaseCode.push(o.selectedPhaseCode);
+				Buzei.push(o.Buzei);
+			});
+
+			urlParams = {
+
+				Action: "TRANSFER",
+				CoNumber: CoNumber,
+				Hours: Hours,
+				Percentage: Percentage,
+				ToActivityCode: ToActivityCode,
+				ToFfActivityCode: ToFfActivityCode,
+				ToFfTaskCode: ToFfTaskCode,
+				ToMatter: ToMatter,
+				ToTaskCode: ToTaskCode,
+				Buzei: Buzei,
+				ToPhaseCode: ToPhaseCode
+
+			};
+
+			var that = this;
+			// var jsonModel = that.getView().getModel("JSONModel");
+
+			oFModel.callFunction("/WIPTRANSFER", {
+				method: "GET",
+				urlParameters: urlParams,
+				success: function(oData) {
+					that.aedit = true;
+					sap.ui.core.BusyIndicator.hide();
+					var res = oData.results;
+					var msgTxt = res[0].Message;
+
+					// for(var o=0 ; o<that.idxToPass.length ; o++){
+
+					// tbl.getRows()[that.idxToPass[o]].getCells()[0].setVisible(true);
+
+					// tbl.getRows()[that.idxToPass[o]].getCells()[0].setProperty("color", "red");
+
+					// tbl.getRows()[that.idxToPass[o]].getCells()[0].setTooltip(msgTxt);
+					// }
+
+					MessageBox.show(
+						msgTxt, {
+							icon: sap.m.MessageBox.Icon.ERROR,
+							title: "ERROR",
+							actions: [sap.m.MessageBox.Action.OK]
+						}
+					);
+
+					// jsonModel.setProperty("/modelData", oData.results);
+
+				}
+			});
+			var InputFields = this.getView().getModel("InputsModel");
+			InputFields.setProperty("/Inputs/isChanged", false);
+			finalArray = [];
 
 		}
-		// onSave: function(oEvt) {
-		// 	var that = this;
-		// 	$.each(this.narIndices, function(i, el) {
-		// 		if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
-		// 	});
-		// 	var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
-		// 	$.each(that.uniqueId, function(i) {
-		// 		var rowdat = that.rowData[i];
-		// 		that.saveObjects.push(rowdat);
-		// 	});
-		// 	var finalArray = this.saveObjects;
-		// 	this.saveObjects = [];
 		
-		// 	var oComponent = this.getOwnerComponent(),
-
-		// 		oFModel = oComponent.getModel(),
-		// 		tData = $.extend(true, [], finalArray),
-		// 		urlParams,
-		// 		CoNumber = [],
-		// 		Hours = [],
-		// 		Percentage = [],
-		// 		ToActivityCode = [],
-		// 		ToFfActivityCode = [],
-		// 		ToFfTaskCode = [],
-		// 		ToMatter = [],
-		// 		ToTaskCode = [],
-		// 		ToPhaseCode = [],
-		// 		Buzei = [];
-
-		// 	$.each(tData, function(i, o) {
-		// 		CoNumber.push(o.Belnr);
-
-		// 		Hours.push(o.Megbtr);
-		// 		Percentage.push(o.Percent);
-		// 		ToActivityCode.push(o.Zzactcd);
-		// 		ToFfActivityCode.push(o.Zzffactcd);
-		// 		ToFfTaskCode.push(o.Zzfftskcd);
-		// 		ToMatter.push(o.Pspid);
-		// 		ToTaskCode.push(o.Zztskcd);
-		// 		ToPhaseCode.push(o.Zzphase);
-		// 		Buzei.push(o.Buzei);
-		// 	});
-
-		// 	urlParams = {
-
-		// 		Action: "EDIT",
-		// 		CoNumber: CoNumber,
-		// 		Hours: Hours,
-		// 		Percentage: Percentage,
-		// 		ToActivityCode: ToActivityCode,
-		// 		ToFfActivityCode: ToFfActivityCode,
-		// 		ToFfTaskCode: ToFfTaskCode,
-		// 		ToMatter: ToMatter,
-		// 		ToTaskCode: ToTaskCode,
-		// 		ToPhaseCode: ToPhaseCode,
-		// 		Buzei: Buzei
-
-		// 	};
-	     
-		
-		// 	var jsonModel = that.getView().getModel("JSONModel");
-
-		// 	oFModel.callFunction("/WIPTRANSFER", {
-		// 		method: "GET",
-		// 		urlParameters: urlParams,
-		// 		success: function(oData) {
-
-		// 			sap.ui.core.BusyIndicator.hide();
-		// 			var res = oData.results;
-		// 			for (var i = 0; i < res.length; i++) {
-		// 				that.msgTxt = res[i].Message;
-		// 				/*	msgs.push(msgTxt);*/
-		// 				// if (that.msgTxt !== "") {
-		// 				// 	var cells = rows[i + 1].getCells();
-		// 				// 	cells[9].setProperty("visible", true);
-		// 				// 	cells[9].setTooltip(that.msgTxt);
-		// 				// }
-
-		// 			}
-		// 			// jsonModel.setProperty("/modelData", oData.results);
-
-		// 		}
-		// 	});
-
-		// }
+	
 
 	});
 
