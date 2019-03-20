@@ -10,7 +10,7 @@ sap.ui.define([
 
 			this.Inputs = {
 				hideFilterBar: true,
-				isChanged:false,
+				isChanged: false,
 				rootPspid: "",
 				masterItems: [],
 				IconTabs: {
@@ -100,6 +100,7 @@ sap.ui.define([
 				            selFfActKey:""
 
 						}],
+
 				qParms: {
 					ACTION: "?Action=",
 					JSON: "&$format=json"
@@ -119,7 +120,7 @@ sap.ui.define([
 					ToTaskCode: "&ToTaskCode="
 
 				},
-				
+
 				Filters: {
 					filters: ["Filter1", "Filter2", "Filter3", "Filter4"],
 					Filter1: {
@@ -462,15 +463,69 @@ sap.ui.define([
 					}
 				},
 				Countries_collection: [{
-					Key: "dataEn",
-					Text: "English"
-				}, {
-					Key: "dataFr",
-					Text: "French"
-				}, {
-					Key: "dataIt",
-					Text: "Italin"
-				}],
+						Key: "dataEn",
+						Text: "Arabic"
+					}, {
+						Key: "dataFr",
+						Text: "Catalan"
+					}, {
+						Key: "dataIt",
+						Text: "Czech"
+					}, {
+						Key: "dataEn",
+						Text: "Dutch"
+					}, {
+						Key: "dataEn",
+						Text: "English(AU)"
+					}, {
+						Key: "dataEn",
+						Text: "English(CA)"
+					}, {
+						Key: "dataEn",
+						Text: "English(US)"
+					}, {
+						Key: "dataEn",
+						Text: "English(UK)"
+					}, {
+						Key: "dataEn",
+						Text: "French"
+					}, {
+						Key: "dataEn",
+						Text: "German"
+					}, {
+						Key: "dataEn",
+						Text: "Hungarian"
+					}, {
+						Key: "dataEn",
+						Text: "Indonesian"
+					},
+
+					{
+						Key: "dataEn",
+						Text: "Italian"
+					}, {
+						Key: "dataEn",
+						Text: "Polish"
+					}, {
+						Key: "dataEn",
+						Text: "Portugese"
+					}, {
+						Key: "dataEn",
+						Text: "Russian"
+					}, {
+						Key: "dataEn",
+						Text: "Spanish"
+					}, {
+						Key: "dataEn",
+						Text: "Swedish"
+					}, {
+						Key: "dataEn",
+						Text: "Thai"
+					}, {
+						Key: "dataEn",
+						Text: "Turkish"
+					}
+				],
 				Toolbar: {
 					Reviewed: false,
 					Unreview: false,
