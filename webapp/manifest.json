@@ -216,6 +216,9 @@
 					"viewLevel": 2
 				}
 			}
+		},
+		"config": {
+			"fullWidth": true
 		}
 	}
 }

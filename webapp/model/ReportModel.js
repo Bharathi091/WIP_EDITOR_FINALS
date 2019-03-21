@@ -13,6 +13,7 @@ sap.ui.define([
 				isChanged: false,
 				rootPspid: "",
 				masterItems: [],
+				
 				IconTabs: {
 					Home: true,
 					Narrative_Edits: false,
@@ -21,6 +22,19 @@ sap.ui.define([
 				},
 					editableIndexes: [0],
 				currentCol: {},
+				createMatter: [
+					{
+								"key": "Pspid",
+								"type": "smartfield",
+								"userCol": "To Matter",
+								 "width" : "90px"
+							}
+
+						],
+						Column:[{
+							Pspid: ""
+
+						}],
 				createcontrols: [
 					{
 								"key": "Pspid",
@@ -462,67 +476,67 @@ sap.ui.define([
 
 					}
 				},
-				Countries_collection: [{
-						Key: "dataEn",
+	Countries_collection: [{
+						Key: "ar",
 						Text: "Arabic"
 					}, {
-						Key: "dataFr",
+						Key: "ca",
 						Text: "Catalan"
 					}, {
-						Key: "dataIt",
+						Key: "cs_CZ",
 						Text: "Czech"
 					}, {
-						Key: "dataEn",
+						Key: "de_DE_frami",
 						Text: "Dutch"
 					}, {
-						Key: "dataEn",
+						Key: "en_AU",
 						Text: "English(AU)"
 					}, {
-						Key: "dataEn",
+						Key: "en_CA",
 						Text: "English(CA)"
 					}, {
-						Key: "dataEn",
+						Key: "en_US",
 						Text: "English(US)"
 					}, {
-						Key: "dataEn",
+						Key: "en_GB",
 						Text: "English(UK)"
 					}, {
-						Key: "dataEn",
+						Key: "fr",
 						Text: "French"
 					}, {
 						Key: "dataEn",
 						Text: "German"
 					}, {
-						Key: "dataEn",
+						Key: "hu_HU",
 						Text: "Hungarian"
 					}, {
-						Key: "dataEn",
+						Key: "id_ID",
 						Text: "Indonesian"
 					},
 
 					{
-						Key: "dataEn",
+						Key: "it_IT",
 						Text: "Italian"
 					}, {
-						Key: "dataEn",
+						Key: "pl_PL",
 						Text: "Polish"
 					}, {
-						Key: "dataEn",
+						Key: "pt_PT",
 						Text: "Portugese"
 					}, {
-						Key: "dataEn",
+						Key: "ru_RU",
 						Text: "Russian"
 					}, {
 						Key: "dataEn",
 						Text: "Spanish"
 					}, {
-						Key: "dataEn",
+						Key: "sv_SE",
 						Text: "Swedish"
 					}, {
-						Key: "dataEn",
+						Key: "th_TH",
 						Text: "Thai"
 					}, {
-						Key: "dataEn",
+						Key: "tr_TR",
 						Text: "Turkish"
 					}
 				],

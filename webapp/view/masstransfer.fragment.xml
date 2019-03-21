@@ -3,10 +3,9 @@
 	<Dialog title="Mass Transfer">
 		<l:Grid defaultSpan="L12 M12 S12" width="auto" id="idGrid">
 			<l:content>
-				<Label text="Target Matter"/>
-				<!--<smartMultiInput:SmartMultiInput id="masspspid" entitySet="WipMattersSet" textLabel="matter" width="20%" value="{Pspid}"/>-->
-				<!--<smartField:SmartField id="masspspid" entitySet="WipDetailsSet" value="{ToMatter}"/>-->
-				<smartField:SmartField id="masspspid" entitySet="WipMattersSet" value="{Pspid}"/>
+			<Table id="matter">
+				
+			</Table>
 				<Label text="Percentage" labelFor="percentage"/>
 				<Input id="percentage" value="100"/>
 				<Table id="masstransfertable">

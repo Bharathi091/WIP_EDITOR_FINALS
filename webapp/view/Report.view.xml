@@ -16,7 +16,7 @@
 								customData:dateFormatSettings="\{&quot;UTC&quot;:true\}" initialise="initiatedFilterbars" filterChange="filterChangeData"
 								filterBarExpanded="{InputsModel>/Inputs/hideFilterBar}" visible="true">
 								<smartFilterBar:controlConfiguration>
-									<smartFilterBar:ControlConfiguration key="Pspid" label="{i18n>Matter}" index="6" id="Matter" visibleInAdvancedArea="true"
+									<smartFilterBar:ControlConfiguration key="Pspid" mandatory="mandatory" label="{i18n>Matter}" index="6" id="Matter" visibleInAdvancedArea="true"
 										preventInitialDataFetchInValueHelpDialog="true" filterType="multi"/>
 									<smartFilterBar:ControlConfiguration key="Budat" mandatory="mandatory" label="{i18n>Date Selection}" index="1" controlType="date"
 										filterType="interval" visibleInAdvancedArea="true"/>
@@ -61,8 +61,8 @@
 											<!--<SearchField width="100%" liveChange="onGlobalSearch" class="searchPosition" id="searchText"/>-->
 										</f:SimpleForm>
 										<smartTable:SmartTable enableCustomFilter="false" smartvisible="true" id="smartTable_ResponsiveTable0" editable="false"
-											entitySet="WipDetailsSet" tableType="AnalyticalTable" showRowCount="true" useVariantManagement="true" persistencyKey="SmartTablePKey"
-											useTablePersonalisation="true" header="{i18n>Results}" useExportToExcel="true" beforeRebindTable="onBeforeRebindTable"
+											entitySet="WipDetailsSet" tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey"
+											useTablePersonalisation="true" header="{i18n>Results} ({JSONModel>/RowCount})"  useExportToExcel="false" beforeRebindTable="onBeforeRebindTable"
 											enableAutoBinding="false" dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport">
 											<smartTable:customToolbar>
 												<Toolbar>
@@ -71,6 +71,7 @@
 													<Button icon="sap-icon://synchronize" press="Reload"/>
 													<!--<ToggleButton icon='./image/home.png' pressed='false' id="toggle1" press='handlePress1'/>-->
 													<!--<ToggleButton icon='./image/nerate.png' visible="false" id="toggle2" pressed='false' press='handlePress2'/>-->
+														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
 												</Toolbar>
 											</smartTable:customToolbar>
 											<uitbl:Table id="WipDetailsSet" alternateRowColors="true" visibleRowCount="10" filter="filter" selectionMode="None"
@@ -267,13 +268,13 @@
 										</f:SimpleForm>
 									
 										<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable1" editable="false" entitySet="WipDetailsSet"
-											tableType="AnalyticalTable" showRowCount="true" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
-											header="{i18n>Results}" useExportToExcel="true" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
+											tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
+											header="{i18n>Results} ({JSONModel>/RowCount1})" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
 											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" >
 											<smartTable:customToolbar>
 												<Toolbar>
 													<m:ToolbarSpacer/>
-													<ComboBox items="{ path: 'InputsModel>/Inputs/Countries_collection'}" class="comboPosition" width="20%">
+													<ComboBox items="{ path: 'InputsModel>/Inputs/Countries_collection'}" class="comboPosition" id="comboPosition" width="20%" change = "dictionaryChange">
 														<core:Item key="{InputsModel>key}" text="{InputsModel>Text}"/>
 													</ComboBox>
 													<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText1"/>
@@ -281,6 +282,7 @@
 													<Button icon="sap-icon://play" press="removeSpaces"/>
 													<Button icon="sap-icon://synchronize" press="Reload"/>
 													<!--<Button icon="sap-icon://download" press="Export"/>-->
+														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
 												</Toolbar>
 											</smartTable:customToolbar>
 										
@@ -341,9 +343,9 @@
 														<uitbl:label>
 															<Text text="Narrative"/></uitbl:label>
 														<uitbl:template>
-															<!--<TextArea value="{NarrativeString}" growing="true" width="80%" liveChange="changeNarrative"/>-->
-																<core:HTML
-															content=" &lt;div class='fulcrum-editor-textarea {path:'NarrativeStringSpell'}' contenteditable='true' rows='4' fulcrum-editor&gt;{path:'NarrativeStringSpell'}&lt;/div&gt;"  preferDOM="true" afterRendering="onAfterRenderingEvent" ></core:HTML>
+															<TextArea value="{NarrativeString}" growing="true" width="80%" liveChange="changeNarrative"/>
+															<!--	<core:HTML-->
+															<!--content=" &lt;div class='fulcrum-editor-textarea {path:'NarrativeStringSpell'}' contenteditable='true' rows='4' fulcrum-editor&gt;{path:'NarrativeStringSpell'}&lt;/div&gt;"  preferDOM="true" afterRendering="onAfterRenderingEvent" ></core:HTML>-->
 														</uitbl:template>
 													</uitbl:Column>
 												</uitbl:columns>
@@ -376,21 +378,22 @@
 										</f:SimpleForm>
 										
 										<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable2" editable="false" entitySet="WipDetailsSet"
-											tableType="AnalyticalTable" showRowCount="true" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
-											header="{i18n>Results}" useExportToExcel="true" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
+											tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
+											header="{i18n>Results} ({JSONModel>/RowCount2})" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
 											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport">
 											<smartTable:customToolbar>
 												<Toolbar>
 													<m:ToolbarSpacer/>
 													<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText2"/>
 													<Button icon="sap-icon://synchronize" press="Reload"/>
+														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
 												</Toolbar>
 											</smartTable:customToolbar>
 											<uitbl:Table id="WipDetailsSet2" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemEditsSelection">
 												<uitbl:columns>
-													<uitbl:Column width="8rem" filterProperty="" sortProperty="" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:Column width="8rem" filterProperty="Zzwipcur" sortProperty="Zzwipcur" showSortMenuEntry="true" autoResizable="true">
 														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "" , "maxLength": "5","columnIndex":"2", "leadingProperty": "" }'/>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Zzwipcur" , "maxLength": "5","columnIndex":"2", "leadingProperty": "Zzwipcur" }'/>
 														</uitbl:customData>
 														<uitbl:label>
 															<Text text="Info"/>
@@ -605,14 +608,15 @@
 											<!--<SearchField width="100%" liveChange="onGlobalSearch" class="searchPosition" id="searchText3"/>-->
 										</f:SimpleForm>
 										<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable3" editable="false" entitySet="WipDetailsSet"
-											tableType="AnalyticalTable" showRowCount="true" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
-											header="{i18n>Results}" useExportToExcel="true" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
+											tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
+											header="{i18n>Results} ({JSONModel>/RowCount3})" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
 											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport">
 											<smartTable:customToolbar>
 												<Toolbar>
 													<m:ToolbarSpacer/>
 													<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText3"/>
 													<Button icon="sap-icon://synchronize" press="Reload"/>
+														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
 												</Toolbar>
 											</smartTable:customToolbar>
 											<uitbl:Table id="WipDetailsSet3" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemTransferSelection">
@@ -625,9 +629,9 @@
 													<!--	<core:Icon src="sap-icon://alert" class="size3" visible = "false" id="alert1" color="green"/>-->
 													<!--	</uitbl:template>-->
 													<!--</uitbl:Column>-->
-													<uitbl:Column width="8rem" filterProperty="" sortProperty="" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:Column width="8rem" filterProperty="Zzwipcur" sortProperty="Zzwipcur" showSortMenuEntry="true" autoResizable="true">
 														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "" , "maxLength": "5","columnIndex":"1", "leadingProperty": "" }'/>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Zzwipcur" , "maxLength": "5","columnIndex":"1", "leadingProperty": "Zzwipcur" }'/>
 														</uitbl:customData>
 														<uitbl:label>
 															<Text text="Info"/>
