@@ -65,11 +65,48 @@ sap.ui.define([
 					});
 				}
 			}
+			
+				var NarrativeRows = this.homeArr.length;
+					for (var i = 0; i < NarrativeRows; i++) {
+						var oldnerst = this.homeArr[i].NarrativeString;
+						var nerst = this.homeArr[i].NarrativeString;
+						if (nerst.endsWith(".")) {
+							nerst = nerst.substring(0, nerst.length - 1);
+						} else {
+							nerst = nerst;
+						}
+						var word = nerst.split(" ");
+						var sampletext = "";
+						for (var j = 0; j < word.length; j++) {
+							var splitword = word[j];
+							// if(splitword.endsWith("."))
+							var is_spelled_correctly = this.dictionaryLib.check(splitword);
+							if (is_spelled_correctly === false) {
+								sampletext = sampletext + ' <span class="target">' + splitword + '</span>';
+
+							} else {
+								sampletext = sampletext + " " + splitword;
+
+							}
+							if (word.length - 1 === j) {
+								if (oldnerst.endsWith(".")) {
+									sampletext = sampletext + ".";
+								}
+								this.homeArr[i].NarrativeStringSpell = sampletext;
+								console.log(this.homeArr[i].NarrativeStringSpell);
+							}
+
+						}
+						if (NarrativeRows - 1 === i) {
+							this.jsonModel.setProperty("/modelData", this.homeArr);
+						}
+					}
 
 			// this.dictionaryLib = new Typo(key, false, false, {
 			// 	dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
 			// });
 		},
+
 
 		onPress: function(oEvent) {
 			debugger;
@@ -2238,6 +2275,10 @@ sap.ui.define([
 				this.handleAddRowMass(1);
 			}
 
+var selindexes = oTable.getSelectedIndices();
+            for (var j = 0; j < selindexes.length; j++) {
+				this.indexes.push(selindexes[j]);
+			}
 			$.each(oTable.getSelectedIndices(), function(i, o) {
 
 				var tableContext = oTable.getContextByIndex(o);
