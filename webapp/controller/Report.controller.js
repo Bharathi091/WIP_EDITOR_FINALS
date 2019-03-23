@@ -9,10 +9,11 @@ sap.ui.define([
 	"wip/services/LineItemsServices",
 	"wip/services/SplitItemsServices",
 	"wip/typo/typo",
+	"wip/dist/caret",
 	"sap/m/MessageBox"
 
 ], function(BaseController, JSONModel, formatter, History, Filter, ReportModel, FilterOperator, LineItemsServices, SplitItemsServices,
-	typo, MessageBox) {
+	typo, caret, MessageBox) {
 	"use strict";
 
 	return BaseController.extend("wip.controller.Report", {
@@ -46,6 +47,13 @@ sap.ui.define([
 			this.getView().setModel(this.jsonModel, "JSONModel");
 			this.getView().setModel(new ReportModel().getModel(), "InputsModel");
 			this.onHide();
+
+			//spell check
+			this.spanId = 0;
+			this.currentSpanId = "";
+			this.menurowid = 0;
+			this.ignoreAllArr = [];
+			this.wrongWordsArr = [];
 			this.dictionaryLib = new Typo("en_US", false, false, {
 				dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
 			});
@@ -65,52 +73,22 @@ sap.ui.define([
 					});
 				}
 			}
-			
-				var NarrativeRows = this.homeArr.length;
-					for (var i = 0; i < NarrativeRows; i++) {
-						var oldnerst = this.homeArr[i].NarrativeString;
-						var nerst = this.homeArr[i].NarrativeString;
-						if (nerst.endsWith(".")) {
-							nerst = nerst.substring(0, nerst.length - 1);
-						} else {
-							nerst = nerst;
-						}
-						var word = nerst.split(" ");
-						var sampletext = "";
-						for (var j = 0; j < word.length; j++) {
-							var splitword = word[j];
-							// if(splitword.endsWith("."))
-							var is_spelled_correctly = this.dictionaryLib.check(splitword);
-							if (is_spelled_correctly === false) {
-								sampletext = sampletext + ' <span class="target">' + splitword + '</span>';
-
-							} else {
-								sampletext = sampletext + " " + splitword;
-
-							}
-							if (word.length - 1 === j) {
-								if (oldnerst.endsWith(".")) {
-									sampletext = sampletext + ".";
-								}
-								this.homeArr[i].NarrativeStringSpell = sampletext;
-								console.log(this.homeArr[i].NarrativeStringSpell);
-							}
-
-						}
-						if (NarrativeRows - 1 === i) {
-							this.jsonModel.setProperty("/modelData", this.homeArr);
-						}
-					}
 
 			// this.dictionaryLib = new Typo(key, false, false, {
 			// 	dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
 			// });
 		},
+    
+       	resetOffset: function($textField) {
 
+			console.log("resetOffset")
+			var offset = $textField.caret('offset');
+			var position = $textField.caret('pos');
 
+			return position;
+		},
 		onPress: function(oEvent) {
 			debugger;
-
 			var otable = [];
 			var aFilter = [];
 			var Pspid = oEvent.getSource().getProperty("title");
@@ -119,9 +97,6 @@ sap.ui.define([
 			aFilter.push(new Filter("Pspid", FilterOperator.EQ, Pspid));
 			aFilter.push(new Filter("Budat", sap.ui.model.FilterOperator.BT, odatefrom, odateto));
 			var oModel = this.getOwnerComponent().getModel();
-
-			//var dataObj = LineItemsServices.getInstance().selectListItem(oModel,aFilter);
-
 			LineItemsServices.getInstance().selectListItem(oModel, aFilter)
 				.done(function(oData) {
 
@@ -141,12 +116,14 @@ sap.ui.define([
 
 					debugger;
 					sap.ui.core.BusyIndicator.hide(0);
-					that.homeArr = oData.results;
+					// that.homeArr = oData.results;
 					that.arr = oData.results;
 					for (var i = 0; i < that.arr.length; i++) {
 						//	that.jsonModel.setProperty("/modelData/"+i+"/NarrativeStringSpell", oData.results[i].NarrativeString);
 						that.arr[i].NarrativeStringSpell = that.arr[i].NarrativeString;
+						// that.arr[i].rowIndex = i;
 					}
+					that.homeArr = that.arr;
 					that.jsonModel.setProperty("/RowCount", oData.results.length);
 					that.jsonModel.setProperty("/RowCount1", oData.results.length);
 					that.jsonModel.setProperty("/RowCount2", oData.results.length);
@@ -161,7 +138,11 @@ sap.ui.define([
 					that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
 					});
-
+                      
+                      
+                      
+                      
+                      
 					that.getView().byId("WipDetailsSet").setModel(that.jsonModel);
 					var Otable = that.getView().byId("WipDetailsSet");
 					Otable.bindRows("/modelData");
@@ -169,39 +150,124 @@ sap.ui.define([
 					var Otable1 = that.getView().byId("WipDetailsSet1");
 					Otable1.bindRows("/modelData");
 					var NarrativeRows = that.homeArr.length;
-					for (var i = 0; i < NarrativeRows; i++) {
+					// for (var i = 0; i < NarrativeRows; i++) {
+					// 	var oldnerst = that.homeArr[i].NarrativeString;
+					// 	var nerst = that.homeArr[i].NarrativeString;
+					// 	if (nerst.endsWith(".")) {
+					// 		nerst = nerst.substring(0, nerst.length - 1);
+					// 	} else {
+					// 		nerst = nerst;
+					// 	}
+					// 	var word = nerst.split(" ");
+					// 	var sampletext = "";
+					// 	for (var j = 0; j < word.length; j++) {
+					// 		var splitword = word[j];
+					// 		var is_spelled_correctly = that.dictionaryLib.check(splitword);
+					// 		if (is_spelled_correctly === false) {
+					// 			sampletext = sampletext + ' <span id="id' + that.spanId + '" class="target">' + splitword + '</span>';
+								
+									
+					// 			that.spanId++;
+					// 		} else {
+					// 			sampletext = sampletext + " " + splitword;
+
+					// 		}
+					// 		if (word.length - 1 === j) {
+					// 			if (oldnerst.endsWith(".")) {
+					// 				sampletext = sampletext + ".";
+					// 			}
+					// 			that.homeArr[i].NarrativeStringSpell = sampletext;
+					// 			console.log(that.homeArr[i].NarrativeStringSpell);
+					// 		}
+
+					// 	}
+					// 	if (NarrativeRows - 1 === i) {
+					// 		that.jsonModel.setProperty("/modelData", that.homeArr);
+					// 	}
+					// }
+					
+				          for (var i = 0; i < NarrativeRows; i++) {
 						var oldnerst = that.homeArr[i].NarrativeString;
 						var nerst = that.homeArr[i].NarrativeString;
-						if (nerst.endsWith(".")) {
-							nerst = nerst.substring(0, nerst.length - 1);
-						} else {
-							nerst = nerst;
-						}
+						var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
 						var word = nerst.split(" ");
+
 						var sampletext = "";
 						for (var j = 0; j < word.length; j++) {
 							var splitword = word[j];
-							// if(splitword.endsWith("."))
-							var is_spelled_correctly = that.dictionaryLib.check(splitword);
-							if (is_spelled_correctly === false) {
-								sampletext = sampletext + ' <span class="target">' + splitword + '</span>';
+							var splitword1 = word[j];
+
+							if (specialChars.test(splitword)) {
+
+								var numericItem = "";
+								var subText = splitword.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
+
+								subText.forEach(function(subItem) {
+
+									if (specialChars.test(subItem)) {
+
+										numericItem = numericItem + subItem;
+									} else {
+
+										if (that.dictionaryLib.check(subItem) == false) {
+
+											numericItem = numericItem + '<span id="id' + that.spanId +
+												'"class="target"  style="background-color:#F08080;   ">' + subItem + '</span>';
+
+											that.wrongWordsArr.push({
+												rowId: i,
+												id: "#id" + that.spanId,
+												Text: subItem
+											});
+
+											that.spanId++;
+
+										} else {
+
+											numericItem = numericItem + subItem;
+										}
+
+									}
+
+								});
+
+								sampletext = sampletext + " " + numericItem;
 
 							} else {
-								sampletext = sampletext + " " + splitword;
 
+								if (that.dictionaryLib.check(splitword) == false) {
+
+									sampletext = sampletext + ' <span id="id' + that.spanId +
+										'"class="target"  style="background-color:#F08080;">' + splitword + '</span>';
+
+									that.wrongWordsArr.push({
+										rowId: i,
+										id: "#id" + that.spanId,
+										Text: splitword
+									});
+
+									that.spanId++;
+
+								} else {
+
+									sampletext = sampletext +" "+ splitword;
+									that.wrongWordsArr.push({
+										rowId: i,
+										id: "#id" + that.spanId,
+										Text: splitword
+									});
+									that.spanId++;
+								}
 							}
 							if (word.length - 1 === j) {
-								if (oldnerst.endsWith(".")) {
-									sampletext = sampletext + ".";
-								}
 								that.homeArr[i].NarrativeStringSpell = sampletext;
 								console.log(that.homeArr[i].NarrativeStringSpell);
 							}
-
 						}
 						if (NarrativeRows - 1 === i) {
 							that.jsonModel.setProperty("/modelData", that.homeArr);
 						}
+
 					}
 
 				}
@@ -216,28 +282,12 @@ sap.ui.define([
 			}
 			InputFields.setProperty("/Inputs/rootPspid", Pspid);
 
-			// for (var j = 0; j < otable.length; j++) {
-			// 	var tableId = otable[j];
-			// 	this.byId(tableId).rebindTable();
-			// }
+		
 			InputFields.setProperty("/Inputs/IconTabs/Narrative_Edits", true);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Edits", true);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Transfers", true);
 
 		},
-
-		// onBeforeRebindTable: function(oEvent) {
-
-		// 	var oBindingParams = oEvent.getParameter("bindingParams");
-
-		// 	var InputFields = this.getView().getModel("InputsModel");
-
-		// 	var Matter = InputFields.getProperty("/Inputs/rootPspid");
-		// 	oBindingParams.filters.push(
-		// 		new Filter("Pspid", FilterOperator.EQ, Matter));
-
-		// },
-
 		listSorting: function(oEvent) {
 
 			var InputsModel = this.getView().getModel("InputsModel");
@@ -252,7 +302,250 @@ sap.ui.define([
 
 			}
 		},
+		handleIconTabBarSelect: function(oEvent) {
+			debugger;
+			var that = this;
+			var InputFields = this.getView().getModel("InputsModel");
+			var change = oEvent.getSource();
 
+			var value = change.getSelectedKey();
+
+			this.ReloadTable();
+
+			if (value === "NarrativeEdits") {
+
+				var Otable = this.getView().byId("WipDetailsSet1");
+
+				this.byId("searchText1").setValue("");
+				this.jsonModel.setProperty("/RowCount1", this.arr.length);
+
+				this.jsonModel.setProperty("/modelData", this.arr);
+
+				this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+				var Otable = this.getView().byId("WipDetailsSet1");
+				Otable.bindRows("/modelData");
+
+				var tableLineEdits = this.getView().byId("WipDetailsSet2");
+				var index = tableLineEdits.getSelectedIndices();
+				for (var i = 0; i < index.length; i++) {
+					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
+					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
+
+				}
+
+				//Visible property set
+				InputFields.setProperty("/Inputs/Toolbar/Reviewed", true);
+				InputFields.setProperty("/Inputs/Toolbar/Unreview", true);
+				InputFields.setProperty("/Inputs/Toolbar/Save", true);
+				InputFields.setProperty("/Inputs/Toolbar/Save_Layout", false);
+				InputFields.setProperty("/Inputs/Toolbar/Modify_Reverse", false);
+				InputFields.setProperty("/Inputs/Toolbar/Consolidate", false);
+				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", false);
+				InputFields.setProperty("/Inputs/Toolbar/GlobalSpellCheck", true);
+				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
+				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
+				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", true);
+
+				//Enable Property set 
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
+
+				this.onNarativeTexChange();
+
+			
+
+			} else if (value === "LineItemEdits") {
+				this.byId("searchText2").setValue("");
+				this.jsonModel.setProperty("/RowCount2", this.arr.length);
+				var tableLineEdits = this.getView().byId("WipDetailsSet2");
+				var index = tableLineEdits.getSelectedIndices();
+				for (var i = 0; i < index.length; i++) {
+					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
+					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
+
+				}
+
+				InputFields.setProperty("/Inputs/Toolbar/Reviewed", true);
+				InputFields.setProperty("/Inputs/Toolbar/Unreview", true);
+				InputFields.setProperty("/Inputs/Toolbar/Save", true);
+				InputFields.setProperty("/Inputs/Toolbar/Save_Layout", true);
+				InputFields.setProperty("/Inputs/Toolbar/Modify_Reverse", true);
+				InputFields.setProperty("/Inputs/Toolbar/Consolidate", false);
+				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", true);
+				InputFields.setProperty("/Inputs/Toolbar/GlobalSpellCheck", false);
+				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
+				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
+				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
+
+				//Enable Property set 
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
+				this.tableId = "WipDetailsSet2";
+				debugger;
+				var that = this;
+				this.rowData = [];
+				this.jsonModel.getData()["modelData"].forEach(function(item, f) {
+
+					that.rowData[f] = item;
+
+				});
+				// this.data(this.rowData);
+
+				//	console.log(this.jsonModel.getData()["modelData"]);
+
+			} else if (value === "LineItemTransfers") {
+				this.byId("searchText3").setValue("");
+				this.jsonModel.setProperty("/RowCount3", this.arr.length);
+				var tableLineEdits = this.getView().byId("WipDetailsSet2");
+				var index = tableLineEdits.getSelectedIndices();
+				for (var i = 0; i < index.length; i++) {
+					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
+					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
+
+				}
+				this.getView(0).byId("WipDetailsSet2").getModel().refresh(true);
+
+				var tableLineEdits1 = this.getView().byId("WipDetailsSet3");
+
+				var len = tableLineEdits1.getRows().length;
+				for (var q = 0; q < len; q++) {
+					tableLineEdits1.getRows()[q].getCells()[0].setVisible(false);
+
+				}
+				//Visible property set
+				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
+				InputFields.setProperty("/Inputs/Toolbar/Unreview", false);
+				InputFields.setProperty("/Inputs/Toolbar/Save", true);
+				InputFields.setProperty("/Inputs/Toolbar/Save_Layout", true);
+				InputFields.setProperty("/Inputs/Toolbar/Modify_Reverse", false);
+				InputFields.setProperty("/Inputs/Toolbar/Consolidate", true);
+				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", true);
+				InputFields.setProperty("/Inputs/Toolbar/GlobalSpellCheck", false);
+				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", true);
+				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", true);
+				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
+
+				//Enable Property set 
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
+				this.tableId = "WipDetailsSet3";
+				// this.data(this.rowData);
+
+			} else {
+				this.byId("searchText").setValue("");
+				this.jsonModel.setProperty("/modelData", this.arr);
+
+				this.getView().byId("WipDetailsSet").setModel(this.jsonModel);
+				var Otable = this.getView().byId("WipDetailsSet");
+				Otable.bindRows("/modelData");
+				this.jsonModel.setProperty("/RowCount", this.arr.length);
+				//Visible property set
+				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
+				InputFields.setProperty("/Inputs/Toolbar/Unreview", false);
+				InputFields.setProperty("/Inputs/Toolbar/Save", false);
+				InputFields.setProperty("/Inputs/Toolbar/Save_Layout", true);
+				InputFields.setProperty("/Inputs/Toolbar/Modify_Reverse", false);
+				InputFields.setProperty("/Inputs/Toolbar/Consolidate", false);
+				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", false);
+				InputFields.setProperty("/Inputs/Toolbar/GlobalSpellCheck", false);
+				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
+				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
+				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
+
+				//Enable Property set 
+
+			}
+			this.settimeout();
+		},
+		
+		NarrativeEditsSelection: function(oEvent) {
+
+			debugger;
+			var InputFields = this.getView().getModel("InputsModel");
+			var rowCount = this.byId("WipDetailsSet1").getSelectedIndices();
+
+			if (rowCount.length) {
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", true);
+
+			} else {
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
+			}
+
+		},
+		LineItemEditsSelection: function() {
+
+			var InputFields = this.getView().getModel("InputsModel");
+			var rowCount = this.byId("WipDetailsSet2").getSelectedIndices();
+
+			if (rowCount.length === 1) {
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", true);
+
+			} else if (rowCount.length > 1) {
+				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
+			} else {
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
+
+			}
+
+		},
+		LineItemTransferSelection: function(oEvent) {
+			debugger;
+			var InputFields = this.getView().getModel("InputsModel");
+			var rowCount = this.byId("WipDetailsSet3").getSelectedIndices();
+			this.byId("ToMatter3");
+
+			// Need to update Updatecodes Logic based on control filed selection in th table columns
+
+			if (rowCount.length === 1) {
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", true);
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", true);
+
+			} else if (rowCount.length > 1) {
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", true);
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
+			} else {
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
+
+			}
+
+		},
+
+		//Narrative edits:
 		ReviewUnreview: function(oEvent) {
 			debugger;
 			var text = oEvent.getSource().getText();
@@ -377,6 +670,7 @@ sap.ui.define([
 			return string.charAt(0).toUpperCase() + string.slice(1);
 
 		},
+	
 		capitalization: function() {
 			debugger;
 			var InputFields = this.getView().getModel("InputsModel");
@@ -385,10 +679,8 @@ sap.ui.define([
 			var data = [];
 			var res = [];
 			var Otable = this.getView().byId("WipDetailsSet1");
-			//this.jsonModel.setProperty("/modelData", this.rowData );
-			var NarStr;
 
-			//data = this.rowData;
+			var NarStr;
 
 			this.rowData.forEach(function(o, k) {
 				data[k] = o;
@@ -401,36 +693,42 @@ sap.ui.define([
 			res = $.each(data, function(item) {
 				var narString = data[item].NarrativeString;
 				NarStr = that.capitalizeFirstLetter(data[item].NarrativeString);
+				data[item].NarrativeStringSpell = NarStr;
 				data[item].NarrativeString = NarStr;
+
 				if (NarStr !== "") {
 					var lastChar = NarStr.charAt(NarStr.length - 1);
 					if (endChars.indexOf(lastChar.slice(-1)) === -1) {
 						NarStr = NarStr + ".";
+						data[item].NarrativeStringSpell = NarStr;
 						data[item].NarrativeString = NarStr;
 
 					}
-
+					that.rowData[item].NarrativeStringSpell = NarStr;
 					if (narString != data[item].NarrativeString) {
 						that.saveObjects.push(data[item]);
 					}
 
-					return data[item].NarrativeString;
+					return data[item].NarrativeStringSpell;
 				}
 
 			});
 
-			this.jsonModel.setProperty("/modelData", data);
-
+			var data1 = this.handlespellcheck(data);
+			// console.log(data1);
+			this.jsonModel.setProperty("/modelData", data1);
+			this.rowData === data1;
 			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
 			Otable.bindRows("/modelData");
+			this.settimeout();
+			this.onNarativeTexChange();
 		},
-
 		remove_character: function(str, char_pos) {
 			var part1 = str.substring(0, char_pos);
 			var part2 = str.substring(char_pos + 1, str.length);
 			return (part1 + part2);
 		},
-
+	
 		removeSpaces: function(oEvt) {
 			debugger;
 			var InputFields = this.getView().getModel("InputsModel");
@@ -458,20 +756,776 @@ sap.ui.define([
 				}
 
 				data[item].NarrativeString = result;
+				data[item].NarrativeStringSpell = result;
 				if (narStr != result) {
 					that.saveObjects.push(data[item]);
 				}
 
 				return data[item].NarrativeString;
 			});
-			this.jsonModel.setProperty("/modelData", res);
+			var data1 = this.handlespellcheck(res);
+			this.jsonModel.setProperty("/modelData", data1);
 			var Otable = this.getView().byId("WipDetailsSet1");
 			// this.jsonModel.setData(res);
 			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
 			Otable.bindRows("/modelData");
-
+			this.settimeout();
+			this.onNarativeTexChange();
 		},
+	
+		handlespellcheck: function(data) {
+			var that = this;
+			debugger;
+		
+	// 		for (var i = 0; i < NarrativeRows; i++) {
+	// 			var oldnerst = data[i].NarrativeString;
+	// 			var nerst = data[i].NarrativeString;
+	// 			console.log(nerst);
+	// 			if (nerst.endsWith(".")) {
+	// 				nerst = nerst.substring(0, nerst.length - 1);
+	// 			} else {
+	// 				nerst = nerst;
+	// 			}
+	// 			var word = nerst.split(" ");
+	// 			var sampletext = "";
+	// 			for (var j = 0; j < word.length; j++) {
+	// 				var splitword = word[j];
 
+	// 				var is_spelled_correctly = this.dictionaryLib.check(splitword);
+	// 				if (is_spelled_correctly === false) {
+	// 					sampletext = sampletext + ' <span id="id' + this.spanId + '"  class="target" style="background-color:pink">' + splitword +
+	// 						'</span>';
+ //                       that.wrongWordsArr.push({
+ //                       	                     rowId: i,
+	// 												id: "#id" + that.spanId,
+	// 												Text: splitword
+	// 											});
+	// 					this.spanId++;
+
+	// 				} else {
+	// 					sampletext = sampletext + " " + splitword;
+
+	// 				}
+
+	// 				if (word.length - 1 === j) {
+	// 					if (oldnerst.endsWith(".")) {
+	// 						sampletext = sampletext + ".";
+	// 					}
+	// 					data[i].NarrativeStringSpell = sampletext;
+
+	// 				}
+
+	// 			}
+
+	// 		}
+
+	// data[i].NarrativeStringSpell = sampletext;
+	// 		return data;
+			var NarrativeRows = data.length;
+			   for (var i = 0; i < NarrativeRows; i++) {
+						var oldnerst = that.homeArr[i].NarrativeString;
+						var nerst = that.homeArr[i].NarrativeString;
+						var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
+						var word = nerst.split(" ");
+
+						var sampletext = "";
+						for (var j = 0; j < word.length; j++) {
+							var splitword = word[j];
+							var splitword1 = word[j];
+
+							if (specialChars.test(splitword)) {
+
+								var numericItem = "";
+								var subText = splitword.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
+
+								subText.forEach(function(subItem) {
+
+									if (specialChars.test(subItem)) {
+
+										numericItem = numericItem + subItem;
+									} else {
+
+										if (that.dictionaryLib.check(subItem) == false) {
+
+											numericItem = numericItem + '<span id="id' + that.spanId +
+												'"class="target"  style="background-color:#F08080;   ">' + subItem + '</span>';
+
+											that.wrongWordsArr.push({
+												rowId: i,
+												id: "#id" + that.spanId,
+												Text: subItem
+											});
+
+											that.spanId++;
+
+										} else {
+
+											numericItem = numericItem + subItem;
+										}
+
+									}
+
+								});
+
+								sampletext = sampletext + " " + numericItem;
+
+							} else {
+
+								if (that.dictionaryLib.check(splitword) == false) {
+
+									sampletext = sampletext + ' <span id="id' + that.spanId +
+										'"class="target"  style="background-color:#F08080;">' + splitword + '</span>';
+
+									that.wrongWordsArr.push({
+										rowId: i,
+										id: "#id" + that.spanId,
+										Text: splitword
+									});
+
+									that.spanId++;
+
+								} else {
+
+									sampletext = sampletext +" "+ splitword;
+									that.wrongWordsArr.push({
+										rowId: i,
+										id: "#id" + that.spanId,
+										Text: splitword
+									});
+									that.spanId++;
+								}
+							}
+							if (word.length - 1 === j) {
+								data[i].NarrativeStringSpell = sampletext;
+								
+							}
+						}
+					
+					}
+					return data;
+		},
+		
+		// once check  this changeNarrative if any changes 
+		// changeNarrative: function(oEvent) {
+
+		// 	debugger;
+		// 	var InputFields = this.getView().getModel("InputsModel");
+
+		// 	InputFields.setProperty("/Inputs/isChanged", true);
+
+		// 	var changedRow = oEvent.getSource().getBindingContext();
+		// 	// changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
+		// 	var obj = changedRow.getObject();
+		// 	obj.NarrativeString = oEvent.getParameters().value;
+		// 	var idx = oEvent.getSource().getParent();
+		// 	var index = idx.getIndex();
+		// 	var that = this;
+		// 	this.rowData = [];
+		// 	this.homeArr.forEach(function(o, i) {
+		// 		that.rowData[i] = o;
+		// 	});
+		// 	this.rowData[index] = obj;
+
+		// 	this.narIndices.push(index);
+
+		// 	$.each(this.narIndices, function(i, el) {
+		// 		if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
+		// 	});
+		// },
+		changeNarrative: function(index, text, stringText) {
+
+			debugger;
+			var InputFields = this.getView().getModel("InputsModel");
+			InputFields.setProperty("/Inputs/isChanged", true);
+
+			var Otable = this.getView().byId("WipDetailsSet1");
+			var tableContext = Otable.getContextByIndex(index);
+			var obj = tableContext.getObject();
+			console.log("selected obj narrative string:" + text)
+			obj.NarrativeStringSpell = stringText;
+			obj.NarrativeString = text;
+			console.log(obj.NarrativeStringSpell);
+
+			var that = this;
+			this.rowData = [];
+			this.arr.forEach(function(o, i) {
+				that.rowData[i] = o;
+			});
+			this.rowData[index] = obj;
+			this.narIndices.push(index);
+			$.each(this.narIndices, function(i, el) {
+				if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
+			});
+			
+		},
+		CodesChange: function(oEvent) {
+			debugger;
+			var InputFields = this.getView().getModel("InputsModel");
+
+			var item = oEvent.getSource().getParent();
+			var idx = oEvent.getSource().getParent().getParent().indexOfRow(item);
+			this.narIndices.push(idx);
+
+			InputFields.setProperty("/Inputs/isChanged", true);
+
+			// var changedRow = oEvent.getSource().getBindingContext();
+			// // changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
+			// var obj = jQuery.extend({}, changedRow.getObject());
+
+			// obj.Zzactcd = oEvent.getSource().getSelectedItem().getText();
+			// var idx = oEvent.getSource().getParent();
+			// var index = idx.getIndex();
+			// var that = this;
+
+			// debugger;
+			// this.homeArr.forEach(function(o, i) {
+			// 	that.rowData[i] = o;
+			// });
+			// this.rowData[index] = obj;
+		},
+		
+		
+		onNarativeTexChange: function() {
+			var that = this;
+			// $(".fulcrum-editor-textarea").each(function(index, element) {
+			// 	element.addEventListener("keyup", function() {
+			// 		debugger;
+
+			// 		var text = this.innerText;
+			// 		var utilityDict = new Typo();
+			// 		var lang_code = 'en_US';
+			// 		var dictionary = new Typo("en_US", false, false, {
+			// 			dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
+			// 		});
+
+				
+			// 		var srt = text.split(" ");
+			// 		var stringText = "";
+			// 		var spanId = 0;
+			// 		srt.forEach(function(item) {
+			// 			if (dictionary.check(item) == false) {
+
+			// 				//item = item.reverse();
+			// 				stringText = stringText + ' <span id="id' + that.spanId + '" class="target">' + item +
+			// 					'</span>';
+			// 				that.spanId++;
+
+			// 			} else {
+
+			// 				stringText = stringText + " " + item;
+
+			// 			}
+
+			// 		});
+
+			// 		this.innerHTML = stringText;
+			// 		that.changeNarrative(index, text, stringText);
+			// 		$(".target").contextmenu(function(eve) {
+				
+			// 			document.addEventListener('contextmenu', event => event.preventDefault());
+			// 			that.currentSpanId = eve.target.id;
+			// 			that.menurowid = $(this).closest('tr')["0"].rowIndex - 1;
+		
+			// 			var array_of_suggestions = that.dictionaryLib.suggest(this.innerText);
+			// 			that.suggestions = [];
+			// 			for (var k = 0; k < array_of_suggestions.length; k++) {
+			// 				var txt = array_of_suggestions[k];
+			// 				var obj = new Object();
+			// 				obj.text = txt;
+			// 				that.suggestions.push(obj);
+			// 			}
+
+			// 			that.menuModel = new sap.ui.model.json.JSONModel({
+			// 				mainMenu: that.suggestions
+			// 			});
+			// 			that.menuModel.setProperty("/menutext", that.suggestions);
+			// 			if (!that._menu) {
+			// 				that._menu = sap.ui.xmlfragment(
+			// 					"wip.view.MenuItemEventing",
+			// 					that
+			// 				);
+			// 				// this.getView().addDependent(that._menu);
+			// 			}
+			// 			that._menu.setModel(that.menuModel, "menu");
+
+			// 			var eDock = sap.ui.core.Popup.Dock;
+			// 			that._menu.open(that._bKeyboard, $("#" + eve.target.id), eDock.BeginTop, eDock.BeginBottom, $("#" + eve.target.id));
+
+			// 		});
+
+			// 	});
+			// });
+			
+			
+				$(".fulcrum-editor-textarea").each(function(index, element) {
+
+				// element.addEventListener("copy", function() {
+
+				// 	return
+
+				// })
+
+				// 	element.addEventListener("paste", function() {
+
+				// 	return
+
+				// })
+
+				element.addEventListener("keyup", function() {
+					debugger
+                     var i = $(this).closest('tr')["0"].rowIndex - 1;
+					var position = that.resetOffset($("#" + this.id));
+
+					if (event.code == 'Space') {
+						debugger;
+						var log = 0;
+						var len = this.innerText.trim().length;
+                        $("#" + this.id).attr("data-isused", "true");
+						if (position - 1 == len) {
+
+							$("#" + this.id).caret('pos', position).focus();
+							event.preventDefault();
+							log = 1;
+
+						} else {
+							$("#" + this.id).caret('pos', len + 2).focus();
+							event.preventDefault();
+							log = 1;
+						}
+					
+					
+
+						if (log == 1) {
+							return;
+						}
+						
+					
+						
+
+					}
+
+					if (event.code == 'KeyC' && (event.ctrlKey || event.metaKey) || event.code == 'KeyV' && (event.ctrlKey || event.metaKey)) {
+
+						if (event.code == 'KeyV') {
+							$("#" + this.id).caret('pos', position + 2).focus();
+						}
+						event.preventDefault();
+
+						return
+					}
+
+					debugger
+
+					// $(window).resize(function() {
+					//                console.log("resize")
+
+					//              var offset = $("#"+this.id).caret('offset');
+					//             var position = $("#"+this.id).caret('position');
+
+					//               });
+
+					$(window).resize(function() {
+						console.log("resize window")
+						var resizePosition = that.resetOffset($("#" + this.id));
+						$("#" + this.id).caret('pos', resizePosition).focus();
+					});
+
+					debugger;
+					var text = this.innerText;
+
+					console.log(text)
+					var srt = text.split(/\s+/);
+
+					// var str1 = text.split("");
+					// var word = "";
+					// var lastChar = str1[str1.length-1];
+					// var str2 = [];
+					// str1.forEach(function(item){
+					// 	if(item == " " ){
+
+					// 			if(word.replace(/\s/g,'')){
+
+					// 			word =	word.replace(/\s/g,'');
+					// 				str2.push(word);
+					// 				str2.push(" ");
+					// 				alert(" dasdsadasdsa");
+					// 				word=""
+					// 			}
+					//                         else{
+					// 		str2.push(word);
+					// 		word="";
+					// 		str2.push(item);
+					//                         }
+
+					// 	}
+					// 	else{
+
+					// 		word = word + item;
+
+					// 	}
+
+					// });
+					// if(lastChar){
+
+					// 	str2.push(word);
+					// }
+
+					// debugger;
+
+					var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
+					
+				
+					var stringText = "";
+					srt.forEach(function(item) {
+
+						var log = 0;
+						that.wrongWordsArr.forEach(function(obj) {
+
+							if (obj.Text == item) {
+								log = 1;
+							}
+						});
+
+						if (log == 1) {
+							if (that.ignoreAllArr.includes(item) || specialChars.test(item)) {
+
+								stringText = stringText + " " + item;
+
+							} else {
+
+								if (specialChars.test(item)) {
+									
+								
+
+									var numericItem = "";
+									var subText = item.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
+
+
+									subText.forEach(function(subItem) {
+
+										if (specialChars.test(subItem) || that.ignoreAllArr.includes(subItem)) {
+
+											numericItem = numericItem + subItem;
+										} else {
+
+											if (that.dictionaryLib.check(subItem) == false) {
+
+												numericItem = numericItem + '<span id="id' + that.spanId +
+													'"class="target"  style="background-color:#F08080;   ">' + subItem + '</span>';
+
+												that.wrongWordsArr.push({
+													  rowId: i,
+													id: "#id" + that.spanId,
+													Text: subItem
+												});
+
+												that.spanId++;
+
+											} else {
+
+												numericItem = numericItem + subItem;
+											}
+
+										}
+
+									});
+
+									stringText = stringText + " " + numericItem;
+
+								} else {
+
+									stringText = stringText + ' <span id="id' + that.spanId +
+										'"class="target"  style="background-color:#F08080;">' + item + '</span>';
+									that.wrongWordsArr.push({
+										rowId: i,
+										id: "#id" + that.spanId,
+										Text: item
+									});
+									that.spanId++;
+								}
+							}
+
+						} else {
+
+							if (that.dictionaryLib.check(item) == false) {
+
+								if (that.ignoreAllArr.includes(item)) {
+
+									stringText = stringText + " " + item;
+
+								} else {
+
+								if (specialChars.test(item)) {
+									
+								
+
+									var numericItem = "";
+									var subText = item.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
+
+
+									subText.forEach(function(subItem) {
+
+										if (specialChars.test(subItem) || that.ignoreAllArr.includes(subItem)) {
+
+											numericItem = numericItem + subItem;
+										} else {
+
+											if (that.dictionaryLib.check(subItem) == false) {
+
+												numericItem = numericItem + '<span id="id' + that.spanId +
+													'"class="target"  style="background-color:#F08080;   ">' + subItem + '</span>';
+
+												that.wrongWordsArr.push({
+													rowId: i,
+													id: "#id" + that.spanId,
+													Text: subItem
+												});
+
+												that.spanId++;
+
+											} else {
+
+												numericItem = numericItem + subItem;
+											}
+
+										}
+
+									});
+
+									stringText = stringText + " " + numericItem;
+
+								} else {
+
+										stringText = stringText + ' <span id="id' + that.spanId +
+											'"class="target"  style="background-color:#F08080;   ">' + item + '</span>';
+										that.wrongWordsArr.push({
+											rowId: i,
+											id: "#id" + that.spanId,
+											Text: item
+										});
+										that.spanId++;
+
+									}
+
+								}
+
+							} else {
+
+								stringText = stringText + " " + item;
+							}
+
+						}
+
+					});
+
+					this.innerHTML = stringText;
+					debugger;
+                   that.changeNarrative(index, text, stringText);
+				
+
+						if ($("#" + this.id).attr("data-isused") != "true") {
+
+							$("#" + this.id).attr("data-isused", "true");
+
+							$("#" + this.id).caret('pos', position + 1).focus();
+						} else {
+
+							$("#" + this.id).caret('pos', position).focus();
+
+						}
+				
+
+					$(".target").contextmenu(function(eve) {
+						document.addEventListener('contextmenu', event => event.preventDefault());
+						debugger;
+						console.log(eve.target.id);
+						that.currentSpanId = eve.target.id;
+						// this._menu = sap.ui.xmlfragment("spc.view.MenuItemEventing", this);
+						//    	this._menu.open();
+						console.log("test");
+						that.array_of_suggestions = that.dictionaryLib.suggest(this.innerText);
+						console.log(that.array_of_suggestions);
+
+						this.suggestions = [];
+						for (var k = 0; k < that.array_of_suggestions.length; k++) {
+							var txt = that.array_of_suggestions[k];
+							var obj = new Object();
+							obj.text = txt;
+							this.suggestions.push(obj);
+						}
+						this.suggestions.push({
+							text: "ignoreAll"
+						});
+						that.menuModel = new sap.ui.model.json.JSONModel({
+							mainMenu: this.suggestions
+						});
+						that.menuModel.setProperty("/menutext", this.suggestions);
+
+						if (!that._menu) {
+							that._menu = sap.ui.xmlfragment(
+								"wip.view.MenuItemEventing",
+								that
+							);
+							that.getView().addDependent(that._menu);
+						}
+						that._menu.setModel(that.menuModel, "menu");
+
+				
+
+						var eDock = sap.ui.core.Popup.Dock;
+					
+						that._menu.open(that._bKeyboard, $("#" + eve.target.id), eDock.BeginTop, eDock.BeginBottom, $("#" + eve.target.id));
+
+					
+
+					});
+
+				});
+
+			});
+			
+			
+		},
+		settimeout: function() {
+			var that = this;
+			setTimeout(function() {
+			
+				$(".target").contextmenu(function(eve) {
+			
+					document.addEventListener('contextmenu', event => event.preventDefault());
+				
+					that.currentSpanId = eve.target.id;
+					that.menurowid = $(this).closest('tr')["0"].rowIndex - 1;
+					that.array_of_suggestions = that.dictionaryLib.suggest(this.innerText);
+					that.suggestions = [];
+					for (var k = 0; k < that.array_of_suggestions.length; k++) {
+						var txt = that.array_of_suggestions[k];
+						var obj = new Object();
+						obj.text = txt;
+						that.suggestions.push(obj);
+					}
+                    
+                    
+                    	that.suggestions.push({
+							text: "ignoreAll"
+						});
+                    
+					that.menuModel = new sap.ui.model.json.JSONModel({
+						mainMenu: that.suggestions
+					});
+					that.menuModel.setProperty("/menutext", that.suggestions);
+					if (!that._menu) {
+						that._menu = sap.ui.xmlfragment(
+							"wip.view.MenuItemEventing",
+							that
+						);
+						// this.getView().addDependent(that._menu);
+					}
+					that._menu.setModel(that.menuModel, "menu");
+
+					var eDock = sap.ui.core.Popup.Dock;
+					that._menu.open(that._bKeyboard, $("#" + eve.target.id), eDock.BeginTop, eDock.BeginBottom, $("#" + eve.target.id));
+
+				});
+
+			}, 2000);
+		},
+		// onMenuItemPress: function(oEvent) {
+		// 	debugger;
+		// 	// var rowindex = $("#" + this.currentSpanId).parent().attr("id");
+		// 	// var spantext = $("#" + this.currentSpanId)["0"].innerText;
+		// 	// var changedspantext = oEvent.getParameter("item").getText();
+		// 	// var narstr = this.rowData[rowindex].NarrativeString;
+		// 	// var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+		// 	// console.log("narstr" + narstr);
+		// 	// console.log("narstrspell" + narstrspell);
+		// 	$("#" + this.currentSpanId)["0"].innerText = oEvent.getParameter("item").getText();
+		// 	$("#" + this.currentSpanId).contents().unwrap();
+		// 	// var unwrap = $("#" + this.currentSpanId).contents().unwrap();
+		// 	// console.log("wrap" + unwrap);
+		// 	// 	this.rowData[rowindex].
+		// 	// var text = $("#" + this.currentSpanId)["0"].innerText
+		// },
+		onMenuItemPress: function(oEvent) {
+			debugger;
+
+			var rowindex = this.menurowid;
+			var spantext = $("#" + this.currentSpanId)["0"].innerText;
+			var changedspantext = oEvent.getParameter("item").getText();
+			var narstr = this.rowData[rowindex].NarrativeString;
+			var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+			var newnarstr = narstr.replace(spantext, changedspantext);
+			this.rowData[rowindex].NarrativeString = newnarstr;
+			// var newnarstrspell = narstrspell.replace('<span id="' + this.currentSpanId + '" class="target">' + spantext + '</span>',
+			// 	changedspantext);
+		
+			//this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
+		
+			this.saveObjects.push(this.rowData[rowindex]);
+			this.jsonModel.setProperty("/modelData", this.rowData);
+			var oTable = this.getView().byId("WipDetailsSet1");
+			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+			oTable.bindRows("/modelData");
+			
+			// my code
+			
+			var that = this;
+			debugger;
+
+			var msg = oEvent.getParameter("item").getText();
+			
+			var narstr = this.rowData[rowindex].NarrativeString;
+			var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+
+			if (msg == "ignoreAll") {
+
+				that.ignoreAllArr.push($("#" + that.currentSpanId)["0"].innerText);
+
+				if (that.wrongWordsArr) {
+
+					that.wrongWordsArr.forEach(function(obj) {
+						
+						
+
+						if (obj.Text == $("#" + that.currentSpanId)["0"].innerText) {
+							debugger;
+							
+							alert(obj.rowId);
+
+							$(obj.id).contents().unwrap();
+						}
+
+					});
+
+				}
+
+			} 
+			else
+			{
+				$("#" + that.currentSpanId)["0"].innerText = msg;
+				$("#" + that.currentSpanId).css("background-color", "transparent");
+			}
+
+			this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
+		
+			this.saveObjects.push(this.rowData[rowindex]);
+			this.jsonModel.setProperty("/modelData", this.rowData);
+			var oTable = this.getView().byId("WipDetailsSet1");
+			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+			oTable.bindRows("/modelData");
+			
+			
+			
+			
+			
+		},
+            
+            
+            
+            
+            
+
+		
 		onGlobalSearch: function(oEvent) {
 
 			debugger;
@@ -652,101 +1706,6 @@ sap.ui.define([
 			this.jsonModel.setProperty("/BillingOffice", this.homeArr[0].Werks);
 
 		},
-		// Reload: function(oEvent) {
-
-		// 	debugger;
-
-		// 	this.filter = oEvent.getSource().getParent().getParent().getParent().getText();
-
-		// 	var InputFields = this.getView().getModel("InputsModel");
-		// 	var change = InputFields.getProperty("/Inputs/isChanged");
-		// 	console.log(change);
-		// 	if (change === true) {
-		// 		this._Dialog = sap.ui.xmlfragment("wip.view.Fragment", this);
-		// 		this._Dialog.open();
-		// 	} else {
-		// 		this.ReloadTable();
-
-		// 	}
-
-		// },
-
-		// closeDialog: function() {
-		// 	this._Dialog.close();
-
-		// },
-
-		// ReloadTable: function(oEvent) {
-
-		// 	var InputFields = this.getView().getModel("InputsModel");
-
-		// 	var value = this.filter;
-
-		// 	if (value === " ") {
-		// 		this.getView().byId("WipDetailsSet").getModel().refresh(true);
-		// 	} else if (value === "Narrative_Edits") {
-		// 		sap.ui.core.BusyIndicator.show(0);
-		// 		this.getView().byId("WipDetailsSet1").getModel().refresh(true);
-		// 		var pspid = this.jsonModel.getProperty("/Matter");
-		// 		var oModel = this.getOwnerComponent().getModel();
-		// 		var aFilter = [];
-		// 		aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
-
-		// 		var that = this;
-		// 		oModel.read("/WipDetailsSet", {
-		// 			filters: aFilter,
-		// 			success: function(oData) {
-		// 				sap.ui.core.BusyIndicator.hide(0);
-
-		// 				debugger;
-
-		// 				that.jsonModel.setProperty("/modelData", oData.results);
-
-		// 			}
-		// 		});
-
-		// 	} else if (value === "Line_Item_Edits") {
-		// 		sap.ui.core.BusyIndicator.show(0);
-		// 		this.data(this.rowData);
-
-		// 	} else {
-
-		// 		sap.ui.core.BusyIndicator.show(0);
-
-		// 		var pspid = this.jsonModel.getProperty("/Matter");
-		// 		var oModel = this.getOwnerComponent().getModel();
-		// 		var aFilter = [];
-		// 		aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
-
-		// 		var that = this;
-		// 		oModel.read("/WipDetailsSet", {
-		// 			filters: aFilter,
-		// 			success: function(oData) {
-		// 				sap.ui.core.BusyIndicator.hide(0);
-
-		// 				debugger;
-
-		// 				that.jsonModel.setProperty("/modelData", oData.results);
-		// 				that.jsonModel.setProperty("/modelData", that.homeArr);
-
-		// 				that.getView().byId("WipDetailsSet3").setModel(that.jsonModel);
-		// 				var Otable = that.getView().byId("WipDetailsSet3");
-		// 				Otable.bindRows("/modelData");
-
-		// 			}
-		// 		});
-
-		// 	}
-
-		// 	if (this._Dialog) {
-
-		// 		this._Dialog.close();
-
-		// 	}
-		// 	InputFields.setProperty("/Inputs/isChanged", false);
-
-		// },
-
 		Reload: function(oEvent) {
 
 			debugger;
@@ -765,96 +1724,10 @@ sap.ui.define([
 			}
 
 		},
-
 		closeDialog: function() {
 			this._Dialog.close();
 
 		},
-
-		// ReloadTable: function(oEvent) {
-		// 	debugger;
-		// 	var InputFields = this.getView().getModel("InputsModel");
-
-		// 	var value = this.filter;
-
-		// 	if (value === " ") {
-		// 		this.getView().byId("WipDetailsSet").getModel().refresh(true);
-		// 	} else if (value === "Narrative_Edits") {
-		// 		sap.ui.core.BusyIndicator.show(0);
-		// 		this.getView().byId("WipDetailsSet1").getModel().refresh(true);
-		// 		var pspid = this.jsonModel.getProperty("/Matter");
-		// 		var oModel = this.getOwnerComponent().getModel();
-		// 		var aFilter = [];
-		// 		aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
-
-		// 		var that = this;
-		// 		oModel.read("/WipDetailsSet", {
-		// 			filters: aFilter,
-		// 			success: function(oData) {
-		// 				sap.ui.core.BusyIndicator.hide(0);
-
-		// 				debugger;
-		//                         that.homeArr = oData.results;
-		// 				that.jsonModel.setProperty("/modelData", oData.results);
-		// 				//that.jsonModel.setProperty("/modelData", that.homeArr);
-
-		// 					that.homeArr.forEach(function(o, k) {
-		// 				that.rowData[k] = o;
-		// 		        	});
-
-		// 				// that.jsonModel.setProperty("/modelData", that.homeArr);
-
-		// 				// that.getView().byId("WipDetailsSet1").setModel(that.jsonModel);
-		// 				// var Otable = this.getView().byId("WipDetailsSet1");
-		// 				// Otable.bindRows("/modelData");
-
-		// 			}
-		// 		});
-
-		// 	} else if (value === "Line_Item_Edits") {
-		// 		sap.ui.core.BusyIndicator.show(0);
-		// 		this.data(this.homeArr);
-
-		// 	} else {
-		// 		sap.ui.core.BusyIndicator.show(0);
-
-		// 		var pspid = this.jsonModel.getProperty("/Matter");
-		// 		var oModel = this.getOwnerComponent().getModel();
-		// 		var aFilter = [];
-		// 		aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
-
-		// 		var that = this;
-		// 		oModel.read("/WipDetailsSet", {
-		// 			filters: aFilter,
-		// 			success: function(oData) {
-		// 				sap.ui.core.BusyIndicator.hide(0);
-
-		// 				debugger;
-		//                      that.homeArr = oData.results;
-		// 				that.jsonModel.setProperty("/modelData", oData.results);
-		// 				//that.jsonModel.setProperty("/modelData", that.homeArr);
-
-		// 					that.homeArr.forEach(function(o, k) {
-		// 				that.rowData[k] = o;
-		// 			});
-
-		// 				that.getView().byId("WipDetailsSet3").setModel(that.jsonModel);
-		// 				var Otable = that.getView().byId("WipDetailsSet3");
-		// 				Otable.bindRows("/modelData");
-
-		// 			}
-		// 		});
-		// 	}
-
-		// 	if (this._Dialog) {
-
-		// 		this._Dialog.close();
-
-		// 	}
-		// 	InputFields.setProperty("/Inputs/isChanged", false);
-
-		// },
-
 		ReloadTable: function(oEvent) {
 			debugger;
 			var InputFields = this.getView().getModel("InputsModel");
@@ -874,7 +1747,7 @@ sap.ui.define([
 						sap.ui.core.BusyIndicator.hide(0);
 
 						debugger;
-						that.homeArr = oData.results;
+						that.homeArr = that.arr;
 						that.jsonModel.setProperty("/modelData", that.arr);
 						that.rowData = [];
 						that.homeArr.forEach(function(o, k) {
@@ -904,10 +1777,17 @@ sap.ui.define([
 						that.homeArr.forEach(function(o, k) {
 							that.rowData[k] = o;
 						});
+						
+						that.handlespellcheck(that.homeArr);
+
+						that.jsonModel.setProperty("/modelData", that.homeArr);
+
+						that.settimeout();
+						that.onNarativeTexChange();
 
 					}
 				});
-				this.onNarativeTexChange();
+			
 			} else if (filter === "LineItemEdits") {
 				sap.ui.core.BusyIndicator.show(0);
 				this.data(this.homeArr);
@@ -916,6 +1796,12 @@ sap.ui.define([
 				// debugger;
 				sap.ui.core.BusyIndicator.show(0);
 				// this.getView().byId("WipDetailsSet3").getModel().refresh(true);
+				var tableLineEdits = this.getView().byId("WipDetailsSet3");
+				var index = tableLineEdits.getSelectedIndices();
+				for (var i = 0; i < index.length; i++) {
+					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
+				
+				}
 				var pspid = this.jsonModel.getProperty("/Matter");
 				var oModel = this.getOwnerComponent().getModel();
 				var aFilter = [];
@@ -978,458 +1864,6 @@ sap.ui.define([
 			var Otable = this.getView().byId("WipDetailsSet1");
 			Otable.onAfterRendering();
 
-		},
-
-		changeNarrative: function(oEvent) {
-
-			debugger;
-			var InputFields = this.getView().getModel("InputsModel");
-
-			InputFields.setProperty("/Inputs/isChanged", true);
-
-			var changedRow = oEvent.getSource().getBindingContext();
-			// changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
-			var obj = changedRow.getObject();
-			obj.NarrativeString = oEvent.getParameters().value;
-			var idx = oEvent.getSource().getParent();
-			var index = idx.getIndex();
-			var that = this;
-			this.rowData = [];
-			this.homeArr.forEach(function(o, i) {
-				that.rowData[i] = o;
-			});
-			this.rowData[index] = obj;
-
-			this.narIndices.push(index);
-
-			$.each(this.narIndices, function(i, el) {
-				if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
-			});
-		},
-		CodesChange: function(oEvent) {
-			debugger;
-			var InputFields = this.getView().getModel("InputsModel");
-
-			var item = oEvent.getSource().getParent();
-			var idx = oEvent.getSource().getParent().getParent().indexOfRow(item);
-			this.narIndices.push(idx);
-
-			InputFields.setProperty("/Inputs/isChanged", true);
-
-			// var changedRow = oEvent.getSource().getBindingContext();
-			// // changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
-			// var obj = jQuery.extend({}, changedRow.getObject());
-
-			// obj.Zzactcd = oEvent.getSource().getSelectedItem().getText();
-			// var idx = oEvent.getSource().getParent();
-			// var index = idx.getIndex();
-			// var that = this;
-
-			// debugger;
-			// this.homeArr.forEach(function(o, i) {
-			// 	that.rowData[i] = o;
-			// });
-			// this.rowData[index] = obj;
-		},
-		NarrativeEditsSelection: function(oEvent) {
-
-			debugger;
-			var InputFields = this.getView().getModel("InputsModel");
-			var rowCount = this.byId("WipDetailsSet1").getSelectedIndices();
-
-			if (rowCount.length) {
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", true);
-
-			} else {
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
-			}
-
-		},
-
-		LineItemEditsSelection: function() {
-
-			var InputFields = this.getView().getModel("InputsModel");
-			var rowCount = this.byId("WipDetailsSet2").getSelectedIndices();
-
-			if (rowCount.length === 1) {
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", true);
-
-			} else if (rowCount.length > 1) {
-				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
-			} else {
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
-
-			}
-
-		},
-		LineItemTransferSelection: function(oEvent) {
-			debugger;
-			var InputFields = this.getView().getModel("InputsModel");
-			var rowCount = this.byId("WipDetailsSet3").getSelectedIndices();
-			this.byId("ToMatter3");
-
-			// Need to update Updatecodes Logic based on control filed selection in th table columns
-
-			if (rowCount.length === 1) {
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", true);
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", true);
-
-			} else if (rowCount.length > 1) {
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", true);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", true);
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
-			} else {
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
-
-			}
-
-		},
-
-		handleIconTabBarSelect: function(oEvent) {
-			debugger;
-
-			var InputFields = this.getView().getModel("InputsModel");
-			var change = oEvent.getSource();
-		
-			var value = change.getSelectedKey();
-
-	
-		this.ReloadTable();
-
-			if (value === "NarrativeEdits") {
-
-				var Otable = this.getView().byId("WipDetailsSet1");
-
-				this.byId("searchText1").setValue("");
-				this.jsonModel.setProperty("/RowCount1", this.arr.length);
-
-				this.jsonModel.setProperty("/modelData", this.arr);
-
-				this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
-				var Otable = this.getView().byId("WipDetailsSet1");
-				Otable.bindRows("/modelData");
-
-				var tableLineEdits = this.getView().byId("WipDetailsSet2");
-				var index = tableLineEdits.getSelectedIndices();
-				for (var i = 0; i < index.length; i++) {
-					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
-					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
-
-				}
-
-				//Visible property set
-				InputFields.setProperty("/Inputs/Toolbar/Reviewed", true);
-				InputFields.setProperty("/Inputs/Toolbar/Unreview", true);
-				InputFields.setProperty("/Inputs/Toolbar/Save", true);
-				InputFields.setProperty("/Inputs/Toolbar/Save_Layout", false);
-				InputFields.setProperty("/Inputs/Toolbar/Modify_Reverse", false);
-				InputFields.setProperty("/Inputs/Toolbar/Consolidate", false);
-				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", false);
-				InputFields.setProperty("/Inputs/Toolbar/GlobalSpellCheck", true);
-				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
-				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
-				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", true);
-
-				//Enable Property set 
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
-
-				this.onNarativeTexChange();
-
-				// $(".fulcrum-editor-textarea").each(function(index, element) {
-
-				// 	element.addEventListener("keyup", function() {
-				// 		debugger;
-
-				// 		var text = this.innerText;
-				// 		var utilityDict = new Typo();
-				// 		var lang_code = 'en_US';
-				// 		var dictionary = new Typo("en_US", false, false, {
-				// 			dictionaryPath: location.protocol + '//' + location.host+"/webapp/typo/dictionaries"
-				// 		});
-
-				// 		console.log(text);
-				// 		var srt = text.split(" ");
-				// 		var stringText = "";
-				// 		var spanId = 0;
-				// 		srt.forEach(function(item) {
-				// 			if (dictionary.check(item) == false) {
-
-				// 				//item = item.reverse();
-				// 				stringText = stringText + ' <span id="id' + spanId + '" class="target">' + item +
-				// 					'</span>';
-				// 				spanId++;
-				// 				//	$(".fulcrum-editor-textarea").append(stringText);
-				// 			} else {
-				// 				//	 item = item.reverse();
-				// 				stringText = stringText + " " + item;
-				// 				//	$(".fulcrum-editor-textarea").append(stringText);
-				// 			}
-
-				// 		});
-
-				// 		this.innerHTML = stringText;
-
-				// 		// $(".target").contextmenu(function(eve) {
-				// 		// 	document.addEventListener('contextmenu', event => event.preventDefault());
-				// 		// 	debugger;
-				// 		// 	console.log(eve.target.id);
-				// 		// 	// this._menu = sap.ui.xmlfragment("spc.view.MenuItemEventing", this);
-				// 		// 	//    	this._menu.open();
-				// 		// 	console.log("test");
-				// 		// 	that.array_of_suggestions = that.dictionary.suggest(this.innerText);
-				// 		// 	console.log(that.array_of_suggestions);
-
-				// 		// 	this.suggestions = [];
-				// 		// 	for (var k = 0; k < that.array_of_suggestions.length; k++) {
-				// 		// 		var txt = that.array_of_suggestions[k];
-				// 		// 		var obj = new Object();
-				// 		// 		obj.text = txt;
-				// 		// 		this.suggestions.push(obj);
-				// 		// 	}
-
-				// 		// 	this.menuModel = new sap.ui.model.json.JSONModel({
-				// 		// 		mainMenu: this.suggestions
-				// 		// 	});
-				// 		// 	this.menuModel.setProperty("/menutext", this.suggestions);
-
-				// 		// 	console.log(this.suggestions);
-				// 		// 	if (!this._menu) {
-				// 		// 		this._menu = sap.ui.xmlfragment(
-				// 		// 			"spc.view.MenuItemEventing",
-				// 		// 			this
-				// 		// 		);
-				// 		// 	}
-				// 		// 	this._menu.setModel(this.menuModel, "menu");
-
-				// 		// 	// var oButton = event.getSource();
-
-				// 		// 	// create menu only once
-
-				// 		// 	var eDock = sap.ui.core.Popup.Dock;
-				// 		// 	this._menu.open(this._bKeyboard, eve.pageX, eDock.BeginTop, eDock.BeginBottom, eve.pageY);
-
-				// 		// });
-
-				// 	});
-				// });
-
-			} else if (value === "LineItemEdits") {
-				this.byId("searchText2").setValue("");
-				this.jsonModel.setProperty("/RowCount2", this.arr.length);
-				var tableLineEdits = this.getView().byId("WipDetailsSet2");
-				var index = tableLineEdits.getSelectedIndices();
-				for (var i = 0; i < index.length; i++) {
-					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
-					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
-
-				}
-
-				InputFields.setProperty("/Inputs/Toolbar/Reviewed", true);
-				InputFields.setProperty("/Inputs/Toolbar/Unreview", true);
-				InputFields.setProperty("/Inputs/Toolbar/Save", true);
-				InputFields.setProperty("/Inputs/Toolbar/Save_Layout", true);
-				InputFields.setProperty("/Inputs/Toolbar/Modify_Reverse", true);
-				InputFields.setProperty("/Inputs/Toolbar/Consolidate", false);
-				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", true);
-				InputFields.setProperty("/Inputs/Toolbar/GlobalSpellCheck", false);
-				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
-				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
-				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
-
-				//Enable Property set 
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Reviewed", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Unreview", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
-				this.tableId = "WipDetailsSet2";
-				debugger;
-				var that = this;
-				this.rowData = [];
-				this.jsonModel.getData()["modelData"].forEach(function(item, f) {
-
-					that.rowData[f] = item;
-
-				});
-				this.data(this.rowData);
-
-				//	console.log(this.jsonModel.getData()["modelData"]);
-
-			} else if (value === "LineItemTransfers") {
-				this.byId("searchText3").setValue("");
-				this.jsonModel.setProperty("/RowCount3", this.arr.length);
-				var tableLineEdits = this.getView().byId("WipDetailsSet2");
-				var index = tableLineEdits.getSelectedIndices();
-				for (var i = 0; i < index.length; i++) {
-					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
-					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
-
-				}
-				this.getView(0).byId("WipDetailsSet2").getModel().refresh(true);
-
-				var tableLineEdits1 = this.getView().byId("WipDetailsSet3");
-
-				var len = tableLineEdits1.getRows().length;
-				for (var q = 0; q < len; q++) {
-					tableLineEdits1.getRows()[q].getCells()[0].setVisible(false);
-
-				}
-				//Visible property set
-				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
-				InputFields.setProperty("/Inputs/Toolbar/Unreview", false);
-				InputFields.setProperty("/Inputs/Toolbar/Save", true);
-				InputFields.setProperty("/Inputs/Toolbar/Save_Layout", true);
-				InputFields.setProperty("/Inputs/Toolbar/Modify_Reverse", false);
-				InputFields.setProperty("/Inputs/Toolbar/Consolidate", true);
-				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", true);
-				InputFields.setProperty("/Inputs/Toolbar/GlobalSpellCheck", false);
-				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", true);
-				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", true);
-				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
-
-				//Enable Property set 
-
-				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
-				this.tableId = "WipDetailsSet3";
-				this.data(this.rowData);
-
-
-			} else {
-				this.byId("searchText").setValue("");
-				this.jsonModel.setProperty("/modelData", this.arr);
-
-				this.getView().byId("WipDetailsSet").setModel(this.jsonModel);
-				var Otable = this.getView().byId("WipDetailsSet");
-				Otable.bindRows("/modelData");
-				this.jsonModel.setProperty("/RowCount", this.arr.length);
-				//Visible property set
-				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
-				InputFields.setProperty("/Inputs/Toolbar/Unreview", false);
-				InputFields.setProperty("/Inputs/Toolbar/Save", false);
-				InputFields.setProperty("/Inputs/Toolbar/Save_Layout", true);
-				InputFields.setProperty("/Inputs/Toolbar/Modify_Reverse", false);
-				InputFields.setProperty("/Inputs/Toolbar/Consolidate", false);
-				InputFields.setProperty("/Inputs/Toolbar/Updatecodes", false);
-				InputFields.setProperty("/Inputs/Toolbar/GlobalSpellCheck", false);
-				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
-				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
-				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
-
-				//Enable Property set 
-
-			}
-
-		},
-		onNarativeTexChange: function() {
-			$(".fulcrum-editor-textarea").each(function(index, element) {
-
-				element.addEventListener("keyup", function() {
-					debugger;
-
-					var text = this.innerText;
-					var utilityDict = new Typo();
-					var lang_code = 'en_US';
-					var dictionary = new Typo("en_US", false, false, {
-						dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
-					});
-
-					console.log(text);
-					var srt = text.split(" ");
-					var stringText = "";
-					var spanId = 0;
-					srt.forEach(function(item) {
-						if (dictionary.check(item) == false) {
-
-							//item = item.reverse();
-							stringText = stringText + ' <span id="id' + spanId + '" class="target">' + item +
-								'</span>';
-							spanId++;
-							//	$(".fulcrum-editor-textarea").append(stringText);
-						} else {
-							//	 item = item.reverse();
-							stringText = stringText + " " + item;
-							//	$(".fulcrum-editor-textarea").append(stringText);
-						}
-
-					});
-
-					this.innerHTML = stringText;
-
-					// $(".target").contextmenu(function(eve) {
-					// 	document.addEventListener('contextmenu', event => event.preventDefault());
-					// 	debugger;
-					// 	console.log(eve.target.id);
-					// 	// this._menu = sap.ui.xmlfragment("spc.view.MenuItemEventing", this);
-					// 	//    	this._menu.open();
-					// 	console.log("test");
-					// 	that.array_of_suggestions = that.dictionary.suggest(this.innerText);
-					// 	console.log(that.array_of_suggestions);
-
-					// 	this.suggestions = [];
-					// 	for (var k = 0; k < that.array_of_suggestions.length; k++) {
-					// 		var txt = that.array_of_suggestions[k];
-					// 		var obj = new Object();
-					// 		obj.text = txt;
-					// 		this.suggestions.push(obj);
-					// 	}
-
-					// 	this.menuModel = new sap.ui.model.json.JSONModel({
-					// 		mainMenu: this.suggestions
-					// 	});
-					// 	this.menuModel.setProperty("/menutext", this.suggestions);
-
-					// 	console.log(this.suggestions);
-					// 	if (!this._menu) {
-					// 		this._menu = sap.ui.xmlfragment(
-					// 			"spc.view.MenuItemEventing",
-					// 			this
-					// 		);
-					// 	}
-					// 	this._menu.setModel(this.menuModel, "menu");
-
-					// 	// var oButton = event.getSource();
-
-					// 	// create menu only once
-
-					// 	var eDock = sap.ui.core.Popup.Dock;
-					// 	this._menu.open(this._bKeyboard, eve.pageX, eDock.BeginTop, eDock.BeginBottom, eve.pageY);
-
-					// });
-
-				});
-			});
 		},
 
 		onHide: function() {
@@ -1538,156 +1972,14 @@ sap.ui.define([
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Edits", false);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Transfers", false);
 		},
-		onBack: function() {
-			var sPreviousHash = History.getInstance().getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				window.history.go(-1);
-			} else {
-
-				this.getOwnerComponent().getRouter().navTo("woklist", null, true);
-			}
-		},
-
-		// onReplacewords: function(evt) {
-		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
-		// 	if (oTable.getSelectedIndices().length === 0) {
-		// 		debugger;
-		// 		MessageBox.show(
-		// 			"Select atleast one item!", {
-		// 				icon: sap.m.MessageBox.Icon.WARNING,
-		// 				title: "Replace",
-		// 				actions: [sap.m.MessageBox.Action.OK]
-		// 			}
-		// 		);
-		// 		return;
+		// onBack: function() {
+		// 	var sPreviousHash = History.getInstance().getPreviousHash();
+		// 	if (sPreviousHash !== undefined) {
+		// 		window.history.go(-1);
 		// 	} else {
-		// 		var odialog = this._getreplaceDialogbox();
-		// 		odialog.open();
+		// 		this.getOwnerComponent().getRouter().navTo("woklist", null, true);
 		// 	}
 		// },
-		// _getreplaceDialogbox: function() {
-		// 	if (!this._oreplaceDialog) {
-		// 		this._oreplaceDialog = sap.ui.xmlfragment("replaceword", "wip.view.popup", this);
-		// 		this.getView().addDependent(this._oreplaceDialog);
-		// 	}
-		// 	return this._oreplaceDialog;
-		// },
-		// closereplaceDialog: function() {
-		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
-		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
-		// 	sap.ui.getCore().byId("replaceword--word").setSelected(true);
-		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-		// 	$.each(tbl.getItems(), function(d, o) {
-		// 		if (d > 0) {
-		// 			var rowid = o.getId();
-		// 			tbl.removeItem(rowid);
-		// 		}
-		// 	});
-		// 	this._getreplaceDialogbox().close();
-		// },
-		// onreplace: function() {
-		// 	debugger;
-		// 	var InputFields = this.getView().getModel("InputsModel");
-
-		// 	InputFields.setProperty("/Inputs/isChanged", true);
-		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
-		// 	// console.log(oTable.getRows());
-		// 	var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-		// 	var index = oTable1.getItems().length;
-		// 	console.log(index);
-
-		// 	var that = this;
-		// 	$.each(oTable.getSelectedIndices(), function(i, o) {
-
-		// 		var ctx = oTable.getContextByIndex(o);
-		// 		var m = ctx.getObject();
-		// 		var str = m.NarrativeString;
-		// 		var items = oTable1.getItems();
-		// 		$.each(items, function(l, obj) {
-		// 			var cells = obj.getCells();
-		// 			// var string = sap.ui.getCore().byId("replaceword--string" + j).getValue();
-		// 			// var replacewith = sap.ui.getCore().byId("replaceword--replace" + j).getValue();
-		// 			var string = cells[0].getValue();
-		// 			var replacewith = cells[1].getValue();
-		// 			var searchindex = str.search(string);
-		// 			if (searchindex >= 0) {
-
-		// 				var res = str.replace(string, replacewith);
-		// 				that.replaceItems = that.jsonModel.getProperty("/modelData");
-		// 				that.replaceItems[o].NarrativeString = res;
-		// 				// console.log(that.replaceItems);
-		// 					if(str !== res){
-
-		// 					that.saveObjects.push(that.replaceItems[o]);
-		// 				}
-		// 				str = that.replaceItems[o].NarrativeString;
-
-		// 			}
-
-		// 		});
-		// 		that.jsonModel.setProperty("/modelData", that.replaceItems);
-		// 	that.getView().byId("WipDetailsSet1").setModel(that.jsonModel);
-		// 		oTable.bindRows("/modelData");
-
-		// 	});
-		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
-		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
-		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-		// 	$.each(tbl.getItems(), function(d, o) {
-		// 		if (d > 0) {
-		// 			var rowid = o.getId();
-		// 			tbl.removeItem(rowid);
-		// 		}
-		// 	});
-		// 	this._getreplaceDialogbox().close();
-		// },
-		// replaceall: function() {
-		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
-		// 	var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-		// 	var replaceItems = this.jsonModel.getProperty("/modelData");
-		// 	var that = this;
-		// 	var result = $.each(replaceItems, function(i, o) {
-
-		// 		var m = o;
-		// 		var str = m.NarrativeString;
-		// 		var items = oTable1.getItems();
-		// 		$.each(items, function(l, obj) {
-		// 			var cells = obj.getCells();
-		// 			var string = cells[0].getValue();
-		// 			var replacewith = cells[1].getValue();
-		// 			var searchindex = str.search(string);
-		// 			if (searchindex >= 0) {
-		// 				var res = str.replace(string, replacewith);
-		// 				that.replace = that.jsonModel.getProperty("/modelData");
-		// 				that.replace[i].NarrativeString = res;
-
-		// 					if(str !== res)
-		// 				{
-		// 					that.saveObjects.push(that.replace[i]);
-		// 				}
-
-		// 				str = that.replace[i].NarrativeString;
-		// 			}
-		// 		});
-		// 		return that.replace;
-
-		// 	});
-
-		// 	this.jsonModel.setProperty("/modelData", result);
-		// 	this.getView().setModel(this.jsonModel);
-		// 	oTable.bindRows("/modelData");
-		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
-		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
-		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-		// 	$.each(tbl.getItems(), function(d, o) {
-		// 		if (d > 0) {
-		// 			var rowid = o.getId();
-		// 			tbl.removeItem(rowid);
-		// 		}
-		// 	});
-		// 	this._getreplaceDialogbox().close();
-		// },
-
 		onReplacewords: function(evt) {
 			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			if (oTable.getSelectedIndices().length === 0) {
@@ -1725,11 +2017,163 @@ sap.ui.define([
 			});
 			this._oreplaceDialog.close();
 		},
+		// onreplace: function() {
+		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+		// 	// console.log(oTable.getRows());
+		// 	var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+
+		// 	var that = this;
+		// 	$.each(oTable.getSelectedIndices(), function(i, o) {
+		// 		debugger;
+		// 		var ctx = oTable.getContextByIndex(o);
+		// 		var m = ctx.getObject();
+		// 		var str = m.NarrativeString;
+		// 		var res;
+		// 		debugger;
+		// 		var items = oTable1.getItems();
+		// 		$.each(items, function(l, obj) {
+		// 			debugger;
+		// 			var cells = obj.getCells();
+		// 			var string = cells[0].getValue();
+		// 			var replacewith = cells[1].getValue();
+		// 			var check = cells[3].getSelected();
+		// 			if (check) {
+
+		// 				var pullstop = str.lastIndexOf(".");
+		// 				if (pullstop) {
+		// 					str = str.substring(0, pullstop);
+		// 				}
+		// 				var stringarr = str.split(" ");
+
+		// 				var startindex = stringarr.indexOf(string);
+		// 				if (startindex >= 0) {
+		// 					stringarr[startindex] = replacewith;
+		// 				}
+		// 				if (pullstop) {
+		// 					stringarr.push(".");
+		// 				}
+		// 				res = stringarr.join(" ");
+
+		// 				if (pullstop) {
+		// 					res = that.remove_character(res, res.length - 2);
+		// 				}
+
+		// 			} else {
+		// 				debugger;
+		// 				var searchindex = str.search(string);
+		// 				if (searchindex >= 0) {
+		// 					res = str.replace(string, replacewith);
+		// 				}
+		// 			}
+
+		// 			that.replaceItems = that.jsonModel.getProperty("/modelData");
+		// 			that.replaceItems[o].NarrativeString = res;
+
+		// 			if (str != res) {
+		// 				that.saveObjects.push(that.replaceItems[o]);
+		// 			}
+
+		// 			str = that.replaceItems[o].NarrativeString;
+
+		// 		});
+		// 		that.jsonModel.setProperty("/modelData", that.replaceItems);
+		// 		oTable.setModel(that.jsonModel);
+		// 		oTable.bindRows("/modelData");
+
+		// 	});
+		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
+		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
+		// 	sap.ui.getCore().byId("replaceword--word").setSelected(true);
+		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+		// 	$.each(tbl.getItems(), function(d, o) {
+		// 		if (d > 0) {
+		// 			var rowid = o.getId();
+		// 			tbl.removeItem(rowid);
+		// 		}
+		// 	});
+		// 	this._getreplaceDialogbox().close();
+		// },
+		// replaceall: function() {
+		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+		// 	var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+		// 	var replaceItems = this.jsonModel.getProperty("/modelData");
+		// 	var that = this;
+		// 	var result = $.each(replaceItems, function(i, o) {
+
+		// 		var m = o;
+		// 		var str = m.NarrativeString;
+		// 		var res;
+		// 		var items = oTable1.getItems();
+		// 		$.each(items, function(l, obj) {
+		// 			var cells = obj.getCells();
+		// 			var string = cells[0].getValue();
+		// 			var replacewith = cells[1].getValue();
+		// 			var check = cells[3].getSelected();
+		// 			if (check) {
+
+		// 				var pullstop = str.lastIndexOf(".");
+		// 				if (pullstop) {
+		// 					str = str.substring(0, pullstop);
+		// 				}
+
+		// 				var stringarr = str.split(" ");
+		// 				var startindex = stringarr.indexOf(string);
+		// 				if (startindex >= 0) {
+		// 					stringarr[startindex] = replacewith;
+		// 				}
+		// 				if (pullstop) {
+		// 					stringarr.push(".");
+		// 				}
+
+		// 				res = stringarr.join(" ");
+
+		// 				if (pullstop) {
+		// 					res = that.remove_character(res, res.length - 2);
+		// 				}
+		// 				that.replace = that.jsonModel.getProperty("/modelData");
+		// 				that.replace[i].NarrativeString = res;
+
+		// 				if (str != res) {
+		// 					that.saveObjects.push(that.replace[i]);
+		// 				}
+
+		// 				str = that.replace[i].NarrativeString;
+
+		// 			} else {
+
+		// 				var searchindex = str.search(string);
+		// 				if (searchindex >= 0) {
+		// 					res = str.replace(string, replacewith);
+		// 					that.replace = that.jsonModel.getProperty("/modelData");
+		// 					that.replace[i].NarrativeString = res;
+		// 					str = that.replace[i].NarrativeString;
+		// 				}
+		// 			}
+
+		// 		});
+		// 		return that.replace;
+		// 	});
+
+		// 	this.jsonModel.setProperty("/modelData", result);
+		// 	oTable.setModel(this.jsonModel);
+		// 	oTable.bindRows("/modelData");
+		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
+		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
+		// 	sap.ui.getCore().byId("replaceword--word").setSelected(true);
+		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+		// 	$.each(tbl.getItems(), function(d, o) {
+		// 		if (d > 0) {
+		// 			var rowid = o.getId();
+		// 			tbl.removeItem(rowid);
+		// 		}
+		// 	});
+		// 	this._getreplaceDialogbox().close();
+		// },
 		onreplace: function() {
 			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			// console.log(oTable.getRows());
 			var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-
+			this.replaceItems = [];
 			var that = this;
 			$.each(oTable.getSelectedIndices(), function(i, o) {
 				debugger;
@@ -1746,36 +2190,31 @@ sap.ui.define([
 					var replacewith = cells[1].getValue();
 					var check = cells[3].getSelected();
 					if (check) {
-
-						var pullstop = str.lastIndexOf(".");
-						if (pullstop) {
-							str = str.substring(0, pullstop);
-						}
 						var stringarr = str.split(" ");
-
-						var startindex = stringarr.indexOf(string);
-						if (startindex >= 0) {
-							stringarr[startindex] = replacewith;
-						}
-						if (pullstop) {
-							stringarr.push(".");
-						}
+						$.each(stringarr, function(d, o) {
+							if (stringarr[d] === string) {
+								stringarr[d] = replacewith;
+							} else {
+								if (stringarr[d].endsWith(".")) {
+									var newSplitWord = stringarr[d].split(".");
+									if (newSplitWord[0] === string) {
+										stringarr[d] = replacewith + ".";
+									}
+								}
+							}
+						});
 						res = stringarr.join(" ");
-
-						if (pullstop) {
-							res = that.remove_character(res, res.length - 2);
-						}
-
 					} else {
 						debugger;
-						var searchindex = str.search(string);
-						if (searchindex >= 0) {
-							res = str.replace(string, replacewith);
-						}
+					res = str.split(string).join(replacewith);
 					}
+					that.rowData.forEach(function(obj, k) {
+						that.replaceItems[k] = obj;
+					});
 
-					that.replaceItems = that.jsonModel.getProperty("/modelData");
+					// that.replaceItems = that.jsonModel.getProperty("/modelData");
 					that.replaceItems[o].NarrativeString = res;
+					that.replaceItems[o].NarrativeStringSpell = res;
 
 					if (str != res) {
 						that.saveObjects.push(that.replaceItems[o]);
@@ -1784,10 +2223,12 @@ sap.ui.define([
 					str = that.replaceItems[o].NarrativeString;
 
 				});
-				that.jsonModel.setProperty("/modelData", that.replaceItems);
+				var data1 = that.handlespellcheck(that.replaceItems);
+				that.jsonModel.setProperty("/modelData", data1);
 				oTable.setModel(that.jsonModel);
 				oTable.bindRows("/modelData");
-
+				that.settimeout();
+				that.onNarativeTexChange();
 			});
 			sap.ui.getCore().byId("replaceword--string0").setValue("");
 			sap.ui.getCore().byId("replaceword--replace0").setValue("");
@@ -1801,11 +2242,16 @@ sap.ui.define([
 			});
 			this._getreplaceDialogbox().close();
 		},
-
 		replaceall: function() {
+			debugger;
 			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-			var replaceItems = this.jsonModel.getProperty("/modelData");
+
+			var replaceItems = [];
+			this.rowData.forEach(function(obj, k) {
+				replaceItems[k] = obj;
+			});
+			this.replace = [];
 			var that = this;
 			var result = $.each(replaceItems, function(i, o) {
 
@@ -1819,27 +2265,25 @@ sap.ui.define([
 					var replacewith = cells[1].getValue();
 					var check = cells[3].getSelected();
 					if (check) {
-
-						var pullstop = str.lastIndexOf(".");
-						if (pullstop) {
-							str = str.substring(0, pullstop);
-						}
-
-						var stringarr = str.split(" ");
-						var startindex = stringarr.indexOf(string);
-						if (startindex >= 0) {
-							stringarr[startindex] = replacewith;
-						}
-						if (pullstop) {
-							stringarr.push(".");
-						}
-
+                	var stringarr = str.split(" ");
+						$.each(stringarr, function(d, o) {
+							if (stringarr[d] === string) {
+								stringarr[d] = replacewith;
+							} else {
+								if (stringarr[d].endsWith(".")) {
+									var newSplitWord = stringarr[d].split(".");
+									if (newSplitWord[0] === string) {
+										stringarr[d] = replacewith + ".";
+									}
+								}
+							}
+						});
 						res = stringarr.join(" ");
-
-						if (pullstop) {
-							res = that.remove_character(res, res.length - 2);
-						}
-						that.replace = that.jsonModel.getProperty("/modelData");
+						that.rowData.forEach(function(obj, k) {
+							that.replace[k] = obj;
+						});
+						// that.replace = that.jsonModel.getProperty("/modelData");
+						that.replace[i].NarrativeString = res;
 						that.replace[i].NarrativeString = res;
 
 						if (str != res) {
@@ -1852,9 +2296,13 @@ sap.ui.define([
 
 						var searchindex = str.search(string);
 						if (searchindex >= 0) {
-							res = str.replace(string, replacewith);
-							that.replace = that.jsonModel.getProperty("/modelData");
+							res = str.split(string).join(replacewith);
+							// that.replace = that.jsonModel.getProperty("/modelData");
+							that.rowData.forEach(function(obj, k) {
+								that.replace[k] = obj;
+							});
 							that.replace[i].NarrativeString = res;
+							that.replace[i].NarrativeStringSpell = res;
 							str = that.replace[i].NarrativeString;
 						}
 					}
@@ -1862,10 +2310,11 @@ sap.ui.define([
 				});
 				return that.replace;
 			});
-
-			this.jsonModel.setProperty("/modelData", result);
+			var data1 = that.handlespellcheck(result);
+			this.jsonModel.setProperty("/modelData", data1);
 			oTable.setModel(this.jsonModel);
 			oTable.bindRows("/modelData");
+
 			sap.ui.getCore().byId("replaceword--string0").setValue("");
 			sap.ui.getCore().byId("replaceword--replace0").setValue("");
 			sap.ui.getCore().byId("replaceword--word").setSelected(true);
@@ -1877,8 +2326,11 @@ sap.ui.define([
 				}
 			});
 			this._getreplaceDialogbox().close();
+			this.settimeout();
+			this.onNarativeTexChange();
 		},
-
+		
+		
 		addbuttonToReplace: function(evt) {
 
 			var oTable = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
@@ -1903,7 +2355,7 @@ sap.ui.define([
 					name: "word[]"
 				}),
 				new sap.m.Button({
-					text: "delete",
+					icon: "sap-icon://delete",
 					press: function(oEvent) {
 						var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
 						var src = oEvent.getSource().getParent();
@@ -2275,10 +2727,6 @@ sap.ui.define([
 				this.handleAddRowMass(1);
 			}
 
-var selindexes = oTable.getSelectedIndices();
-            for (var j = 0; j < selindexes.length; j++) {
-				this.indexes.push(selindexes[j]);
-			}
 			$.each(oTable.getSelectedIndices(), function(i, o) {
 
 				var tableContext = oTable.getContextByIndex(o);
@@ -3446,9 +3894,8 @@ var selindexes = oTable.getSelectedIndices();
 
 			// this.getTableItems();
 		},
-		onTransfer: function(oModel) {
+	onTransfer: function(oModel) {
 			this.cols = [];
-			this.colsval = [];
 			var oTable = sap.ui.core.Fragment.byId("splitTransfer", "splitTable2");
 			var rows = oTable.getItems();
 			if (rows.length === 1) {
@@ -3456,27 +3903,26 @@ var selindexes = oTable.getSelectedIndices();
 			} else {
 				for (var i = 1; i < rows.length; i++) {
 					var cells = rows[i].getCells();
-					var cell1 = cells[0].getValue();
-					var cell2 = cells[1].getSelectedKey();
-					var cell3 = cells[2].getSelectedKey();
-					var cell4 = cells[3].getSelectedKey();
-					var cell5 = cells[4].getSelectedKey();
-					var cell6 = cells[5].getSelectedKey();
-					var cell7 = cells[6].getValue();
-					var cell8 = cells[7].getValue();
+					var matter = cells[0].getValue();
+					var selPhaseKey = cells[1].getSelectedKey();
+					var selTskKey = cells[2].getSelectedKey();
+					var selActKey = cells[3].getSelectedKey();
+					var selFfTskKey = cells[4].getSelectedKey();
+					var selFfActKey = cells[5].getSelectedKey();
+					var hours = cells[6].getValue();
+					var percentage = cells[7].getValue();
 					this.userObject = {
-						Pspid: cell1,
-						Zzphase: cell2,
-						ToZztskcd: cell3,
-						ToZzactcd: cell4,
-						ToZzfftskcd: cell5,
-						ToZzffactcd: cell6,
-						Megbtr: cell7,
-						Percent: cell8,
+						Pspid: matter,
+						Zzphase: selPhaseKey,
+						ToZztskcd: selTskKey,
+						ToZzactcd: selActKey,
+						ToZzfftskcd: selFfTskKey,
+						ToZzffactcd: selFfActKey,
+						Megbtr: hours,
+						Percent: percentage,
 						Counter: i,
 						Belnr: this.docno
 					};
-					this.colsval = [];
 					this.cols.push(this.userObject);
 					this.userObject = {
 						Pspid: "",
@@ -3490,7 +3936,6 @@ var selindexes = oTable.getSelectedIndices();
 						Counter: "",
 						Belnr: ""
 					};
-
 				}
 				var changedTableData = this.cols;
 				this.makeSplitBatchCalls(changedTableData, oModel);
@@ -4159,7 +4604,7 @@ var selindexes = oTable.getSelectedIndices();
 			var passingArray = [];
 
 			var oModel = this.getOwnerComponent().getModel().sServiceUrl;
-
+			var oModel1 = this.getOwnerComponent().getModel();         
 			var InputFields = this.getView().getModel("InputsModel");
 
 			var oTable = this.getView().byId("smartTable_ResponsiveTable3").getTable();
@@ -4202,18 +4647,69 @@ var selindexes = oTable.getSelectedIndices();
 
 			//consolidate service calling
 
-			LineItemsServices.getInstance().onConsolidate(userServiceUrl)
-				.done(function(oData) {
-					debugger;
+			// LineItemsServices.getInstance().onConsolidate(userServiceUrl)
+			// 	.done(function(oData) {
+			// 		debugger;
 
-					var tableLineEdits = that.getView().byId("WipDetailsSet3");
+			// 		var tableLineEdits = that.getView().byId("WipDetailsSet3");
+			// 		var index = tableLineEdits.getSelectedIndices();
+
+			// 		var i = 0;
+
+			// 		$.each(index, function(k, o) {
+			// 			// we can access the row wise context for the table
+			// 			var errorDefined = oData.d.results[i].Message;
+			// 			tableLineEdits.getRows()[o].getCells()[0].setVisible(true);
+
+			// 			if (errorDefined.includes("ERROR")) {
+
+			// 				tableLineEdits.getRows()[o].getCells()[0].setProperty("color", "red");
+			// 				tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);
+
+			// 			} else {
+
+			// 				tableLineEdits.getRows()[o].getCells()[0].setProperty("color", "red");
+			// 				tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);
+
+			// 			}
+
+			// 			i++;
+
+			// 		});
+
+			// 	})
+			// 	.fail(function() {
+			// 		debugger;
+			// 		alert("Fail");
+
+			// 	});
+			
+			oModel1.setUseBatch(false);
+			oModel1.read("/WIPTRANSFER", {
+				urlParameters: {
+					"Action": "'CONSOLIDATE'",
+					"CoNumber":	"'" + docNumber + "'",
+					"Buzei":"''",
+					"Hours":"''",
+					"Percentage":"''",
+					"ToActivityCode":"''",
+					"ToFfActivityCode":"''",
+					"ToFfTaskCode":"''",
+					"ToMatter":"''",
+					"ToTaskCode":"''",
+					"&$format":"json"
+					
+				},
+				success: function(oData, oResponse) {
+					// alert(oData);
+				var tableLineEdits = that.getView().byId("WipDetailsSet3");
 					var index = tableLineEdits.getSelectedIndices();
 
 					var i = 0;
 
 					$.each(index, function(k, o) {
 						// we can access the row wise context for the table
-						var errorDefined = oData.d.results[i].Message;
+						var errorDefined = oData.results[i].Message;
 						tableLineEdits.getRows()[o].getCells()[0].setVisible(true);
 
 						if (errorDefined.includes("ERROR")) {
@@ -4231,13 +4727,8 @@ var selindexes = oTable.getSelectedIndices();
 						i++;
 
 					});
-
-				})
-				.fail(function() {
-					debugger;
-					alert("Fail");
-
-				});
+				}
+			});
 
 		},
 		//Teju 

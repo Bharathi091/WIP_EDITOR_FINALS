@@ -35,37 +35,37 @@ sap.ui.define([
 			
 		},
 		
-			onConsolidate: function(userServiceUrl){
+		// 	onConsolidate: function(userServiceUrl){
 			
-				debugger;
-			var deferred = $.Deferred();
+		// 		debugger;
+		// 	var deferred = $.Deferred();
 		
 			
-			debugger;
+		// 	debugger;
 			
-			jQuery.ajax({
-				type: "GET",
-				url: userServiceUrl,
-				cache: false,
-				contentType: "application/json",
-				dataType: "json",
-				processData: false,
-				success: function(result) {
-					deferred.resolve(result);
-					debugger
-				},
-				error: function() {
-					deferred.reject();
-				}
+		// 	jQuery.ajax({
+		// 		type: "GET",
+		// 		url: userServiceUrl,
+		// 		cache: false,
+		// 		contentType: "application/json",
+		// 		dataType: "json",
+		// 		processData: false,
+		// 		success: function(result) {
+		// 			deferred.resolve(result);
+		// 			debugger
+		// 		},
+		// 		error: function() {
+		// 			deferred.reject();
+		// 		}
 
-			});
+		// 	});
 
-			return deferred.promise();
+		// 	return deferred.promise();
            
 			
 		
 			
-		},
+		// },
 		
 		getPhaseCodes: function(WipEditModel, pspid, that) {
 		

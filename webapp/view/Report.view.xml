@@ -343,9 +343,9 @@
 														<uitbl:label>
 															<Text text="Narrative"/></uitbl:label>
 														<uitbl:template>
-															<TextArea value="{NarrativeString}" growing="true" width="80%" liveChange="changeNarrative"/>
-															<!--	<core:HTML-->
-															<!--content=" &lt;div class='fulcrum-editor-textarea {path:'NarrativeStringSpell'}' contenteditable='true' rows='4' fulcrum-editor&gt;{path:'NarrativeStringSpell'}&lt;/div&gt;"  preferDOM="true" afterRendering="onAfterRenderingEvent" ></core:HTML>-->
+															<!--<TextArea value="{NarrativeString}" growing="true" width="80%" liveChange="changeNarrative"/>-->
+																<core:HTML
+															content=" &lt;div  spellcheck=false class='fulcrum-editor-textarea {path:'NarrativeStringSpell'}' contenteditable='true' rows='4' fulcrum-editor&gt;{path:'NarrativeStringSpell'}&lt;/div&gt;"  preferDOM="true" afterRendering="onAfterRenderingEvent" ></core:HTML>
 														</uitbl:template>
 													</uitbl:Column>
 												</uitbl:columns>
