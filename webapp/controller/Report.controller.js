@@ -78,8 +78,8 @@ sap.ui.define([
 			// 	dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
 			// });
 		},
-    
-       	resetOffset: function($textField) {
+
+		resetOffset: function($textField) {
 
 			console.log("resetOffset")
 			var offset = $textField.caret('offset');
@@ -138,11 +138,7 @@ sap.ui.define([
 					that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
 					});
-                      
-                      
-                      
-                      
-                      
+
 					that.getView().byId("WipDetailsSet").setModel(that.jsonModel);
 					var Otable = that.getView().byId("WipDetailsSet");
 					Otable.bindRows("/modelData");
@@ -165,8 +161,7 @@ sap.ui.define([
 					// 		var is_spelled_correctly = that.dictionaryLib.check(splitword);
 					// 		if (is_spelled_correctly === false) {
 					// 			sampletext = sampletext + ' <span id="id' + that.spanId + '" class="target">' + splitword + '</span>';
-								
-									
+
 					// 			that.spanId++;
 					// 		} else {
 					// 			sampletext = sampletext + " " + splitword;
@@ -185,8 +180,8 @@ sap.ui.define([
 					// 		that.jsonModel.setProperty("/modelData", that.homeArr);
 					// 	}
 					// }
-					
-				          for (var i = 0; i < NarrativeRows; i++) {
+
+					for (var i = 0; i < NarrativeRows; i++) {
 						var oldnerst = that.homeArr[i].NarrativeString;
 						var nerst = that.homeArr[i].NarrativeString;
 						var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
@@ -212,7 +207,7 @@ sap.ui.define([
 										if (that.dictionaryLib.check(subItem) == false) {
 
 											numericItem = numericItem + '<span id="id' + that.spanId +
-												'"class="target"  style="background-color:#F08080;   ">' + subItem + '</span>';
+												'"class="target">' + subItem + '</span>';
 
 											that.wrongWordsArr.push({
 												rowId: i,
@@ -238,7 +233,7 @@ sap.ui.define([
 								if (that.dictionaryLib.check(splitword) == false) {
 
 									sampletext = sampletext + ' <span id="id' + that.spanId +
-										'"class="target"  style="background-color:#F08080;">' + splitword + '</span>';
+										'"class="target">' + splitword + '</span>';
 
 									that.wrongWordsArr.push({
 										rowId: i,
@@ -250,13 +245,8 @@ sap.ui.define([
 
 								} else {
 
-									sampletext = sampletext +" "+ splitword;
-									that.wrongWordsArr.push({
-										rowId: i,
-										id: "#id" + that.spanId,
-										Text: splitword
-									});
-									that.spanId++;
+									sampletext = sampletext + " " + splitword;
+
 								}
 							}
 							if (word.length - 1 === j) {
@@ -282,7 +272,6 @@ sap.ui.define([
 			}
 			InputFields.setProperty("/Inputs/rootPspid", Pspid);
 
-		
 			InputFields.setProperty("/Inputs/IconTabs/Narrative_Edits", true);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Edits", true);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Transfers", true);
@@ -353,8 +342,6 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
 
 				this.onNarativeTexChange();
-
-			
 
 			} else if (value === "LineItemEdits") {
 				this.byId("searchText2").setValue("");
@@ -465,7 +452,7 @@ sap.ui.define([
 			}
 			this.settimeout();
 		},
-		
+
 		NarrativeEditsSelection: function(oEvent) {
 
 			debugger;
@@ -670,7 +657,7 @@ sap.ui.define([
 			return string.charAt(0).toUpperCase() + string.slice(1);
 
 		},
-	
+
 		capitalization: function() {
 			debugger;
 			var InputFields = this.getView().getModel("InputsModel");
@@ -728,7 +715,7 @@ sap.ui.define([
 			var part2 = str.substring(char_pos + 1, str.length);
 			return (part1 + part2);
 		},
-	
+
 		removeSpaces: function(oEvt) {
 			debugger;
 			var InputFields = this.getView().getModel("InputsModel");
@@ -772,139 +759,134 @@ sap.ui.define([
 			this.settimeout();
 			this.onNarativeTexChange();
 		},
-	
+
 		handlespellcheck: function(data) {
 			var that = this;
 			debugger;
-		
-	// 		for (var i = 0; i < NarrativeRows; i++) {
-	// 			var oldnerst = data[i].NarrativeString;
-	// 			var nerst = data[i].NarrativeString;
-	// 			console.log(nerst);
-	// 			if (nerst.endsWith(".")) {
-	// 				nerst = nerst.substring(0, nerst.length - 1);
-	// 			} else {
-	// 				nerst = nerst;
-	// 			}
-	// 			var word = nerst.split(" ");
-	// 			var sampletext = "";
-	// 			for (var j = 0; j < word.length; j++) {
-	// 				var splitword = word[j];
 
-	// 				var is_spelled_correctly = this.dictionaryLib.check(splitword);
-	// 				if (is_spelled_correctly === false) {
-	// 					sampletext = sampletext + ' <span id="id' + this.spanId + '"  class="target" style="background-color:pink">' + splitword +
-	// 						'</span>';
- //                       that.wrongWordsArr.push({
- //                       	                     rowId: i,
-	// 												id: "#id" + that.spanId,
-	// 												Text: splitword
-	// 											});
-	// 					this.spanId++;
+			// 		for (var i = 0; i < NarrativeRows; i++) {
+			// 			var oldnerst = data[i].NarrativeString;
+			// 			var nerst = data[i].NarrativeString;
+			// 			console.log(nerst);
+			// 			if (nerst.endsWith(".")) {
+			// 				nerst = nerst.substring(0, nerst.length - 1);
+			// 			} else {
+			// 				nerst = nerst;
+			// 			}
+			// 			var word = nerst.split(" ");
+			// 			var sampletext = "";
+			// 			for (var j = 0; j < word.length; j++) {
+			// 				var splitword = word[j];
 
-	// 				} else {
-	// 					sampletext = sampletext + " " + splitword;
+			// 				var is_spelled_correctly = this.dictionaryLib.check(splitword);
+			// 				if (is_spelled_correctly === false) {
+			// 					sampletext = sampletext + ' <span id="id' + this.spanId + '"  class="target" style="background-color:pink">' + splitword +
+			// 						'</span>';
+			//                       that.wrongWordsArr.push({
+			//                       	                     rowId: i,
+			// 												id: "#id" + that.spanId,
+			// 												Text: splitword
+			// 											});
+			// 					this.spanId++;
 
-	// 				}
+			// 				} else {
+			// 					sampletext = sampletext + " " + splitword;
 
-	// 				if (word.length - 1 === j) {
-	// 					if (oldnerst.endsWith(".")) {
-	// 						sampletext = sampletext + ".";
-	// 					}
-	// 					data[i].NarrativeStringSpell = sampletext;
+			// 				}
 
-	// 				}
+			// 				if (word.length - 1 === j) {
+			// 					if (oldnerst.endsWith(".")) {
+			// 						sampletext = sampletext + ".";
+			// 					}
+			// 					data[i].NarrativeStringSpell = sampletext;
 
-	// 			}
+			// 				}
 
-	// 		}
+			// 			}
 
-	// data[i].NarrativeStringSpell = sampletext;
-	// 		return data;
+			// 		}
+
+			// data[i].NarrativeStringSpell = sampletext;
+			// 		return data;
 			var NarrativeRows = data.length;
-			   for (var i = 0; i < NarrativeRows; i++) {
-						var oldnerst = that.homeArr[i].NarrativeString;
-						var nerst = that.homeArr[i].NarrativeString;
-						var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
-						var word = nerst.split(" ");
+			for (var i = 0; i < NarrativeRows; i++) {
+				var oldnerst = that.homeArr[i].NarrativeString;
+				var nerst = that.homeArr[i].NarrativeString;
+				var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
+				var word = nerst.split(" ");
 
-						var sampletext = "";
-						for (var j = 0; j < word.length; j++) {
-							var splitword = word[j];
-							var splitword1 = word[j];
+				var sampletext = "";
+				for (var j = 0; j < word.length; j++) {
+					var splitword = word[j];
+					var splitword1 = word[j];
 
-							if (specialChars.test(splitword)) {
+					if (specialChars.test(splitword)) {
 
-								var numericItem = "";
-								var subText = splitword.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
+						var numericItem = "";
+						var subText = splitword.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
 
-								subText.forEach(function(subItem) {
+						subText.forEach(function(subItem) {
 
-									if (specialChars.test(subItem)) {
+							if (specialChars.test(subItem)) {
 
-										numericItem = numericItem + subItem;
-									} else {
-
-										if (that.dictionaryLib.check(subItem) == false) {
-
-											numericItem = numericItem + '<span id="id' + that.spanId +
-												'"class="target"  style="background-color:#F08080;   ">' + subItem + '</span>';
-
-											that.wrongWordsArr.push({
-												rowId: i,
-												id: "#id" + that.spanId,
-												Text: subItem
-											});
-
-											that.spanId++;
-
-										} else {
-
-											numericItem = numericItem + subItem;
-										}
-
-									}
-
-								});
-
-								sampletext = sampletext + " " + numericItem;
-
+								numericItem = numericItem + subItem;
 							} else {
 
-								if (that.dictionaryLib.check(splitword) == false) {
+								if (that.dictionaryLib.check(subItem) == false) {
 
-									sampletext = sampletext + ' <span id="id' + that.spanId +
-										'"class="target"  style="background-color:#F08080;">' + splitword + '</span>';
+									numericItem = numericItem + '<span id="id' + that.spanId +
+										'"class="target">' + subItem + '</span>';
 
 									that.wrongWordsArr.push({
 										rowId: i,
 										id: "#id" + that.spanId,
-										Text: splitword
+										Text: subItem
 									});
 
 									that.spanId++;
 
 								} else {
 
-									sampletext = sampletext +" "+ splitword;
-									that.wrongWordsArr.push({
-										rowId: i,
-										id: "#id" + that.spanId,
-										Text: splitword
-									});
-									that.spanId++;
+									numericItem = numericItem + subItem;
 								}
+
 							}
-							if (word.length - 1 === j) {
-								data[i].NarrativeStringSpell = sampletext;
-								
-							}
+
+						});
+
+						sampletext = sampletext + " " + numericItem;
+
+					} else {
+
+						if (that.dictionaryLib.check(splitword) == false) {
+
+							sampletext = sampletext + ' <span id="id' + that.spanId +
+								'"class="target">' + splitword + '</span>';
+
+							that.wrongWordsArr.push({
+								rowId: i,
+								id: "#id" + that.spanId,
+								Text: splitword
+							});
+
+							that.spanId++;
+
+						} else {
+
+							sampletext = sampletext + " " + splitword;
+
 						}
-					
 					}
-					return data;
+					if (word.length - 1 === j) {
+						data[i].NarrativeStringSpell = sampletext;
+
+					}
+				}
+
+			}
+			return data;
 		},
-		
+
 		// once check  this changeNarrative if any changes 
 		// changeNarrative: function(oEvent) {
 
@@ -956,7 +938,7 @@ sap.ui.define([
 			$.each(this.narIndices, function(i, el) {
 				if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
 			});
-			
+
 		},
 		CodesChange: function(oEvent) {
 			debugger;
@@ -983,8 +965,7 @@ sap.ui.define([
 			// });
 			// this.rowData[index] = obj;
 		},
-		
-		
+
 		onNarativeTexChange: function() {
 			var that = this;
 			// $(".fulcrum-editor-textarea").each(function(index, element) {
@@ -998,7 +979,6 @@ sap.ui.define([
 			// 			dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
 			// 		});
 
-				
 			// 		var srt = text.split(" ");
 			// 		var stringText = "";
 			// 		var spanId = 0;
@@ -1021,11 +1001,11 @@ sap.ui.define([
 			// 		this.innerHTML = stringText;
 			// 		that.changeNarrative(index, text, stringText);
 			// 		$(".target").contextmenu(function(eve) {
-				
+
 			// 			document.addEventListener('contextmenu', event => event.preventDefault());
 			// 			that.currentSpanId = eve.target.id;
 			// 			that.menurowid = $(this).closest('tr')["0"].rowIndex - 1;
-		
+
 			// 			var array_of_suggestions = that.dictionaryLib.suggest(this.innerText);
 			// 			that.suggestions = [];
 			// 			for (var k = 0; k < array_of_suggestions.length; k++) {
@@ -1055,9 +1035,8 @@ sap.ui.define([
 
 			// 	});
 			// });
-			
-			
-				$(".fulcrum-editor-textarea").each(function(index, element) {
+
+			$(".fulcrum-editor-textarea").each(function(index, element) {
 
 				// element.addEventListener("copy", function() {
 
@@ -1073,36 +1052,31 @@ sap.ui.define([
 
 				element.addEventListener("keyup", function() {
 					debugger
-                     var i = $(this).closest('tr')["0"].rowIndex - 1;
-					var position = that.resetOffset($("#" + this.id));
+					var i = $(this).closest('tr')["0"].rowIndex - 1;
+				    var position = that.resetOffset($("#" + this.id));
+				       $("#" + this.id).contentEditable = true;
+					// if (event.code == 'Space') {
+					// 	debugger;
+					// 	var log = 0;
+					// 	var len = this.innerText.trim().length;
+					// 	$("#" + this.id).attr("data-isused", "true");
+					// 	if (position - 1 == len) {
 
-					if (event.code == 'Space') {
-						debugger;
-						var log = 0;
-						var len = this.innerText.trim().length;
-                        $("#" + this.id).attr("data-isused", "true");
-						if (position - 1 == len) {
+					// 		$("#" + this.id).caret('pos', position).focus();
+					// 		event.preventDefault();
+					// 		log = 1;
 
-							$("#" + this.id).caret('pos', position).focus();
-							event.preventDefault();
-							log = 1;
+					// 	} else {
+					// 		$("#" + this.id).caret('pos', len + 2).focus();
+					// 		event.preventDefault();
+					// 		log = 1;
+					// 	}
 
-						} else {
-							$("#" + this.id).caret('pos', len + 2).focus();
-							event.preventDefault();
-							log = 1;
-						}
-					
-					
+					// 	if (log == 1) {
+					// 		return;
+					// 	}
 
-						if (log == 1) {
-							return;
-						}
-						
-					
-						
-
-					}
+					// }
 
 					if (event.code == 'KeyC' && (event.ctrlKey || event.metaKey) || event.code == 'KeyV' && (event.ctrlKey || event.metaKey)) {
 
@@ -1128,6 +1102,7 @@ sap.ui.define([
 						console.log("resize window")
 						var resizePosition = that.resetOffset($("#" + this.id));
 						$("#" + this.id).caret('pos', resizePosition).focus();
+						return;
 					});
 
 					debugger;
@@ -1173,8 +1148,7 @@ sap.ui.define([
 					// debugger;
 
 					var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
-					
-				
+
 					var stringText = "";
 					srt.forEach(function(item) {
 
@@ -1194,12 +1168,9 @@ sap.ui.define([
 							} else {
 
 								if (specialChars.test(item)) {
-									
-								
 
 									var numericItem = "";
 									var subText = item.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
-
 
 									subText.forEach(function(subItem) {
 
@@ -1211,69 +1182,7 @@ sap.ui.define([
 											if (that.dictionaryLib.check(subItem) == false) {
 
 												numericItem = numericItem + '<span id="id' + that.spanId +
-													'"class="target"  style="background-color:#F08080;   ">' + subItem + '</span>';
-
-												that.wrongWordsArr.push({
-													  rowId: i,
-													id: "#id" + that.spanId,
-													Text: subItem
-												});
-
-												that.spanId++;
-
-											} else {
-
-												numericItem = numericItem + subItem;
-											}
-
-										}
-
-									});
-
-									stringText = stringText + " " + numericItem;
-
-								} else {
-
-									stringText = stringText + ' <span id="id' + that.spanId +
-										'"class="target"  style="background-color:#F08080;">' + item + '</span>';
-									that.wrongWordsArr.push({
-										rowId: i,
-										id: "#id" + that.spanId,
-										Text: item
-									});
-									that.spanId++;
-								}
-							}
-
-						} else {
-
-							if (that.dictionaryLib.check(item) == false) {
-
-								if (that.ignoreAllArr.includes(item)) {
-
-									stringText = stringText + " " + item;
-
-								} else {
-
-								if (specialChars.test(item)) {
-									
-								
-
-									var numericItem = "";
-									var subText = item.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
-
-
-									subText.forEach(function(subItem) {
-
-										if (specialChars.test(subItem) || that.ignoreAllArr.includes(subItem)) {
-
-											numericItem = numericItem + subItem;
-										} else {
-
-											if (that.dictionaryLib.check(subItem) == false) {
-
-												numericItem = numericItem + '<span id="id' + that.spanId +
-													'"class="target"  style="background-color:#F08080;   ">' + subItem + '</span>';
+													'"class="target">' + subItem + '</span>';
 
 												that.wrongWordsArr.push({
 													rowId: i,
@@ -1296,8 +1205,67 @@ sap.ui.define([
 
 								} else {
 
+									stringText = stringText + ' <span id="id' + that.spanId +
+										'"class="target">' + item + '</span>';
+									that.wrongWordsArr.push({
+										rowId: i,
+										id: "#id" + that.spanId,
+										Text: item
+									});
+									that.spanId++;
+								}
+							}
+
+						} else {
+
+							if (that.dictionaryLib.check(item) == false) {
+
+								if (that.ignoreAllArr.includes(item)) {
+
+									stringText = stringText + " " + item;
+
+								} else {
+
+									if (specialChars.test(item)) {
+
+										var numericItem = "";
+										var subText = item.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
+
+										subText.forEach(function(subItem) {
+
+											if (specialChars.test(subItem) || that.ignoreAllArr.includes(subItem)) {
+
+												numericItem = numericItem + subItem;
+											} else {
+
+												if (that.dictionaryLib.check(subItem) == false) {
+
+													numericItem = numericItem + '<span id="id' + that.spanId +
+														'"class="target">' + subItem + '</span>';
+
+													that.wrongWordsArr.push({
+														rowId: i,
+														id: "#id" + that.spanId,
+														Text: subItem
+													});
+
+													that.spanId++;
+
+												} else {
+
+													numericItem = numericItem + subItem;
+												}
+
+											}
+
+										});
+
+										stringText = stringText + " " + numericItem;
+
+									} else {
+
 										stringText = stringText + ' <span id="id' + that.spanId +
-											'"class="target"  style="background-color:#F08080;   ">' + item + '</span>';
+											'"class="target">' + item + '</span>';
 										that.wrongWordsArr.push({
 											rowId: i,
 											id: "#id" + that.spanId,
@@ -1320,20 +1288,18 @@ sap.ui.define([
 
 					this.innerHTML = stringText;
 					debugger;
-                   that.changeNarrative(index, text, stringText);
-				
+					that.changeNarrative(index, text, stringText);
 
-						if ($("#" + this.id).attr("data-isused") != "true") {
+					if ($("#" + this.id).attr("data-isused") != "true") {
 
-							$("#" + this.id).attr("data-isused", "true");
+						$("#" + this.id).attr("data-isused", "true");
 
-							$("#" + this.id).caret('pos', position + 1).focus();
-						} else {
+						$("#" + this.id).caret('pos', position + 1).focus();
+					} else {
 
-							$("#" + this.id).caret('pos', position).focus();
+						$("#" + this.id).caret('pos', position).focus();
 
-						}
-				
+					}
 
 					$(".target").contextmenu(function(eve) {
 						document.addEventListener('contextmenu', event => event.preventDefault());
@@ -1370,30 +1336,25 @@ sap.ui.define([
 						}
 						that._menu.setModel(that.menuModel, "menu");
 
-				
-
 						var eDock = sap.ui.core.Popup.Dock;
-					
-						that._menu.open(that._bKeyboard, $("#" + eve.target.id), eDock.BeginTop, eDock.BeginBottom, $("#" + eve.target.id));
 
-					
+						that._menu.open(that._bKeyboard, $("#" + eve.target.id), eDock.BeginTop, eDock.BeginBottom, $("#" + eve.target.id));
 
 					});
 
 				});
 
 			});
-			
-			
+
 		},
 		settimeout: function() {
 			var that = this;
 			setTimeout(function() {
-			
+
 				$(".target").contextmenu(function(eve) {
-			
+
 					document.addEventListener('contextmenu', event => event.preventDefault());
-				
+
 					that.currentSpanId = eve.target.id;
 					that.menurowid = $(this).closest('tr')["0"].rowIndex - 1;
 					that.array_of_suggestions = that.dictionaryLib.suggest(this.innerText);
@@ -1404,12 +1365,11 @@ sap.ui.define([
 						obj.text = txt;
 						that.suggestions.push(obj);
 					}
-                    
-                    
-                    	that.suggestions.push({
-							text: "ignoreAll"
-						});
-                    
+
+					that.suggestions.push({
+						text: "ignoreAll"
+					});
+
 					that.menuModel = new sap.ui.model.json.JSONModel({
 						mainMenu: that.suggestions
 					});
@@ -1430,102 +1390,137 @@ sap.ui.define([
 
 			}, 2000);
 		},
-		// onMenuItemPress: function(oEvent) {
-		// 	debugger;
-		// 	// var rowindex = $("#" + this.currentSpanId).parent().attr("id");
-		// 	// var spantext = $("#" + this.currentSpanId)["0"].innerText;
-		// 	// var changedspantext = oEvent.getParameter("item").getText();
-		// 	// var narstr = this.rowData[rowindex].NarrativeString;
-		// 	// var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
-		// 	// console.log("narstr" + narstr);
-		// 	// console.log("narstrspell" + narstrspell);
-		// 	$("#" + this.currentSpanId)["0"].innerText = oEvent.getParameter("item").getText();
-		// 	$("#" + this.currentSpanId).contents().unwrap();
-		// 	// var unwrap = $("#" + this.currentSpanId).contents().unwrap();
-		// 	// console.log("wrap" + unwrap);
-		// 	// 	this.rowData[rowindex].
-		// 	// var text = $("#" + this.currentSpanId)["0"].innerText
-		// },
-		onMenuItemPress: function(oEvent) {
-			debugger;
 
-			var rowindex = this.menurowid;
-			var spantext = $("#" + this.currentSpanId)["0"].innerText;
-			var changedspantext = oEvent.getParameter("item").getText();
-			var narstr = this.rowData[rowindex].NarrativeString;
-			var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
-			var newnarstr = narstr.replace(spantext, changedspantext);
-			this.rowData[rowindex].NarrativeString = newnarstr;
-			// var newnarstrspell = narstrspell.replace('<span id="' + this.currentSpanId + '" class="target">' + spantext + '</span>',
-			// 	changedspantext);
-		
-			//this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
-		
-			this.saveObjects.push(this.rowData[rowindex]);
-			this.jsonModel.setProperty("/modelData", this.rowData);
-			var oTable = this.getView().byId("WipDetailsSet1");
-			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
-			oTable.bindRows("/modelData");
-			
+		onMenuItemPress: function(oEvent) {
+
+			//var rowindex = this.menurowid;
+			// var spantext = $("#" + this.currentSpanId)["0"].innerText;
+
+			// var changedspantext = oEvent.getParameter("item").getText();
+			// var narstr = this.rowData[rowindex].NarrativeString;
+			// var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+			// var newnarstr = narstr.replace(spantext, changedspantext);
+			// this.rowData[rowindex].NarrativeString = newnarstr;
+			// // var newnarstrspell = narstrspell.replace('<span id="' + this.currentSpanId + '" class="target">' + spantext + '</span>',
+			// // 	changedspantext);
+
+			// //this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
+
+			// this.saveObjects.push(this.rowData[rowindex]);
+			// this.jsonModel.setProperty("/modelData", this.rowData);
+			// var oTable = this.getView().byId("WipDetailsSet1");
+			// this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+			// oTable.bindRows("/modelData");
+
 			// my code
-			
+
 			var that = this;
-			debugger;
 
 			var msg = oEvent.getParameter("item").getText();
-			
-			var narstr = this.rowData[rowindex].NarrativeString;
-			var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+			var spanText = $("#" + that.currentSpanId)["0"].innerText;
 
 			if (msg == "ignoreAll") {
 
-				that.ignoreAllArr.push($("#" + that.currentSpanId)["0"].innerText);
+				that.ignoreAllArr.push(spanText);
 
 				if (that.wrongWordsArr) {
 
 					that.wrongWordsArr.forEach(function(obj) {
-						
-						
 
-						if (obj.Text == $("#" + that.currentSpanId)["0"].innerText) {
+						if (obj.Text == spanText) {
 							debugger;
-							
-							alert(obj.rowId);
 
+
+							that.rowData[obj.rowId].NarrativeStringSpell.replace('<span id="id' + obj.id.substring(3) +
+								'"class="target">' + obj.Text + '</span>', obj.Text);
 							$(obj.id).contents().unwrap();
 						}
 
 					});
 
+					this.jsonModel.setProperty("/modelData", this.rowData);
+
 				}
 
-			} 
-			else
-			{
-				$("#" + that.currentSpanId)["0"].innerText = msg;
-				$("#" + that.currentSpanId).css("background-color", "transparent");
+			} else {
+				debugger;
+				
+				// start 
+				
+			      var rowindex = this.menurowid;
+			      var divId = $("#" + this.currentSpanId).parent()["0"].id;
+				 var text = $("#" + that.currentSpanId)["0"].innerText;
+				 var narstr = this.rowData[rowindex].NarrativeString;
+				 var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+                 var narstrspellSave = narstrspell.replace('<span id="' + this.currentSpanId + '"class="target">' + text + '</span>',msg);
+                 this.rowData[rowindex].NarrativeStringSpell = narstrspellSave;
+			      this.jsonModel.setProperty("/modelData", this.rowData);
+			      
+			      $("#" + that.currentSpanId)["0"].innerText = msg;		
+					$("#" + that.currentSpanId).contents().unwrap();
+			    // $("#" + that.currentSpanId).css("background-color", "transparent");
+			     
+			      var newnarstrSave = narstr.replace(narstr, $("#" + divId)["0"].innerText);
+				
+				this.rowData[rowindex].NarrativeString = newnarstr;
+				
+				
+					this.jsonModel.setProperty("/modelData", this.rowData);
+				var oTable = this.getView().byId("WipDetailsSet1");
+				this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+				
+				
+				this.saveObjects.push(this.rowData[rowindex]);
+				oTable.bindRows("/modelData");
+			      
+
+				// narstr = narstr.replace(narstr, $("#" + this.currentSpanId).parent()["0"].innerText);
+			
+				// $("#" + that.currentSpanId)["0"].innerText = msg;
+
+				// $("#" + that.currentSpanId).css("background-color", "transparent");
+				// debugger;
+
+				// this.saveObjects.push(that.rowData[currRowId]);
+				// // this.uniqueId.push(currRowId);
+				// this.jsonModel.setProperty("/modelData", that.rowData);
+				// var oTable = this.getView().byId("WipDetailsSet1");
+				// this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+				// oTable.bindRows("/modelData");
+            
+              // END
+            
+				// var rowindex = this.menurowid;
+				// var divId = $("#" + this.currentSpanId).parent()["0"].id;
+				// var spantext = $("#" + this.currentSpanId)["0"].innerText;
+				// var changedspantext = oEvent.getParameter("item").getText();
+				// var narstr = this.rowData[rowindex].NarrativeString;
+				// var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+			
+				// var newnarstrspell = narstrspell.replace('<span id="'+ this.currentSpanId + '"class="target">' + spantext + '</span>',
+				// 	changedspantext);
+
+				// this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
+
+				// this.saveObjects.push(this.rowData[rowindex]);
+				// this.jsonModel.setProperty("/modelData", this.rowData);
+				
+				// var newnarstr = narstr.replace(spantext, $("#" + divId)["0"].innerText);
+				
+				// this.rowData[rowindex].NarrativeString = newnarstr;
+				
+				// 	this.jsonModel.setProperty("/modelData", this.rowData);
+				// var oTable = this.getView().byId("WipDetailsSet1");
+				// this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+				
+				
+				
+				// oTable.bindRows("/modelData");
+
 			}
 
-			this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
-		
-			this.saveObjects.push(this.rowData[rowindex]);
-			this.jsonModel.setProperty("/modelData", this.rowData);
-			var oTable = this.getView().byId("WipDetailsSet1");
-			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
-			oTable.bindRows("/modelData");
-			
-			
-			
-			
-			
 		},
-            
-            
-            
-            
-            
 
-		
 		onGlobalSearch: function(oEvent) {
 
 			debugger;
@@ -1777,7 +1772,7 @@ sap.ui.define([
 						that.homeArr.forEach(function(o, k) {
 							that.rowData[k] = o;
 						});
-						
+
 						that.handlespellcheck(that.homeArr);
 
 						that.jsonModel.setProperty("/modelData", that.homeArr);
@@ -1787,7 +1782,7 @@ sap.ui.define([
 
 					}
 				});
-			
+
 			} else if (filter === "LineItemEdits") {
 				sap.ui.core.BusyIndicator.show(0);
 				this.data(this.homeArr);
@@ -1800,7 +1795,7 @@ sap.ui.define([
 				var index = tableLineEdits.getSelectedIndices();
 				for (var i = 0; i < index.length; i++) {
 					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
-				
+
 				}
 				var pspid = this.jsonModel.getProperty("/Matter");
 				var oModel = this.getOwnerComponent().getModel();
@@ -2206,7 +2201,7 @@ sap.ui.define([
 						res = stringarr.join(" ");
 					} else {
 						debugger;
-					res = str.split(string).join(replacewith);
+						res = str.split(string).join(replacewith);
 					}
 					that.rowData.forEach(function(obj, k) {
 						that.replaceItems[k] = obj;
@@ -2265,7 +2260,7 @@ sap.ui.define([
 					var replacewith = cells[1].getValue();
 					var check = cells[3].getSelected();
 					if (check) {
-                	var stringarr = str.split(" ");
+						var stringarr = str.split(" ");
 						$.each(stringarr, function(d, o) {
 							if (stringarr[d] === string) {
 								stringarr[d] = replacewith;
@@ -2329,8 +2324,7 @@ sap.ui.define([
 			this.settimeout();
 			this.onNarativeTexChange();
 		},
-		
-		
+
 		addbuttonToReplace: function(evt) {
 
 			var oTable = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
@@ -3894,7 +3888,7 @@ sap.ui.define([
 
 			// this.getTableItems();
 		},
-	onTransfer: function(oModel) {
+		onTransfer: function(oModel) {
 			this.cols = [];
 			var oTable = sap.ui.core.Fragment.byId("splitTransfer", "splitTable2");
 			var rows = oTable.getItems();
@@ -4604,7 +4598,7 @@ sap.ui.define([
 			var passingArray = [];
 
 			var oModel = this.getOwnerComponent().getModel().sServiceUrl;
-			var oModel1 = this.getOwnerComponent().getModel();         
+			var oModel1 = this.getOwnerComponent().getModel();
 			var InputFields = this.getView().getModel("InputsModel");
 
 			var oTable = this.getView().byId("smartTable_ResponsiveTable3").getTable();
@@ -4683,26 +4677,26 @@ sap.ui.define([
 			// 		alert("Fail");
 
 			// 	});
-			
+
 			oModel1.setUseBatch(false);
 			oModel1.read("/WIPTRANSFER", {
 				urlParameters: {
 					"Action": "'CONSOLIDATE'",
-					"CoNumber":	"'" + docNumber + "'",
-					"Buzei":"''",
-					"Hours":"''",
-					"Percentage":"''",
-					"ToActivityCode":"''",
-					"ToFfActivityCode":"''",
-					"ToFfTaskCode":"''",
-					"ToMatter":"''",
-					"ToTaskCode":"''",
-					"&$format":"json"
-					
+					"CoNumber": "'" + docNumber + "'",
+					"Buzei": "''",
+					"Hours": "''",
+					"Percentage": "''",
+					"ToActivityCode": "''",
+					"ToFfActivityCode": "''",
+					"ToFfTaskCode": "''",
+					"ToMatter": "''",
+					"ToTaskCode": "''",
+					"&$format": "json"
+
 				},
 				success: function(oData, oResponse) {
 					// alert(oData);
-				var tableLineEdits = that.getView().byId("WipDetailsSet3");
+					var tableLineEdits = that.getView().byId("WipDetailsSet3");
 					var index = tableLineEdits.getSelectedIndices();
 
 					var i = 0;
