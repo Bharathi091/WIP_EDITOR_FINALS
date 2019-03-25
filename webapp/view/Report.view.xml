@@ -63,7 +63,7 @@
 										<smartTable:SmartTable enableCustomFilter="false" smartvisible="true" id="smartTable_ResponsiveTable0" editable="false"
 											entitySet="WipDetailsSet" tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey"
 											useTablePersonalisation="true" header="{i18n>Results} ({JSONModel>/RowCount})"  useExportToExcel="false" beforeRebindTable="onBeforeRebindTable"
-											enableAutoBinding="false" dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport">
+											enableAutoBinding="false" dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" class="smartTable">
 											<smartTable:customToolbar>
 												<Toolbar>
 													<m:ToolbarSpacer/>
@@ -270,7 +270,7 @@
 										<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable1" editable="false" entitySet="WipDetailsSet"
 											tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
 											header="{i18n>Results} ({JSONModel>/RowCount1})" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
-											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" >
+											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" class="smartTable">
 											<smartTable:customToolbar>
 												<Toolbar>
 													<m:ToolbarSpacer/>
@@ -380,7 +380,7 @@
 										<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable2" editable="false" entitySet="WipDetailsSet"
 											tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
 											header="{i18n>Results} ({JSONModel>/RowCount2})" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
-											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport">
+											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" class="smartTable">
 											<smartTable:customToolbar>
 												<Toolbar>
 													<m:ToolbarSpacer/>
@@ -610,7 +610,7 @@
 										<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable3" editable="false" entitySet="WipDetailsSet"
 											tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
 											header="{i18n>Results} ({JSONModel>/RowCount3})" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
-											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport">
+											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" class="smartTable">
 											<smartTable:customToolbar>
 												<Toolbar>
 													<m:ToolbarSpacer/>

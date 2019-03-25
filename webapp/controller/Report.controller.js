@@ -30,13 +30,12 @@ sap.ui.define([
 			this.uniqueId = [];
 			this.narIndices = [];
 			this.saveObjects = [];
-
+			this.rowLineItemCount = [];
 			this.arr = [];
 			this.rowData = [];
 			this.aFilter = [];
 			this._oGlobalFilter = [];
 
-			// for transfer save oninit
 			this.uniqueIdTransfer = [];
 			this.index = [];
 			this.indexes = [];
@@ -48,12 +47,12 @@ sap.ui.define([
 			this.getView().setModel(new ReportModel().getModel(), "InputsModel");
 			this.onHide();
 
-			//spell check
 			this.spanId = 0;
 			this.currentSpanId = "";
 			this.menurowid = 0;
 			this.ignoreAllArr = [];
 			this.wrongWordsArr = [];
+			this.igno = [];
 			this.dictionaryLib = new Typo("en_US", false, false, {
 				dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
 			});
@@ -62,6 +61,7 @@ sap.ui.define([
 		dictionaryChange: function(oEvent) {
 			debugger;
 			var key;
+			var that = this;
 			var selectedText = this.getView().byId("comboPosition").getValue();
 			var InputFields = this.getView().getModel("InputsModel");
 			var dictionary = InputFields.getProperty("/Inputs/Countries_collection");
@@ -71,12 +71,15 @@ sap.ui.define([
 					this.dictionaryLib = new Typo(key, false, false, {
 						dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
 					});
+					that.handlespellcheck(that.homeArr);
+
+					that.jsonModel.setProperty("/modelData", that.homeArr);
+
+					that.settimeout();
+					that.onNarativeTexChange();
 				}
 			}
 
-			// this.dictionaryLib = new Typo(key, false, false, {
-			// 	dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
-			// });
 		},
 
 		resetOffset: function($textField) {
@@ -100,11 +103,8 @@ sap.ui.define([
 			LineItemsServices.getInstance().selectListItem(oModel, aFilter)
 				.done(function(oData) {
 
-					// alert("success");
 				})
 				.fail(function() {
-
-					// alert("Fail");
 
 				});
 			sap.ui.core.BusyIndicator.show(0);
@@ -116,12 +116,12 @@ sap.ui.define([
 
 					debugger;
 					sap.ui.core.BusyIndicator.hide(0);
-					// that.homeArr = oData.results;
+
 					that.arr = oData.results;
 					for (var i = 0; i < that.arr.length; i++) {
-						//	that.jsonModel.setProperty("/modelData/"+i+"/NarrativeStringSpell", oData.results[i].NarrativeString);
+
 						that.arr[i].NarrativeStringSpell = that.arr[i].NarrativeString;
-						// that.arr[i].rowIndex = i;
+
 					}
 					that.homeArr = that.arr;
 					that.jsonModel.setProperty("/RowCount", oData.results.length);
@@ -133,7 +133,6 @@ sap.ui.define([
 					that.jsonModel.setProperty("/LeadPartner", oData.results[1].Sname);
 					that.jsonModel.setProperty("/BillingOffice", oData.results[0].Werks);
 
-					// that.byId("smartTable_ResponsiveTable3").setIgnoreFromPersonalisation("Zzwiprate");
 					that.rowData = [];
 					that.homeArr.forEach(function(o, k) {
 						that.rowData[k] = o;
@@ -146,41 +145,6 @@ sap.ui.define([
 					var Otable1 = that.getView().byId("WipDetailsSet1");
 					Otable1.bindRows("/modelData");
 					var NarrativeRows = that.homeArr.length;
-					// for (var i = 0; i < NarrativeRows; i++) {
-					// 	var oldnerst = that.homeArr[i].NarrativeString;
-					// 	var nerst = that.homeArr[i].NarrativeString;
-					// 	if (nerst.endsWith(".")) {
-					// 		nerst = nerst.substring(0, nerst.length - 1);
-					// 	} else {
-					// 		nerst = nerst;
-					// 	}
-					// 	var word = nerst.split(" ");
-					// 	var sampletext = "";
-					// 	for (var j = 0; j < word.length; j++) {
-					// 		var splitword = word[j];
-					// 		var is_spelled_correctly = that.dictionaryLib.check(splitword);
-					// 		if (is_spelled_correctly === false) {
-					// 			sampletext = sampletext + ' <span id="id' + that.spanId + '" class="target">' + splitword + '</span>';
-
-					// 			that.spanId++;
-					// 		} else {
-					// 			sampletext = sampletext + " " + splitword;
-
-					// 		}
-					// 		if (word.length - 1 === j) {
-					// 			if (oldnerst.endsWith(".")) {
-					// 				sampletext = sampletext + ".";
-					// 			}
-					// 			that.homeArr[i].NarrativeStringSpell = sampletext;
-					// 			console.log(that.homeArr[i].NarrativeStringSpell);
-					// 		}
-
-					// 	}
-					// 	if (NarrativeRows - 1 === i) {
-					// 		that.jsonModel.setProperty("/modelData", that.homeArr);
-					// 	}
-					// }
-
 					for (var i = 0; i < NarrativeRows; i++) {
 						var oldnerst = that.homeArr[i].NarrativeString;
 						var nerst = that.homeArr[i].NarrativeString;
@@ -381,9 +345,6 @@ sap.ui.define([
 					that.rowData[f] = item;
 
 				});
-				// this.data(this.rowData);
-
-				//	console.log(this.jsonModel.getData()["modelData"]);
 
 			} else if (value === "LineItemTransfers") {
 				this.byId("searchText3").setValue("");
@@ -404,7 +365,7 @@ sap.ui.define([
 					tableLineEdits1.getRows()[q].getCells()[0].setVisible(false);
 
 				}
-				//Visible property set
+
 				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
 				InputFields.setProperty("/Inputs/Toolbar/Unreview", false);
 				InputFields.setProperty("/Inputs/Toolbar/Save", true);
@@ -417,14 +378,11 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", true);
 				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
 
-				//Enable Property set 
-
 				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
 				this.tableId = "WipDetailsSet3";
-				// this.data(this.rowData);
 
 			} else {
 				this.byId("searchText").setValue("");
@@ -434,7 +392,7 @@ sap.ui.define([
 				var Otable = this.getView().byId("WipDetailsSet");
 				Otable.bindRows("/modelData");
 				this.jsonModel.setProperty("/RowCount", this.arr.length);
-				//Visible property set
+
 				InputFields.setProperty("/Inputs/Toolbar/Reviewed", false);
 				InputFields.setProperty("/Inputs/Toolbar/Unreview", false);
 				InputFields.setProperty("/Inputs/Toolbar/Save", false);
@@ -446,8 +404,6 @@ sap.ui.define([
 				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
 				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
 				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
-
-				//Enable Property set 
 
 			}
 			this.settimeout();
@@ -477,6 +433,9 @@ sap.ui.define([
 
 			var InputFields = this.getView().getModel("InputsModel");
 			var rowCount = this.byId("WipDetailsSet2").getSelectedIndices();
+			for (var i = 0; i < rowCount.length; i++) {
+				this.rowLineItemCount.push(rowCount[i]);
+			}
 
 			if (rowCount.length === 1) {
 
@@ -506,8 +465,6 @@ sap.ui.define([
 			var rowCount = this.byId("WipDetailsSet3").getSelectedIndices();
 			this.byId("ToMatter3");
 
-			// Need to update Updatecodes Logic based on control filed selection in th table columns
-
 			if (rowCount.length === 1) {
 
 				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
@@ -532,7 +489,6 @@ sap.ui.define([
 
 		},
 
-		//Narrative edits:
 		ReviewUnreview: function(oEvent) {
 			debugger;
 			var text = oEvent.getSource().getText();
@@ -599,7 +555,6 @@ sap.ui.define([
 				CoNumber = [],
 				Buzei = [];
 
-			// pushing the column values in the respected arrays using their keys
 			$.each(tData, function(i, o) {
 				ReviewArray.push(o.ReviewComplete);
 				WorkDateArray.push(o.Budat);
@@ -612,7 +567,6 @@ sap.ui.define([
 
 			});
 
-			// passing them(arrays) to the keys which are given in urlParams
 			urlParams = {
 
 				CoNumber: CoNumber,
@@ -702,7 +656,7 @@ sap.ui.define([
 			});
 
 			var data1 = this.handlespellcheck(data);
-			// console.log(data1);
+
 			this.jsonModel.setProperty("/modelData", data1);
 			this.rowData === data1;
 			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
@@ -763,51 +717,6 @@ sap.ui.define([
 		handlespellcheck: function(data) {
 			var that = this;
 			debugger;
-
-			// 		for (var i = 0; i < NarrativeRows; i++) {
-			// 			var oldnerst = data[i].NarrativeString;
-			// 			var nerst = data[i].NarrativeString;
-			// 			console.log(nerst);
-			// 			if (nerst.endsWith(".")) {
-			// 				nerst = nerst.substring(0, nerst.length - 1);
-			// 			} else {
-			// 				nerst = nerst;
-			// 			}
-			// 			var word = nerst.split(" ");
-			// 			var sampletext = "";
-			// 			for (var j = 0; j < word.length; j++) {
-			// 				var splitword = word[j];
-
-			// 				var is_spelled_correctly = this.dictionaryLib.check(splitword);
-			// 				if (is_spelled_correctly === false) {
-			// 					sampletext = sampletext + ' <span id="id' + this.spanId + '"  class="target" style="background-color:pink">' + splitword +
-			// 						'</span>';
-			//                       that.wrongWordsArr.push({
-			//                       	                     rowId: i,
-			// 												id: "#id" + that.spanId,
-			// 												Text: splitword
-			// 											});
-			// 					this.spanId++;
-
-			// 				} else {
-			// 					sampletext = sampletext + " " + splitword;
-
-			// 				}
-
-			// 				if (word.length - 1 === j) {
-			// 					if (oldnerst.endsWith(".")) {
-			// 						sampletext = sampletext + ".";
-			// 					}
-			// 					data[i].NarrativeStringSpell = sampletext;
-
-			// 				}
-
-			// 			}
-
-			// 		}
-
-			// data[i].NarrativeStringSpell = sampletext;
-			// 		return data;
 			var NarrativeRows = data.length;
 			for (var i = 0; i < NarrativeRows; i++) {
 				var oldnerst = that.homeArr[i].NarrativeString;
@@ -820,100 +729,77 @@ sap.ui.define([
 					var splitword = word[j];
 					var splitword1 = word[j];
 
-					if (specialChars.test(splitword)) {
+					if (this.igno.includes(splitword)) {
+						sampletext = sampletext + " " + splitword;
+					} else {
+						if (specialChars.test(splitword)) {
 
-						var numericItem = "";
-						var subText = splitword.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
+							var numericItem = "";
+							var subText = splitword.replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
 
-						subText.forEach(function(subItem) {
+							subText.forEach(function(subItem) {
 
-							if (specialChars.test(subItem)) {
-
-								numericItem = numericItem + subItem;
-							} else {
-
-								if (that.dictionaryLib.check(subItem) == false) {
-
-									numericItem = numericItem + '<span id="id' + that.spanId +
-										'"class="target">' + subItem + '</span>';
-
-									that.wrongWordsArr.push({
-										rowId: i,
-										id: "#id" + that.spanId,
-										Text: subItem
-									});
-
-									that.spanId++;
-
-								} else {
+								if (specialChars.test(subItem)) {
 
 									numericItem = numericItem + subItem;
+								} else {
+
+									if (that.dictionaryLib.check(subItem) == false) {
+
+										numericItem = numericItem + '<span id="id' + that.spanId +
+											'"class="target">' + subItem + '</span>';
+
+										that.wrongWordsArr.push({
+											rowId: i,
+											id: "#id" + that.spanId,
+											Text: subItem
+										});
+
+										that.spanId++;
+
+									} else {
+
+										numericItem = numericItem + subItem;
+									}
+
 								}
 
-							}
-
-						});
-
-						sampletext = sampletext + " " + numericItem;
-
-					} else {
-
-						if (that.dictionaryLib.check(splitword) == false) {
-
-							sampletext = sampletext + ' <span id="id' + that.spanId +
-								'"class="target">' + splitword + '</span>';
-
-							that.wrongWordsArr.push({
-								rowId: i,
-								id: "#id" + that.spanId,
-								Text: splitword
 							});
 
-							that.spanId++;
+							sampletext = sampletext + " " + numericItem;
 
 						} else {
 
-							sampletext = sampletext + " " + splitword;
+							if (that.dictionaryLib.check(splitword) == false) {
+
+								sampletext = sampletext + ' <span id="id' + that.spanId +
+									'"class="target">' + splitword + '</span>';
+
+								that.wrongWordsArr.push({
+									rowId: i,
+									id: "#id" + that.spanId,
+									Text: splitword
+								});
+
+								that.spanId++;
+
+							} else {
+
+								sampletext = sampletext + " " + splitword;
+
+							}
+						}
+						if (word.length - 1 === j) {
+							data[i].NarrativeStringSpell = sampletext;
 
 						}
 					}
-					if (word.length - 1 === j) {
-						data[i].NarrativeStringSpell = sampletext;
-
-					}
 				}
-
 			}
+			this.igno = [];
 			return data;
 		},
 
-		// once check  this changeNarrative if any changes 
-		// changeNarrative: function(oEvent) {
-
-		// 	debugger;
-		// 	var InputFields = this.getView().getModel("InputsModel");
-
-		// 	InputFields.setProperty("/Inputs/isChanged", true);
-
-		// 	var changedRow = oEvent.getSource().getBindingContext();
-		// 	// changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
-		// 	var obj = changedRow.getObject();
-		// 	obj.NarrativeString = oEvent.getParameters().value;
-		// 	var idx = oEvent.getSource().getParent();
-		// 	var index = idx.getIndex();
-		// 	var that = this;
-		// 	this.rowData = [];
-		// 	this.homeArr.forEach(function(o, i) {
-		// 		that.rowData[i] = o;
-		// 	});
-		// 	this.rowData[index] = obj;
-
-		// 	this.narIndices.push(index);
-
-		// 	$.each(this.narIndices, function(i, el) {
-		// 		if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
-		// 	});
-		// },
 		changeNarrative: function(index, text, stringText) {
 
 			debugger;
@@ -929,10 +815,6 @@ sap.ui.define([
 			console.log(obj.NarrativeStringSpell);
 
 			var that = this;
-			this.rowData = [];
-			this.arr.forEach(function(o, i) {
-				that.rowData[i] = o;
-			});
 			this.rowData[index] = obj;
 			this.narIndices.push(index);
 			$.each(this.narIndices, function(i, el) {
@@ -946,115 +828,92 @@ sap.ui.define([
 
 			var item = oEvent.getSource().getParent();
 			var idx = oEvent.getSource().getParent().getParent().indexOfRow(item);
-			this.narIndices.push(idx);
+			var filter = this.getView().byId("idIconTabBar").getSelectedKey();
+			if (filter === "LineItemEdits") {
+				this.narIndices.push(idx);
+			}
+			this.indexes.push(idx);
 
 			InputFields.setProperty("/Inputs/isChanged", true);
-
-			// var changedRow = oEvent.getSource().getBindingContext();
-			// // changedRow.getModel().setProperty(changedRow.getPath() + "/NarrativeString", oEvent.getParameters().value);
-			// var obj = jQuery.extend({}, changedRow.getObject());
-
-			// obj.Zzactcd = oEvent.getSource().getSelectedItem().getText();
-			// var idx = oEvent.getSource().getParent();
-			// var index = idx.getIndex();
-			// var that = this;
-
-			// debugger;
-			// this.homeArr.forEach(function(o, i) {
-			// 	that.rowData[i] = o;
-			// });
-			// this.rowData[index] = obj;
 		},
 
 		onNarativeTexChange: function() {
 			var that = this;
-			// $(".fulcrum-editor-textarea").each(function(index, element) {
-			// 	element.addEventListener("keyup", function() {
-			// 		debugger;
-
-			// 		var text = this.innerText;
-			// 		var utilityDict = new Typo();
-			// 		var lang_code = 'en_US';
-			// 		var dictionary = new Typo("en_US", false, false, {
-			// 			dictionaryPath: location.protocol + '//' + location.host + "/webapp/typo/dictionaries"
-			// 		});
-
-			// 		var srt = text.split(" ");
-			// 		var stringText = "";
-			// 		var spanId = 0;
-			// 		srt.forEach(function(item) {
-			// 			if (dictionary.check(item) == false) {
-
-			// 				//item = item.reverse();
-			// 				stringText = stringText + ' <span id="id' + that.spanId + '" class="target">' + item +
-			// 					'</span>';
-			// 				that.spanId++;
-
-			// 			} else {
-
-			// 				stringText = stringText + " " + item;
-
-			// 			}
-
-			// 		});
-
-			// 		this.innerHTML = stringText;
-			// 		that.changeNarrative(index, text, stringText);
-			// 		$(".target").contextmenu(function(eve) {
-
-			// 			document.addEventListener('contextmenu', event => event.preventDefault());
-			// 			that.currentSpanId = eve.target.id;
-			// 			that.menurowid = $(this).closest('tr')["0"].rowIndex - 1;
-
-			// 			var array_of_suggestions = that.dictionaryLib.suggest(this.innerText);
-			// 			that.suggestions = [];
-			// 			for (var k = 0; k < array_of_suggestions.length; k++) {
-			// 				var txt = array_of_suggestions[k];
-			// 				var obj = new Object();
-			// 				obj.text = txt;
-			// 				that.suggestions.push(obj);
-			// 			}
-
-			// 			that.menuModel = new sap.ui.model.json.JSONModel({
-			// 				mainMenu: that.suggestions
-			// 			});
-			// 			that.menuModel.setProperty("/menutext", that.suggestions);
-			// 			if (!that._menu) {
-			// 				that._menu = sap.ui.xmlfragment(
-			// 					"wip.view.MenuItemEventing",
-			// 					that
-			// 				);
-			// 				// this.getView().addDependent(that._menu);
-			// 			}
-			// 			that._menu.setModel(that.menuModel, "menu");
-
-			// 			var eDock = sap.ui.core.Popup.Dock;
-			// 			that._menu.open(that._bKeyboard, $("#" + eve.target.id), eDock.BeginTop, eDock.BeginBottom, $("#" + eve.target.id));
-
-			// 		});
-
-			// 	});
-			// });
 
 			$(".fulcrum-editor-textarea").each(function(index, element) {
-
-				// element.addEventListener("copy", function() {
-
-				// 	return
-
-				// })
-
-				// 	element.addEventListener("paste", function() {
-
-				// 	return
-
-				// })
-
 				element.addEventListener("keyup", function() {
 					debugger
 					var i = $(this).closest('tr')["0"].rowIndex - 1;
-				    var position = that.resetOffset($("#" + this.id));
-				       $("#" + this.id).contentEditable = true;
+					var position = that.resetOffset($("#" + this.id));
+
+				var len = this.innerText.trim().length;
+				    	var value = this.innerText.trim();
+				      var mainSpaceLogValue = 0;
+					if (event.code == 'Space') {
+						debugger;
+					
+					
+						$("#" + this.id).attr("data-isused", "true");
+						
+						
+						if (position - 3 == len) {
+                         alert("asdasdas");
+							$("#" + this.id).caret('pos', position-1).focus();
+							event.preventDefault();
+						
+                              return;
+						} 
+						if (position - 2 == len) {
+                         alert("sadasda");
+							$("#" + this.id).caret('pos', position).focus();
+								event.preventDefault();
+						
+                              return;
+							
+						} 
+						
+						if(position == 1){
+							
+								$("#" + this.id).caret('pos', 0).focus();
+								event.preventDefault();
+						
+                            return;
+						}
+						
+						if(position < len){
+			
+							  var res1 = value.charAt(position-1);
+							  var res2 = value.charAt(position-2);
+							  var res3 = value.charAt(position-3);
+							  
+							  if(!/^\s+$/.test(res1) && /^\s+$/.test(res2)  && !/^\s+$/.test(res3)){
+							  
+							  	mainSpaceLogValue = 1;
+							  }
+							  if(/^\s+$/.test(res1) && /^\s+$/.test(res2)  && !/^\s+$/.test(res3)){
+							  
+							  	mainSpaceLogValue = 2;
+							  }
+							  if(!/^\s+$/.test(res1) && /^\s+$/.test(res2)  && /^\s+$/.test(res3)){
+							  
+							  	mainSpaceLogValue = 3;
+							  }
+							  
+						
+							 
+ 							
+							
+						}
+						// else {
+						// 	$("#" + this.id).caret('pos', len + 2).focus();
+						// 	event.preventDefault();
+						// 	log = 1;
+						// }
+
+					
+
+					}
+
 					// if (event.code == 'Space') {
 					// 	debugger;
 					// 	var log = 0;
@@ -1066,12 +925,7 @@ sap.ui.define([
 					// 		event.preventDefault();
 					// 		log = 1;
 
-					// 	} else {
-					// 		$("#" + this.id).caret('pos', len + 2).focus();
-					// 		event.preventDefault();
-					// 		log = 1;
 					// 	}
-
 					// 	if (log == 1) {
 					// 		return;
 					// 	}
@@ -1085,18 +939,9 @@ sap.ui.define([
 						}
 						event.preventDefault();
 
-						return
 					}
 
 					debugger
-
-					// $(window).resize(function() {
-					//                console.log("resize")
-
-					//              var offset = $("#"+this.id).caret('offset');
-					//             var position = $("#"+this.id).caret('position');
-
-					//               });
 
 					$(window).resize(function() {
 						console.log("resize window")
@@ -1110,43 +955,6 @@ sap.ui.define([
 
 					console.log(text)
 					var srt = text.split(/\s+/);
-
-					// var str1 = text.split("");
-					// var word = "";
-					// var lastChar = str1[str1.length-1];
-					// var str2 = [];
-					// str1.forEach(function(item){
-					// 	if(item == " " ){
-
-					// 			if(word.replace(/\s/g,'')){
-
-					// 			word =	word.replace(/\s/g,'');
-					// 				str2.push(word);
-					// 				str2.push(" ");
-					// 				alert(" dasdsadasdsa");
-					// 				word=""
-					// 			}
-					//                         else{
-					// 		str2.push(word);
-					// 		word="";
-					// 		str2.push(item);
-					//                         }
-
-					// 	}
-					// 	else{
-
-					// 		word = word + item;
-
-					// 	}
-
-					// });
-					// if(lastChar){
-
-					// 	str2.push(word);
-					// }
-
-					// debugger;
-
 					var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
 
 					var stringText = "";
@@ -1290,18 +1098,42 @@ sap.ui.define([
 					debugger;
 					that.changeNarrative(index, text, stringText);
 
-					if ($("#" + this.id).attr("data-isused") != "true") {
+					if (mainSpaceLogValue == 0) {
 
-						$("#" + this.id).attr("data-isused", "true");
+						if ($("#" + this.id).attr("data-isused") != "true") {
 
-						$("#" + this.id).caret('pos', position + 1).focus();
+							$("#" + this.id).attr("data-isused", "true");
+
+							$("#" + this.id).caret('pos', position + 1).focus();
+						} else {
+
+							$("#" + this.id).caret('pos', position).focus();
+
+						}
 					} else {
-
-						$("#" + this.id).caret('pos', position).focus();
+						if (mainSpaceLogValue == 1) {
+							$("#" + this.id).caret('pos', position).focus();
+						} else if (mainSpaceLogValue == 1) {
+							$("#" + this.id).caret('pos', position).focus();
+						} else {
+							$("#" + this.id).caret('pos', position - 1).focus();
+						}
 
 					}
 
+					// if ($("#" + this.id).attr("data-isused") != "true") {
+
+					// 	$("#" + this.id).attr("data-isused", "true");
+
+					// 	$("#" + this.id).caret('pos', position + 1).focus();
+					// } else {
+
+					// 	$("#" + this.id).caret('pos', position).focus();
+
+					// }
+
 					$(".target").contextmenu(function(eve) {
+						debugger;
 						document.addEventListener('contextmenu', event => event.preventDefault());
 						debugger;
 						console.log(eve.target.id);
@@ -1379,7 +1211,7 @@ sap.ui.define([
 							"wip.view.MenuItemEventing",
 							that
 						);
-						// this.getView().addDependent(that._menu);
+
 					}
 					that._menu.setModel(that.menuModel, "menu");
 
@@ -1390,6 +1222,117 @@ sap.ui.define([
 
 			}, 2000);
 		},
+
+		// onMenuItemPress: function(oEvent) {
+		// 	var that = this;
+
+		// 	var msg = oEvent.getParameter("item").getText();
+		// 	var spanText = $("#" + that.currentSpanId)["0"].innerText;
+
+		// 	if (msg == "ignoreAll") {
+
+		// 		that.ignoreAllArr.push(spanText);
+		// 		if (that.wrongWordsArr) {
+
+		// 			that.wrongWordsArr.forEach(function(obj) {
+
+		// 				if (obj.Text == spanText) {
+		// 					debugger;
+		//                          $(obj.id).contents().unwrap();
+		// 					that.rowData[obj.rowId].NarrativeStringSpell.replace('<span id="id' + obj.id.substring(3) +
+		// 						'"class="target">' + obj.Text + '</span>', obj.Text);
+		// 					$(obj.id).contents().unwrap();
+		// 				}
+
+		// 			});
+
+		// 			this.jsonModel.setProperty("/modelData", this.rowData);
+
+		// 		}
+
+		// 	} else {
+		// 		debugger;
+
+		// 		var spantext = $("#" + this.currentSpanId)["0"].innerText;
+
+		// 		var rowindex = this.menurowid;
+		// 		var cmpareId = "#" + this.currentSpanId;
+		// 		that.wrongWordsArr.forEach(function(obj) {
+		// 			if (obj.id == cmpareId) {
+		// 				rowindex = obj.rowId;
+		// 			}
+
+		// 		});
+
+		// 		var divId = $("#" + this.currentSpanId).parent()["0"].id;
+		// 		var spantext = $("#" + this.currentSpanId)["0"].innerText;
+		// 		var changedspantext = oEvent.getParameter("item").getText();
+		// 		var narstr = this.rowData[rowindex].NarrativeString;
+		// 		var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+
+		// 		var newnarstrspell = narstrspell.replace('<span id="' + this.currentSpanId + '"class="target">' + spantext + '</span>',
+		// 			changedspantext);
+
+		// 		this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
+
+		// 		this.saveObjects.push(this.rowData[rowindex]);
+		// 		this.jsonModel.setProperty("/modelData", this.rowData);
+
+		// 		var newnarstr = narstr.replace(spantext, changedspantext);
+
+		// 		this.rowData[rowindex].NarrativeString = newnarstr;
+
+		// 		this.jsonModel.setProperty("/modelData", this.rowData);
+		// 		var oTable = this.getView().byId("WipDetailsSet1");
+		// 		this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+
+		// 		oTable.bindRows("/modelData");
+
+		// 		$(".target").contextmenu(function(eve) {
+		// 			debugger;
+		// 			document.addEventListener('contextmenu', event => event.preventDefault());
+		// 			debugger;
+		// 			console.log(eve.target.id);
+		// 			that.currentSpanId = eve.target.id;
+		// 			// this._menu = sap.ui.xmlfragment("spc.view.MenuItemEventing", this);
+		// 			//    	this._menu.open();
+		// 			console.log("test");
+		// 			that.array_of_suggestions = that.dictionaryLib.suggest(this.innerText);
+		// 			console.log(that.array_of_suggestions);
+
+		// 			this.suggestions = [];
+		// 			for (var k = 0; k < that.array_of_suggestions.length; k++) {
+		// 				var txt = that.array_of_suggestions[k];
+		// 				var obj = new Object();
+		// 				obj.text = txt;
+		// 				this.suggestions.push(obj);
+		// 			}
+		// 			this.suggestions.push({
+		// 				text: "ignoreAll"
+		// 			});
+		// 			that.menuModel = new sap.ui.model.json.JSONModel({
+		// 				mainMenu: this.suggestions
+		// 			});
+		// 			that.menuModel.setProperty("/menutext", this.suggestions);
+
+		// 			if (!that._menu) {
+		// 				that._menu = sap.ui.xmlfragment(
+		// 					"wip.view.MenuItemEventing",
+		// 					that
+		// 				);
+		// 				that.getView().addDependent(that._menu);
+		// 			}
+		// 			that._menu.setModel(that.menuModel, "menu");
+
+		// 			var eDock = sap.ui.core.Popup.Dock;
+
+		// 			that._menu.open(that._bKeyboard, $("#" + eve.target.id), eDock.BeginTop, eDock.BeginBottom, $("#" + eve.target.id));
+
+		// 		});
+
+		// 	}
+		// 	that.igno = that.ignoreAllArr;
+		// },
 
 		onMenuItemPress: function(oEvent) {
 
@@ -1430,52 +1373,64 @@ sap.ui.define([
 						if (obj.Text == spanText) {
 							debugger;
 
+							$(obj.id).contents().unwrap();
 
-							that.rowData[obj.rowId].NarrativeStringSpell.replace('<span id="id' + obj.id.substring(3) +
-								'"class="target">' + obj.Text + '</span>', obj.Text);
+							// that.rowData[obj.rowId].NarrativeStringSpell.replace('<span id="id' + obj.id.substring(3) +
+							// 	'"class="target">' + obj.Text + '</span>', obj.Text);
+
+							var narstrspell = that.rowData[obj.rowId].NarrativeStringSpell;
+
+							var newnarstrspell = narstrspell.replace('<span id="' + obj.id.substring(1) + '"class="target">' + obj.Text + '</span>',
+								obj.Text);
+
+							that.rowData[obj.rowId].NarrativeStringSpell = newnarstrspell;
+
 							$(obj.id).contents().unwrap();
 						}
 
 					});
-
+					debugger;
 					this.jsonModel.setProperty("/modelData", this.rowData);
+					var oTable = this.getView().byId("WipDetailsSet1");
+					this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+
+					oTable.bindRows("/modelData");
+					this.settimeout();
+					this.onNarativeTexChange();
 
 				}
 
 			} else {
 				debugger;
-				
+
 				// start 
-				
-			      var rowindex = this.menurowid;
-			      var divId = $("#" + this.currentSpanId).parent()["0"].id;
-				 var text = $("#" + that.currentSpanId)["0"].innerText;
-				 var narstr = this.rowData[rowindex].NarrativeString;
-				 var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
-                 var narstrspellSave = narstrspell.replace('<span id="' + this.currentSpanId + '"class="target">' + text + '</span>',msg);
-                 this.rowData[rowindex].NarrativeStringSpell = narstrspellSave;
-			      this.jsonModel.setProperty("/modelData", this.rowData);
-			      
-			      $("#" + that.currentSpanId)["0"].innerText = msg;		
-					$("#" + that.currentSpanId).contents().unwrap();
-			    // $("#" + that.currentSpanId).css("background-color", "transparent");
-			     
-			      var newnarstrSave = narstr.replace(narstr, $("#" + divId)["0"].innerText);
-				
-				this.rowData[rowindex].NarrativeString = newnarstr;
-				
-				
-					this.jsonModel.setProperty("/modelData", this.rowData);
-				var oTable = this.getView().byId("WipDetailsSet1");
-				this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
-				
-				
-				this.saveObjects.push(this.rowData[rowindex]);
-				oTable.bindRows("/modelData");
-			      
+
+				//     var rowindex = this.menurowid;
+				//     var divId = $("#" + this.currentSpanId).parent()["0"].id;
+				//  var text = $("#" + that.currentSpanId)["0"].innerText;
+				//  var narstr = this.rowData[rowindex].NarrativeString;
+				//  var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+				//              var narstrspellSave = narstrspell.replace('<span id="' + this.currentSpanId + '"class="target">' + text + '</span>',msg);
+				//              this.rowData[rowindex].NarrativeStringSpell = narstrspellSave;
+				//     this.jsonModel.setProperty("/modelData", this.rowData);
+
+				//     $("#" + that.currentSpanId)["0"].innerText = msg;		
+				// 	$("#" + that.currentSpanId).contents().unwrap();
+				//   // $("#" + that.currentSpanId).css("background-color", "transparent");
+
+				//     var newnarstrSave = narstr.replace(narstr, $("#" + divId)["0"].innerText);
+
+				// this.rowData[rowindex].NarrativeString = newnarstrSave;
+
+				// 	this.jsonModel.setProperty("/modelData", this.rowData);
+				// var oTable = this.getView().byId("WipDetailsSet1");
+				// this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+
+				// this.saveObjects.push(this.rowData[rowindex]);
+				// oTable.bindRows("/modelData");
 
 				// narstr = narstr.replace(narstr, $("#" + this.currentSpanId).parent()["0"].innerText);
-			
+
 				// $("#" + that.currentSpanId)["0"].innerText = msg;
 
 				// $("#" + that.currentSpanId).css("background-color", "transparent");
@@ -1487,38 +1442,90 @@ sap.ui.define([
 				// var oTable = this.getView().byId("WipDetailsSet1");
 				// this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
 				// oTable.bindRows("/modelData");
-            
-              // END
-            
-				// var rowindex = this.menurowid;
-				// var divId = $("#" + this.currentSpanId).parent()["0"].id;
-				// var spantext = $("#" + this.currentSpanId)["0"].innerText;
-				// var changedspantext = oEvent.getParameter("item").getText();
-				// var narstr = this.rowData[rowindex].NarrativeString;
-				// var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
-			
-				// var newnarstrspell = narstrspell.replace('<span id="'+ this.currentSpanId + '"class="target">' + spantext + '</span>',
-				// 	changedspantext);
 
-				// this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
+				// END
 
-				// this.saveObjects.push(this.rowData[rowindex]);
-				// this.jsonModel.setProperty("/modelData", this.rowData);
-				
-				// var newnarstr = narstr.replace(spantext, $("#" + divId)["0"].innerText);
-				
-				// this.rowData[rowindex].NarrativeString = newnarstr;
-				
-				// 	this.jsonModel.setProperty("/modelData", this.rowData);
-				// var oTable = this.getView().byId("WipDetailsSet1");
-				// this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
-				
-				
-				
-				// oTable.bindRows("/modelData");
+				var spantext = $("#" + this.currentSpanId)["0"].innerText;
+
+				var rowindex = this.menurowid;
+				var cmpareId = "#" + this.currentSpanId;
+				that.wrongWordsArr.forEach(function(obj) {
+					if (obj.id == cmpareId) {
+						rowindex = obj.rowId;
+					}
+
+				});
+
+				var divId = $("#" + this.currentSpanId).parent()["0"].id;
+				var spantext = $("#" + this.currentSpanId)["0"].innerText;
+				var changedspantext = oEvent.getParameter("item").getText();
+				var narstr = this.rowData[rowindex].NarrativeString;
+				var narstrspell = this.rowData[rowindex].NarrativeStringSpell;
+
+				var newnarstrspell = narstrspell.replace('<span id="' + this.currentSpanId + '"class="target">' + spantext + '</span>',
+					changedspantext);
+
+				this.rowData[rowindex].NarrativeStringSpell = newnarstrspell;
+
+				this.saveObjects.push(this.rowData[rowindex]);
+				this.jsonModel.setProperty("/modelData", this.rowData);
+
+				var newnarstr = narstr.replace(spantext, changedspantext);
+
+				this.rowData[rowindex].NarrativeString = newnarstr;
+
+				this.jsonModel.setProperty("/modelData", this.rowData);
+				var oTable = this.getView().byId("WipDetailsSet1");
+				this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+
+				oTable.bindRows("/modelData");
 
 			}
 
+			$(".target").contextmenu(function(eve) {
+				debugger;
+				document.addEventListener('contextmenu', event => event.preventDefault());
+				debugger;
+				console.log(eve.target.id);
+				that.currentSpanId = eve.target.id;
+				// this._menu = sap.ui.xmlfragment("spc.view.MenuItemEventing", this);
+				//    	this._menu.open();
+				console.log("test");
+				that.array_of_suggestions = that.dictionaryLib.suggest(this.innerText);
+				console.log(that.array_of_suggestions);
+
+				this.suggestions = [];
+				for (var k = 0; k < that.array_of_suggestions.length; k++) {
+					var txt = that.array_of_suggestions[k];
+					var obj = new Object();
+					obj.text = txt;
+					this.suggestions.push(obj);
+				}
+				this.suggestions.push({
+					text: "ignoreAll"
+				});
+				that.menuModel = new sap.ui.model.json.JSONModel({
+					mainMenu: this.suggestions
+				});
+				that.menuModel.setProperty("/menutext", this.suggestions);
+
+				if (!that._menu) {
+					that._menu = sap.ui.xmlfragment(
+						"wip.view.MenuItemEventing",
+						that
+					);
+					that.getView().addDependent(that._menu);
+				}
+				that._menu.setModel(that.menuModel, "menu");
+
+				var eDock = sap.ui.core.Popup.Dock;
+
+				that._menu.open(that._bKeyboard, $("#" + eve.target.id), eDock.BeginTop, eDock.BeginBottom, $("#" + eve.target.id));
+
+			});
+			that.igno = that.ignoreAllArr;
+			this.settimeout();
+			this.onNarativeTexChange();
 		},
 
 		onGlobalSearch: function(oEvent) {
@@ -1559,10 +1566,6 @@ sap.ui.define([
 					}
 				);
 
-				// this.clearTabledata("smartTable_ResponsiveTable0");   
-
-				//	 this.byId("smartTable_ResponsiveTable1").rebindTable();
-
 				var otable = this.byId("WipDetailsSet");
 				debugger;
 
@@ -1573,16 +1576,6 @@ sap.ui.define([
 
 				otable.bindRows("/modelData");
 				this.jsonModel.setProperty("/RowCount", result.length);
-
-				// otable.setModel(this.jsonModel);
-
-				//  otable.setBindingContext("/modelData");
-
-				//this.byId("smartTable_ResponsiveTable0").getBinding("columns").refresh(true);
-				//	this.byId("smartTable_ResponsiveTable0").getModel().refresh(true);
-				//		this.byId("smartTable_ResponsiveTable0").getModel().updateBindings();
-
-				//	this.byId("smartTable_ResponsiveTable0").rebindTable();
 			} else if (iconTabKey === "NarrativeEdits") {
 
 				var searchValue = this.byId("searchText1").getValue();
@@ -1772,7 +1765,8 @@ sap.ui.define([
 						that.homeArr.forEach(function(o, k) {
 							that.rowData[k] = o;
 						});
-
+						that.ignoreAllArr = [];
+						that.igno = [];
 						that.handlespellcheck(that.homeArr);
 
 						that.jsonModel.setProperty("/modelData", that.homeArr);
@@ -1786,11 +1780,18 @@ sap.ui.define([
 			} else if (filter === "LineItemEdits") {
 				sap.ui.core.BusyIndicator.show(0);
 				this.data(this.homeArr);
+				var tableLineEdits = this.getView().byId("WipDetailsSet2");
+				var index = this.rowLineItemCount;
+				for (var i = 0; i < index.length; i++) {
+
+					tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
+					tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
+
+				}
+
 			} else {
-				// sap.ui.core.BusyIndicator.show(0);
-				// debugger;
+
 				sap.ui.core.BusyIndicator.show(0);
-				// this.getView().byId("WipDetailsSet3").getModel().refresh(true);
 				var tableLineEdits = this.getView().byId("WipDetailsSet3");
 				var index = tableLineEdits.getSelectedIndices();
 				for (var i = 0; i < index.length; i++) {
@@ -1822,33 +1823,6 @@ sap.ui.define([
 				});
 
 			}
-
-			// else {
-			// sap.ui.core.BusyIndicator.show(0);
-
-			// 	var pspid = this.jsonModel.getProperty("/Matter");
-			// 	var oModel = this.getOwnerComponent().getModel();
-			// 	var aFilter = [];
-			// 	aFilter.push(new Filter("Pspid", FilterOperator.EQ, pspid));
-
-			// 	var that = this;
-			// 	oModel.read("/WipDetailsSet", {
-			// 		filters: aFilter,
-			// 		success: function(oData) {
-			// 			sap.ui.core.BusyIndicator.hide(0);
-
-			// 			debugger;
-			// 			that.homeArr=oData.results;
-			// 			that.jsonModel.setProperty("/modelData", oData.results);
-			// 			that.rowData = [];
-			// 			that.homeArr.forEach(function(o, k) {
-			// 			that.rowData[k] = o;
-			// 		});
-
-			// 		}
-			// 	});
-			// 		this.data(this.homeArr);
-			// }
 			if (this._Dialog) {
 
 				this._Dialog.close();
@@ -1967,14 +1941,6 @@ sap.ui.define([
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Edits", false);
 			InputFields.setProperty("/Inputs/IconTabs/Line_Item_Transfers", false);
 		},
-		// onBack: function() {
-		// 	var sPreviousHash = History.getInstance().getPreviousHash();
-		// 	if (sPreviousHash !== undefined) {
-		// 		window.history.go(-1);
-		// 	} else {
-		// 		this.getOwnerComponent().getRouter().navTo("woklist", null, true);
-		// 	}
-		// },
 		onReplacewords: function(evt) {
 			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			if (oTable.getSelectedIndices().length === 0) {
@@ -2012,158 +1978,6 @@ sap.ui.define([
 			});
 			this._oreplaceDialog.close();
 		},
-		// onreplace: function() {
-		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
-		// 	// console.log(oTable.getRows());
-		// 	var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-
-		// 	var that = this;
-		// 	$.each(oTable.getSelectedIndices(), function(i, o) {
-		// 		debugger;
-		// 		var ctx = oTable.getContextByIndex(o);
-		// 		var m = ctx.getObject();
-		// 		var str = m.NarrativeString;
-		// 		var res;
-		// 		debugger;
-		// 		var items = oTable1.getItems();
-		// 		$.each(items, function(l, obj) {
-		// 			debugger;
-		// 			var cells = obj.getCells();
-		// 			var string = cells[0].getValue();
-		// 			var replacewith = cells[1].getValue();
-		// 			var check = cells[3].getSelected();
-		// 			if (check) {
-
-		// 				var pullstop = str.lastIndexOf(".");
-		// 				if (pullstop) {
-		// 					str = str.substring(0, pullstop);
-		// 				}
-		// 				var stringarr = str.split(" ");
-
-		// 				var startindex = stringarr.indexOf(string);
-		// 				if (startindex >= 0) {
-		// 					stringarr[startindex] = replacewith;
-		// 				}
-		// 				if (pullstop) {
-		// 					stringarr.push(".");
-		// 				}
-		// 				res = stringarr.join(" ");
-
-		// 				if (pullstop) {
-		// 					res = that.remove_character(res, res.length - 2);
-		// 				}
-
-		// 			} else {
-		// 				debugger;
-		// 				var searchindex = str.search(string);
-		// 				if (searchindex >= 0) {
-		// 					res = str.replace(string, replacewith);
-		// 				}
-		// 			}
-
-		// 			that.replaceItems = that.jsonModel.getProperty("/modelData");
-		// 			that.replaceItems[o].NarrativeString = res;
-
-		// 			if (str != res) {
-		// 				that.saveObjects.push(that.replaceItems[o]);
-		// 			}
-
-		// 			str = that.replaceItems[o].NarrativeString;
-
-		// 		});
-		// 		that.jsonModel.setProperty("/modelData", that.replaceItems);
-		// 		oTable.setModel(that.jsonModel);
-		// 		oTable.bindRows("/modelData");
-
-		// 	});
-		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
-		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
-		// 	sap.ui.getCore().byId("replaceword--word").setSelected(true);
-		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-		// 	$.each(tbl.getItems(), function(d, o) {
-		// 		if (d > 0) {
-		// 			var rowid = o.getId();
-		// 			tbl.removeItem(rowid);
-		// 		}
-		// 	});
-		// 	this._getreplaceDialogbox().close();
-		// },
-		// replaceall: function() {
-		// 	var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
-		// 	var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-		// 	var replaceItems = this.jsonModel.getProperty("/modelData");
-		// 	var that = this;
-		// 	var result = $.each(replaceItems, function(i, o) {
-
-		// 		var m = o;
-		// 		var str = m.NarrativeString;
-		// 		var res;
-		// 		var items = oTable1.getItems();
-		// 		$.each(items, function(l, obj) {
-		// 			var cells = obj.getCells();
-		// 			var string = cells[0].getValue();
-		// 			var replacewith = cells[1].getValue();
-		// 			var check = cells[3].getSelected();
-		// 			if (check) {
-
-		// 				var pullstop = str.lastIndexOf(".");
-		// 				if (pullstop) {
-		// 					str = str.substring(0, pullstop);
-		// 				}
-
-		// 				var stringarr = str.split(" ");
-		// 				var startindex = stringarr.indexOf(string);
-		// 				if (startindex >= 0) {
-		// 					stringarr[startindex] = replacewith;
-		// 				}
-		// 				if (pullstop) {
-		// 					stringarr.push(".");
-		// 				}
-
-		// 				res = stringarr.join(" ");
-
-		// 				if (pullstop) {
-		// 					res = that.remove_character(res, res.length - 2);
-		// 				}
-		// 				that.replace = that.jsonModel.getProperty("/modelData");
-		// 				that.replace[i].NarrativeString = res;
-
-		// 				if (str != res) {
-		// 					that.saveObjects.push(that.replace[i]);
-		// 				}
-
-		// 				str = that.replace[i].NarrativeString;
-
-		// 			} else {
-
-		// 				var searchindex = str.search(string);
-		// 				if (searchindex >= 0) {
-		// 					res = str.replace(string, replacewith);
-		// 					that.replace = that.jsonModel.getProperty("/modelData");
-		// 					that.replace[i].NarrativeString = res;
-		// 					str = that.replace[i].NarrativeString;
-		// 				}
-		// 			}
-
-		// 		});
-		// 		return that.replace;
-		// 	});
-
-		// 	this.jsonModel.setProperty("/modelData", result);
-		// 	oTable.setModel(this.jsonModel);
-		// 	oTable.bindRows("/modelData");
-		// 	sap.ui.getCore().byId("replaceword--string0").setValue("");
-		// 	sap.ui.getCore().byId("replaceword--replace0").setValue("");
-		// 	sap.ui.getCore().byId("replaceword--word").setSelected(true);
-		// 	var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
-		// 	$.each(tbl.getItems(), function(d, o) {
-		// 		if (d > 0) {
-		// 			var rowid = o.getId();
-		// 			tbl.removeItem(rowid);
-		// 		}
-		// 	});
-		// 	this._getreplaceDialogbox().close();
-		// },
 		onreplace: function() {
 			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
 			// console.log(oTable.getRows());
@@ -2207,7 +2021,6 @@ sap.ui.define([
 						that.replaceItems[k] = obj;
 					});
 
-					// that.replaceItems = that.jsonModel.getProperty("/modelData");
 					that.replaceItems[o].NarrativeString = res;
 					that.replaceItems[o].NarrativeStringSpell = res;
 
@@ -2277,7 +2090,7 @@ sap.ui.define([
 						that.rowData.forEach(function(obj, k) {
 							that.replace[k] = obj;
 						});
-						// that.replace = that.jsonModel.getProperty("/modelData");
+
 						that.replace[i].NarrativeString = res;
 						that.replace[i].NarrativeString = res;
 
@@ -2366,336 +2179,6 @@ sap.ui.define([
 
 		},
 
-		// onmasstransfer: function() {
-
-		// 	var odialog = this._getDialogmass();
-		// 	odialog.open();
-		// 	var oTable = this.getView().byId("WipDetailsSet3");
-		// 	var ofrag = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 	$.each(oTable.getSelectedIndices(), function(i, o) {
-
-		// 		var tableContext = oTable.getContextByIndex(o);
-		// 		var obj = tableContext.getObject();
-		// 		var itemno = obj.Buzei;
-		// 		var docno = obj.Belnr;
-		// 		ofrag.addItem(new sap.m.ColumnListItem({
-		// 			cells: [new sap.m.Text({
-		// 					width: "100%",
-		// 					text: docno
-		// 				}),
-		// 				new sap.m.Text({
-		// 					width: "100%",
-		// 					text: itemno
-		// 				}),
-		// 				new sap.m.Button({
-		// 					text: "delete",
-		// 					press: function(oEvent) {
-		// 						var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 						var src = oEvent.getSource().getParent();
-		// 						var rowid = src.getId();
-		// 						tbl.removeItem(rowid);
-		// 					}
-		// 				})
-
-		// 			]
-		// 		}));
-		// 	});
-		// },
-		// _getDialogmass: function() {
-		// 	if (!this._omassDialog) {
-		// 		this._omassDialog = sap.ui.xmlfragment("masstransfer", "wip.view.masstransfer", this);
-		// 		this.getView().addDependent(this._omassDialog);
-		// 	}
-		// 	return this._omassDialog;
-		// },
-		// closemassDialog: function() {
-		// 	sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
-		// 	var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 	$.each(tbl.getItems(), function(i, o) {
-		// 		var rowid = o.getId();
-		// 		tbl.removeItem(rowid);
-		// 	});
-		// 	this._omassDialog.close();
-		// },
-		// onmassTransferchange: function() {
-
-		// 	var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
-		// 	this.WipEditModel = this.getModel("InputsModel");
-		// 	this.serviceInstance = LineItemsServices.getInstance();
-		// 	var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
-		// 	var oTable1 = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 	var items = oTable1.getItems();
-		// 	console.log("items");
-		// 	console.log(items);
-		// 	var Docno = [];
-		// 	$.each(items, function(l, obj) {
-
-		// 		var cells = obj.getCells();
-		// 		var string = cells[0].getText();
-		// 		Docno.push(string);
-		// 	});
-		// 	console.log("Docno");
-		// 	console.log(Docno);
-		// 	var check = false;
-		// 	var oView = this.getView(),
-		// 		oTable = oView.byId("WipDetailsSet3");
-		// 	var selectindex = oTable.getSelectedIndices();
-		// 	if (matter != "") {
-		// 		var Pspid = matter;
-		// 		var lineItems = this.homeArr;
-		// 		var that = this;
-
-		// 		$.when(
-		// 			that.serviceInstance.getPhaseCodes(that.WipEditModel, Pspid, that),
-		// 			that.serviceInstance.getTaskcodes(that.WipEditModel, "", that),
-		// 			that.serviceInstance.getActivitycodes(that.WipEditModel, "", Pspid, that),
-		// 			that.serviceInstance.getFFtaskcodes(that.WipEditModel, "", Pspid, that),
-		// 			that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
-
-		// 		.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
-
-		// 			$.each(oTable.getSelectedIndices(), function(j, o) {
-
-		// 				var ctx = oTable.getContextByIndex(o);
-		// 				var m = ctx.getObject();
-		// 				var docno = m.Belnr;
-		// 				check = Docno.includes(docno);
-		// 				if (check) {
-
-		// 					lineItems[o].ToMatter = matter;
-		// 					lineItems[o].Percent = percent;
-		// 					lineItems[o].taskCodes = lineItems[o].Zztskcd.length ? [{
-		// 						TaskCodes: "",
-		// 						TaskCodeDesc: ""
-		// 					}].concat(taskCodes.results) : taskCodes.results;
-		// 					lineItems[o].actCodes = lineItems[o].Zzactcd.length ? [{
-		// 						ActivityCodes: "",
-		// 						ActivityCodeDesc: ""
-		// 					}].concat(activityCodes.results) : activityCodes.results;
-		// 					lineItems[o].ffTskCodes = lineItems[o].Zzfftskcd.length ? [{
-		// 						FfTaskCodes: "",
-		// 						FfTaskCodeDesc: ""
-		// 					}].concat(ffTskCodes.results) : ffTskCodes.results;
-		// 					lineItems[o].ffActCodes = lineItems[o].Zzffactcd.length ? [{
-		// 						FfActivityCodes: "",
-		// 						FfActivityCodeDesc: ""
-		// 					}].concat(ffActCodes.results) : ffActCodes.results;
-		// 					lineItems[o].index = o;
-		// 					lineItems[o].indeces = o;
-		// 					lineItems[o].isRowEdited = true;
-
-		// 				} else {
-		// 					// check = false;
-		// 					var indes = selectindex.indexOf(o);
-		// 					selectindex[indes] = " ";
-		// 				}
-
-		// 			});
-		// 			that.getView().setModel(that.jsonModel);
-		// 			oTable.bindRows("/modelData");
-		// 			console.log(selectindex);
-		// 			// for (var s = 0; s < selectindex.length; s++) {
-		// 			// 	debugger;
-		// 			// 	var value = selectindex[s];
-		// 			// 	if (value !== "") {
-		// 			// 		oTable.setSelectedIndex(value);
-		// 			// 	}
-
-		// 			// }
-		// 			that.onEditTable(selectindex);
-		// 		});
-		// 	}
-		// 	sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
-		// 	var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 	$.each(tbl.getItems(), function(i, o) {
-		// 		var rowid = o.getId();
-		// 		tbl.removeItem(rowid);
-		// 	});
-
-		// 	this._omassDialog.close();
-		// 	var InputFields = this.getView().getModel("InputsModel");
-		// 	InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
-		// },
-		// onEditTable: function(selindexes) {
-		// 	debugger;
-		// 	var oView = this.getView(),
-		// 		oTable = oView.byId("WipDetailsSet3");
-
-		// 	for (var i = 0; i < selindexes.length; i++) {
-		// 		var value = selindexes[i];
-		// 		if (value !== " ") {
-		// 			var ctx = oTable.getContextByIndex(value);
-		// 			var m = ctx.getModel(ctx.getPath());
-		// 			m.setProperty(ctx.getPath() + "/Edit", true);
-		// 			oTable.addSelectionInterval(value, value);
-
-		// 		}
-		// 	}
-
-		// },
-
-		// onmasstransfer: function() {
-
-		// 	var odialog = this._getDialogmass();
-
-		// 	//sap.ui.core.Fragment.byId("masstransfer", "masspspid").setValue("1500008011");
-		// 	odialog.open();
-		// 	var oTable = this.getView().byId("WipDetailsSet3");
-		// 	var ofrag = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 	$.each(oTable.getSelectedIndices(), function(i, o) {
-
-		// 		var tableContext = oTable.getContextByIndex(o);
-		// 		var obj = tableContext.getObject();
-		// 		var itemno = obj.Buzei;
-		// 		var docno = obj.Belnr;
-		// 		ofrag.addItem(new sap.m.ColumnListItem({
-		// 			cells: [new sap.m.Text({
-		// 					width: "100%",
-		// 					text: docno
-		// 				}),
-		// 				new sap.m.Text({
-		// 					width: "100%",
-		// 					text: itemno
-		// 				}),
-		// 				new sap.m.Button({
-		// 					text: "delete",
-		// 					press: function(oEvent) {
-		// 						var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 						var src = oEvent.getSource().getParent();
-		// 						var rowid = src.getId();
-		// 						tbl.removeItem(rowid);
-		// 					}
-		// 				})
-
-		// 			]
-		// 		}));
-		// 	});
-		// },
-		// _getDialogmass: function() {
-		// 	if (!this._omassDialog) {
-		// 		this._omassDialog = sap.ui.xmlfragment("masstransfer", "wip.view.masstransfer", this);
-		// 		this.getView().addDependent(this._omassDialog);
-		// 	}
-		// 	return this._omassDialog;
-		// },
-		// closemassDialog: function() {
-		// 	sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
-		// 	var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 	$.each(tbl.getItems(), function(i, o) {
-		// 		var rowid = o.getId();
-		// 		tbl.removeItem(rowid);
-		// 	});
-
-		// 	this._omassDialog.close();
-
-		// },
-		// onmassTransferchange: function() {
-		// 	debugger;
-		// 	var matter = sap.ui.core.Fragment.byId("masstransfer", "masspspid").getValue();
-		// 	// var InputFields = this.getView().getModel("InputsModel");
-
-		// 	// InputFields.setProperty("/Inputs/matter", matter);
-		// 	// this.masstransfer(matter);
-		// 	this.WipEditModel = this.getModel("InputsModel");
-		// 	// var matter = this.WipEditModel.getProperty("/Inputs/matter");
-		// 	this.serviceInstance = LineItemsServices.getInstance();
-		// 	var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
-		// 	var oTable1 = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 	var items = oTable1.getItems();
-		// 	var Docno = [];
-		// 	$.each(items, function(l, obj) {
-
-		// 		var cells = obj.getCells();
-		// 		var string = cells[0].getText();
-		// 		Docno.push(string);
-		// 	});
-		// 	// console.log("Docno");
-		// 	// console.log(Docno);
-		// 	var check = false;
-		// 	var oView = this.getView(),
-		// 		oTable = oView.byId("WipDetailsSet3");
-		// 	var selectindex = oTable.getSelectedIndices();
-		// 	if (matter != "") {
-		// 		var Pspid = matter;
-		// 		var lineItems = this.homeArr;
-		// 		var that = this;
-
-		// 		$.when(
-		// 			that.serviceInstance.getPhaseCodes(that.WipEditModel, Pspid, that),
-		// 			that.serviceInstance.getTaskcodes(that.WipEditModel, "", that),
-		// 			that.serviceInstance.getActivitycodes(that.WipEditModel, "", Pspid, that),
-		// 			that.serviceInstance.getFFtaskcodes(that.WipEditModel, "", Pspid, that),
-		// 			that.serviceInstance.getFFActivitycodes(that.WipEditModel, "", Pspid, that))
-
-		// 		.done(function(phaseCodes, taskCodes, activityCodes, ffTskCodes, ffActCodes) {
-
-		// 			$.each(oTable.getSelectedIndices(), function(j, o) {
-		// 				debugger;
-		// 				var ctx = oTable.getContextByIndex(o);
-		// 				var m = ctx.getObject();
-		// 				var docno = m.Belnr;
-		// 				check = Docno.includes(docno);
-		// 				if (check) {
-
-		// 					lineItems[o].ToMatter = matter;
-		// 					lineItems[o].Percent = percent;
-		// 					lineItems[o].taskCodes = lineItems[o].Zztskcd.length ? [{
-		// 						TaskCodes: "",
-		// 						TaskCodeDesc: ""
-		// 					}].concat(taskCodes.results) : taskCodes.results;
-		// 					lineItems[o].actCodes = lineItems[o].Zzactcd.length ? [{
-		// 						ActivityCodes: "",
-		// 						ActivityCodeDesc: ""
-		// 					}].concat(activityCodes.results) : activityCodes.results;
-		// 					lineItems[o].ffTskCodes = lineItems[o].Zzfftskcd.length ? [{
-		// 						FfTaskCodes: "",
-		// 						FfTaskCodeDesc: ""
-		// 					}].concat(ffTskCodes.results) : ffTskCodes.results;
-		// 					lineItems[o].ffActCodes = lineItems[o].Zzffactcd.length ? [{
-		// 						FfActivityCodes: "",
-		// 						FfActivityCodeDesc: ""
-		// 					}].concat(ffActCodes.results) : ffActCodes.results;
-		// 					lineItems[o].index = o;
-		// 					lineItems[o].indeces = o;
-		// 					lineItems[o].isRowEdited = true;
-
-		// 				} else {
-		// 					// check = false;
-		// 					var indes = selectindex.indexOf(o);
-		// 					selectindex[indes] = " ";
-		// 				}
-
-		// 			});
-		// 			that.jsonModel.setProperty("/modelData", lineItems);
-
-		// 			that.getView().byId("WipDetailsSet3").setModel(that.jsonModel);
-		// 			oTable.bindRows("/modelData");
-		// 			console.log(selectindex);
-		// 			for (var s = 0; s < selectindex.length; s++) {
-		// 				debugger;
-		// 				var value = selectindex[s];
-		// 				if (value !== "") {
-		// 					oTable.setSelectedIndex(value);
-		// 				}
-
-		// 			}
-
-		// 			that.onEditTable(selectindex);
-		// 		});
-		// 	}
-		// 	var InputFields = this.getView().getModel("InputsModel");
-		// 	InputFields.setProperty("/Inputs/ToolbarEnable/Updatecodes", true);
-		// 	InputFields.setProperty("/Inputs/isChanged", true);
-		// 	sap.ui.core.Fragment.byId("masstransfer", "percentage").setValue("100");
-		// 	var tbl = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
-		// 	$.each(tbl.getItems(), function(i, o) {
-		// 		var rowid = o.getId();
-		// 		tbl.removeItem(rowid);
-		// 	});
-
-		// 	this._omassDialog.close();
-		// },
-
 		onmasstransfer: function() {
 			debugger;
 			var odialog = this._getDialogmass();
@@ -2719,6 +2202,10 @@ sap.ui.define([
 					}));
 				}
 				this.handleAddRowMass(1);
+			}
+			var selindexes = oTable.getSelectedIndices();
+			for (var k = 0; k < selindexes.length; k++) {
+				this.indexes.push(selindexes[k]);
 			}
 
 			$.each(oTable.getSelectedIndices(), function(i, o) {
@@ -2816,12 +2303,9 @@ sap.ui.define([
 			debugger;
 			var oTbl = sap.ui.core.Fragment.byId("masstransfer", "matter");
 			var matter = oTbl.getItems()[0].getCells()[0].getValue();
-			// var InputFields = this.getView().getModel("InputsModel");
 
-			// InputFields.setProperty("/Inputs/matter", matter);
-			// this.masstransfer(matter);
 			this.WipEditModel = this.getModel("InputsModel");
-			// var matter = this.WipEditModel.getProperty("/Inputs/matter");
+
 			this.serviceInstance = LineItemsServices.getInstance();
 			var percent = sap.ui.core.Fragment.byId("masstransfer", "percentage").getValue();
 			var oTable1 = sap.ui.core.Fragment.byId("masstransfer", "masstransfertable");
@@ -2833,8 +2317,6 @@ sap.ui.define([
 				var string = cells[0].getText();
 				Docno.push(string);
 			});
-			// console.log("Docno");
-			// console.log(Docno);
 			var check = false;
 			var oView = this.getView(),
 				oTable = oView.byId("WipDetailsSet3");
@@ -4316,9 +3798,16 @@ sap.ui.define([
 			} else {
 				this.aIndices = this.getView().byId(this.tableId).getSelectedIndices();
 			}
+			var filter = this.getView().byId("idIconTabBar").getSelectedKey();
+			if (filter === "LineItemEdits") {
+				for (var k = 0; k < this.aIndices.length; k++) {
+					this.narIndices.push(this.aIndices[k]);
+				}
 
-			for (var k = 0; k < this.aIndices.length; k++) {
-				this.narIndices.push(this.aIndices[k]);
+			}
+
+			for (var j = 0; j < this.aIndices.length; j++) {
+				this.indexes.push(this.aIndices[j]);
 			}
 
 			var sMsg;
@@ -4639,45 +4128,6 @@ sap.ui.define([
 
 			var that = this;
 
-			//consolidate service calling
-
-			// LineItemsServices.getInstance().onConsolidate(userServiceUrl)
-			// 	.done(function(oData) {
-			// 		debugger;
-
-			// 		var tableLineEdits = that.getView().byId("WipDetailsSet3");
-			// 		var index = tableLineEdits.getSelectedIndices();
-
-			// 		var i = 0;
-
-			// 		$.each(index, function(k, o) {
-			// 			// we can access the row wise context for the table
-			// 			var errorDefined = oData.d.results[i].Message;
-			// 			tableLineEdits.getRows()[o].getCells()[0].setVisible(true);
-
-			// 			if (errorDefined.includes("ERROR")) {
-
-			// 				tableLineEdits.getRows()[o].getCells()[0].setProperty("color", "red");
-			// 				tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);
-
-			// 			} else {
-
-			// 				tableLineEdits.getRows()[o].getCells()[0].setProperty("color", "red");
-			// 				tableLineEdits.getRows()[o].getCells()[0].setTooltip(errorDefined);
-
-			// 			}
-
-			// 			i++;
-
-			// 		});
-
-			// 	})
-			// 	.fail(function() {
-			// 		debugger;
-			// 		alert("Fail");
-
-			// 	});
-
 			oModel1.setUseBatch(false);
 			oModel1.read("/WIPTRANSFER", {
 				urlParameters: {
@@ -4695,14 +4145,13 @@ sap.ui.define([
 
 				},
 				success: function(oData, oResponse) {
-					// alert(oData);
 					var tableLineEdits = that.getView().byId("WipDetailsSet3");
 					var index = tableLineEdits.getSelectedIndices();
 
 					var i = 0;
 
 					$.each(index, function(k, o) {
-						// we can access the row wise context for the table
+
 						var errorDefined = oData.results[i].Message;
 						tableLineEdits.getRows()[o].getCells()[0].setVisible(true);
 
@@ -4725,7 +4174,7 @@ sap.ui.define([
 			});
 
 		},
-		//Teju 
+
 		onSave: function(oEvt) {
 			var filter = this.getView().byId("idIconTabBar").getSelectedKey();
 			if (filter === "NarrativeEdits") {
@@ -4740,10 +4189,11 @@ sap.ui.define([
 		onNarrativeEditsSave: function(oEvt) {
 			var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
 			var that = this;
-			$.each(that.uniqueId, function(i) {
-				var narStr = that.rowData[i];
+			$.each(that.uniqueId, function(i, o) {
+				var narStr = that.rowData[o];
 				that.saveObjects.push(narStr);
 			});
+			this.uniqueId = [];
 			var changeObj = this.saveObjects;
 
 			if (this.saveObjects.length === 0) {
@@ -4790,7 +4240,6 @@ sap.ui.define([
 			}
 
 			this.saveObjects = [];
-			this.uniqueId = [];
 			var InputFields = this.getView().getModel("InputsModel");
 			InputFields.setProperty("/Inputs/isChanged", false);
 
@@ -4800,11 +4249,13 @@ sap.ui.define([
 			$.each(this.narIndices, function(i, el) {
 				if ($.inArray(el, that.uniqueId) === -1) that.uniqueId.push(el);
 			});
-			// var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
-			$.each(that.uniqueId, function(i) {
-				var rowdat = that.rowData[i];
+
+			$.each(that.uniqueId, function(i, o) {
+				var rowdat = that.rowData[o];
 				that.saveObjects.push(rowdat);
 			});
+			this.uniqueId = [];
+			this.narIndices = [];
 			var finalArray;
 			finalArray = this.saveObjects;
 			if (this.saveObjects.length === 0) {
@@ -4817,8 +4268,6 @@ sap.ui.define([
 				);
 			}
 			this.saveObjects = [];
-			this.uniqueId = [];
-			this.narIndices = [];
 
 			var oComponent = this.getOwnerComponent(),
 
@@ -4866,8 +4315,6 @@ sap.ui.define([
 
 			};
 
-			// var jsonModel = that.getView().getModel("JSONModel");
-
 			oFModel.callFunction("/WIPTRANSFER", {
 				method: "GET",
 				urlParameters: urlParams,
@@ -4882,7 +4329,6 @@ sap.ui.define([
 							actions: [sap.m.MessageBox.Action.OK]
 						}
 					);
-					// jsonModel.setProperty("/modelData", oData.results);
 
 				}
 			});
@@ -4891,8 +4337,6 @@ sap.ui.define([
 			InputFields.setProperty("/Inputs/isChanged", false);
 			finalArray = [];
 		},
-
-		//valli
 
 		changeTransferToMatter: function(oEvent) {
 			debugger;
@@ -4976,7 +4420,6 @@ sap.ui.define([
 		},
 		onLineItemTransfersSave: function(oModel) {
 			debugger;
-			// alert("onLineItemsTransferSave");
 
 			debugger;
 
@@ -5044,7 +4487,6 @@ sap.ui.define([
 			$.each(this.idxToPass, function(i, el) {
 				if ($.inArray(el, that.uniqueIdTransfer) === -1) that.uniqueIdTransfer.push(el);
 			});
-			// var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
 
 			var finalArray;
 			finalArray = oList;
@@ -5116,7 +4558,6 @@ sap.ui.define([
 			};
 
 			var that = this;
-			// var jsonModel = that.getView().getModel("JSONModel");
 
 			oFModel.callFunction("/WIPTRANSFER", {
 				method: "GET",
@@ -5126,16 +4567,6 @@ sap.ui.define([
 					sap.ui.core.BusyIndicator.hide();
 					var res = oData.results;
 					var msgTxt = res[0].Message;
-
-					// for(var o=0 ; o<that.idxToPass.length ; o++){
-
-					// tbl.getRows()[that.idxToPass[o]].getCells()[0].setVisible(true);
-
-					// tbl.getRows()[that.idxToPass[o]].getCells()[0].setProperty("color", "red");
-
-					// tbl.getRows()[that.idxToPass[o]].getCells()[0].setTooltip(msgTxt);
-					// }
-
 					MessageBox.show(
 						msgTxt, {
 							icon: sap.m.MessageBox.Icon.ERROR,
@@ -5143,8 +4574,6 @@ sap.ui.define([
 							actions: [sap.m.MessageBox.Action.OK]
 						}
 					);
-
-					// jsonModel.setProperty("/modelData", oData.results);
 
 				}
 			});

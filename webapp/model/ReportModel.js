@@ -476,69 +476,94 @@ sap.ui.define([
 
 					}
 				},
-	Countries_collection: [{
+		Countries_collection: [{
 						Key: "ar",
-						Text: "Arabic"
-					}, {
-						Key: "ca",
-						Text: "Catalan"
-					}, {
-						Key: "cs_CZ",
-						Text: "Czech"
-					}, {
-						Key: "de_DE_frami",
-						Text: "Dutch"
-					}, {
-						Key: "en_AU",
-						Text: "English(AU)"
-					}, {
-						Key: "en_CA",
-						Text: "English(CA)"
-					}, {
-						Key: "en_US",
-						Text: "English(US)"
-					}, {
-						Key: "en_GB",
-						Text: "English(UK)"
-					}, {
-						Key: "fr",
-						Text: "French"
-					}, {
-						Key: "dataEn",
-						Text: "German"
-					}, {
-						Key: "hu_HU",
-						Text: "Hungarian"
-					}, {
-						Key: "id_ID",
-						Text: "Indonesian"
-					},
-
+						Text: "Arabic",
+						lang:"ar"
+					 },
+					 //{
+					// 	Key: "ca",
+					// 	Text: "Catalan",
+					// 	lang:"ca"
+					// }, {
+					// 	Key: "cs_CZ",
+					// 	Text: "Czech",
+					// 		lang:"cs"
+					// }, {
+					// 	Key: "de_DE_frami",
+					// 	Text: "Dutch",
+					// 		lang:"nl"
+					// }, {
+					// 	Key: "en_AU",
+					// 	Text: "English(AU)",
+					// 		lang:"en"
+					// }, {
+					// 	Key: "en_CA",
+					// 	Text: "English(CA)",
+					// 		lang:"en"
+					// },
 					{
-						Key: "it_IT",
-						Text: "Italian"
-					}, {
-						Key: "pl_PL",
-						Text: "Polish"
-					}, {
-						Key: "pt_PT",
-						Text: "Portugese"
-					}, {
-						Key: "ru_RU",
-						Text: "Russian"
-					}, {
-						Key: "dataEn",
-						Text: "Spanish"
-					}, {
-						Key: "sv_SE",
-						Text: "Swedish"
-					}, {
-						Key: "th_TH",
-						Text: "Thai"
-					}, {
-						Key: "tr_TR",
-						Text: "Turkish"
-					}
+						Key: "en_US",
+						Text: "English(US)",
+							lang:"en"
+					},
+					// {
+					// 	Key: "en_GB",
+					// 	Text: "English(UK)",
+					// 		lang:"en"
+					// }, 
+					{
+						Key: "fr",
+						Text: "French",
+							lang:"fr"
+					},
+					// {
+					// 	Key: "dataEn",
+					// 	Text: "German",
+					// 		lang:"de"
+					// }, {
+					// 	Key: "hu_HU",
+					// 	Text: "Hungarian",
+					// 		lang:"hu"
+					// }, {
+					// 	Key: "id_ID",
+					// 	Text: "Indonesian",
+					// 		lang:"id"
+					// },
+
+					// {
+					// 	Key: "it_IT",
+					// 	Text: "Italian",
+					// 		lang:"it"
+					// }, {
+					// 	Key: "pl_PL",
+					// 	Text: "Polish",
+					// 		lang:"pl"
+					// }, {
+					// 	Key: "pt_PT",
+					// 	Text: "Portugese",
+					// 		lang:"pt"
+					// }, {
+					// 	Key: "ru_RU",
+					// 	Text: "Russian",
+					// 		lang:"ru"
+					// }, {
+					// 	Key: "dataEn",
+					// 	Text: "Spanish",
+					// 		lang:"es"
+					// }, {
+					// 	Key: "sv_SE",
+					// 	Text: "Swedish",
+					// 		lang:"sv"
+					// }, {
+					// 	Key: "th_TH",
+					// 	Text: "Thai",
+					// 		lang:"th"
+					// }, {
+					// 	Key: "tr_TR",
+					// 	Text: "Turkish",
+					// 		lang:"tr"
+					// }
 				],
 				Toolbar: {
 					Reviewed: false,
