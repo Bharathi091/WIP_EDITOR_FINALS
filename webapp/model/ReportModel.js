@@ -458,7 +458,7 @@ sap.ui.define([
 								"key": "ToZzffactcd",
 								"type": "DropDown",
 								"userCol": "Flat Fee ActivityCode"
-							},
+							}
 
 						],
 
@@ -476,11 +476,10 @@ sap.ui.define([
 
 					}
 				},
-		Countries_collection: [{
-						Key: "ar",
-						Text: "Arabic",
-						lang:"ar"
-					 },
+				
+				changedLang:"en_US",
+		
+		Countries_collection: [
 					 //{
 					// 	Key: "ca",
 					// 	Text: "Catalan",
@@ -507,6 +506,11 @@ sap.ui.define([
 						Text: "English(US)",
 							lang:"en"
 					},
+					{
+						Key: "ar",
+						Text: "Arabic",
+						lang:"ar"
+					 },
 					// {
 					// 	Key: "en_GB",
 					// 	Text: "English(UK)",
@@ -516,7 +520,7 @@ sap.ui.define([
 						Key: "fr",
 						Text: "French",
 							lang:"fr"
-					},
+					}
 					// {
 					// 	Key: "dataEn",
 					// 	Text: "German",

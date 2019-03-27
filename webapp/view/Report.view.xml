@@ -244,7 +244,7 @@
 											</uitbl:Table>
 										</smartTable:SmartTable>
 									</IconTabFilter >
-									<IconTabFilter icon="sap-icon://write-new-document" iconColor="Critical" class="size1" text="Narrative_Edits" design="Horizontal"
+									<IconTabFilter icon="sap-icon://write-new-document" iconColor="Critical" class="size1" text="Narrative Edits" design="Horizontal"
 										visible="{InputsModel>/Inputs/IconTabs/Narrative_Edits}" key="NarrativeEdits">
 										<!--<ComboBox items="{ path: 'InputsModel>/Inputs/Countries_collection'}" class="comboPosition" width="20%">-->
 										<!--	<core:Item key="{InputsModel>key}" text="{InputsModel>Text}"/>-->
@@ -274,19 +274,20 @@
 											<smartTable:customToolbar>
 												<Toolbar>
 													<m:ToolbarSpacer/>
-													<ComboBox items="{ path: 'InputsModel>/Inputs/Countries_collection'}" class="comboPosition" id="comboPosition" width="20%" change = "dictionaryChange">
+												<Select items="{ path: 'InputsModel>/Inputs/Countries_collection'}" class="comboPosition" id="comboPosition" width="20%"
+														change="dictionaryChange" >
 														<core:Item key="{InputsModel>key}" text="{InputsModel>Text}"/>
-													</ComboBox>
+													</Select>
 													<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText1"/>
 													<Button icon="sap-icon://text-formatting" press="capitalization"/>
-													<Button icon="sap-icon://play" press="removeSpaces"/>
+													<Button icon="sap-icon://play" press="removeSpaces" enabled="false"/>
 													<Button icon="sap-icon://synchronize" press="Reload"/>
 													<!--<Button icon="sap-icon://download" press="Export"/>-->
 														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
 												</Toolbar>
 											</smartTable:customToolbar>
 										
-											<uitbl:Table id="WipDetailsSet1" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="NarrativeEditsSelection" >
+											<uitbl:Table id="WipDetailsSet1" firstVisibleRowChanged="scrollChange" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="NarrativeEditsSelection" >
 												<uitbl:columns>
 													<uitbl:Column width="8rem" filterProperty="ReviewComplete" sortProperty="ReviewComplete" showSortMenuEntry="true" autoResizable="true">
 														<uitbl:customData>
@@ -357,7 +358,7 @@
 									
 									
 									</IconTabFilter>
-									<IconTabFilter icon="sap-icon://write-new-document" text="Line_Item_Edits" design="Horizontal"
+									<IconTabFilter icon="sap-icon://write-new-document" text="Line Item Edits" design="Horizontal"
 										visible="{InputsModel>/Inputs/IconTabs/Line_Item_Edits}" key="LineItemEdits">
 										<f:SimpleForm id="formData2" maxContainerCols="4" class="form" layout="Layout">
 											<l:HorizontalLayout class="sapUiSmallMargin">
@@ -588,7 +589,7 @@
 											</uitbl:Table>
 										</smartTable:SmartTable>
 									</IconTabFilter>
-									<IconTabFilter icon="sap-icon://write-new-document" iconColor="Negative" text="Line_Item_Transfers" design="Horizontal"
+									<IconTabFilter icon="sap-icon://write-new-document" iconColor="Negative" text="Line Item Transfers" design="Horizontal"
 										visible="{InputsModel>/Inputs/IconTabs/Line_Item_Transfers}" key="LineItemTransfers">
 										<f:SimpleForm id="formData3" maxContainerCols="4" class="form" layout="Layout">
 											<l:HorizontalLayout class="sapUiSmallMargin">
@@ -875,7 +876,7 @@
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Modify_Reverse}"/>
 				<Button text="Updatecodes" press="onUpdateCodes" visible="{InputsModel>/Inputs/Toolbar/Updatecodes}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Updatecodes}"/>
-				<Button text="A GlobalSpellCheck" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/GlobalSpellCheck}"/>
+				<Button text="A Global Spell Check" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/GlobalSpellCheck}"/>
 				<Button text="Consolidate" press="onConsolidate" visible="{InputsModel>/Inputs/Toolbar/Consolidate}"
 					enabled="{InputsModel>/Inputs/ToolbarEnable/Consolidate}"/>
 				<Button text="Mass Transfer" press="onmasstransfer" visible="{InputsModel>/Inputs/Toolbar/Mass_Transfer}"
