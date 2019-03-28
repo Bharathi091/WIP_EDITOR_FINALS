@@ -12,3 +12,13 @@
 	border: 2.5px solid  #DBDADA;
 	
 }
+.fulcrum-editor-textarea{
+	
+
+	word-wrap: break-word;
+ white-space: pre-wrap;
+ display:inline-block;
+ width:100%;height:100%;
+ 
+
+}

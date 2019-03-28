@@ -280,7 +280,7 @@
 													</Select>
 													<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText1"/>
 													<Button icon="sap-icon://text-formatting" press="capitalization"/>
-													<Button icon="sap-icon://play" press="removeSpaces" enabled="false"/>
+													<Button icon="sap-icon://play" press="removeSpaces" />
 													<Button icon="sap-icon://synchronize" press="Reload"/>
 													<!--<Button icon="sap-icon://download" press="Export"/>-->
 														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
@@ -337,7 +337,7 @@
 														<uitbl:template>
 															<smartField:SmartField editable="false" id="Werks" value="{Werks}"/></uitbl:template>
 													</uitbl:Column>
-													<uitbl:Column   width="40rem" filterProperty="NarrativeString" sortProperty="NarrativeString" showSortMenuEntry="true" autoResizable="true">
+													<uitbl:Column   width="100%" filterProperty="NarrativeString" sortProperty="NarrativeString" showSortMenuEntry="true" autoResizable="true">
 														<uitbl:customData>
 															<core:CustomData key="p13nData"
 																value='\{"columnKey": "NarrativeString" , "maxLength": "5","columnIndex":"6", "leadingProperty": "NarrativeString" }'/></uitbl:customData>
@@ -346,7 +346,7 @@
 														<uitbl:template>
 															<!--<TextArea value="{NarrativeString}" growing="true" width="80%" liveChange="changeNarrative"/>-->
 																<core:HTML
-															content=" &lt;div  spellcheck=false class='fulcrum-editor-textarea {path:'NarrativeStringSpell'}' contenteditable='true' rows='4' fulcrum-editor&gt;{path:'NarrativeStringSpell'}&lt;/div&gt;"  preferDOM="true" afterRendering="onAfterRenderingEvent" ></core:HTML>
+															content=" &lt;div  spellcheck=false class=fulcrum-editor-textarea contenteditable='true' rows='4' fulcrum-editor&gt;{path:'NarrativeStringSpell'}&lt;/div&gt;"  preferDOM="true" afterRendering="onAfterRenderingEvent" ></core:HTML>
 														</uitbl:template>
 													</uitbl:Column>
 												</uitbl:columns>
