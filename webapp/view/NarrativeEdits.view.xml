@@ -1,0 +1,81 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:m="sap.m" controllerName="billedit.controller.NarrativeEdits"
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:u="sap.ui.unified" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns="sap.ui.table" xmlns:smartTable="sap.ui.comp.smarttable">
+	<smartTable:SmartTable id="smartTable_LineItemsTable" editable="false" tableType="AnalyticalTable" entitySet="OrderItemSet">
+		<smartTable:customToolbar>
+			<m:Toolbar>
+			
+				<m:Label   text="Draft Bill :"/>
+				<m:Title   text="{MatterModel>/Inputs/selectedRow/Vbeln}"/>
+				<m:Label   text="{MatterModel>/LinetableResults}  Line Items"/>
+			
+				<m:ToolbarSpacer/>
+				<m:Button type="Default" icon="sap-icon://synchronize" tooltip="refresh" press="refreshTable"/>
+			</m:Toolbar>
+		</smartTable:customToolbar>
+		<Table id="lineTable" rows="{MatterModel>/LineitemsCopy/results}" selectionMode="MultiToggle" visibleRowCount="10" ariaLabelledBy="title">
+			<!--<toolbar>-->
+			<!--	<m:Toolbar>-->
+			<!--		<m:content>-->
+			<!--			<m:ToolbarSpacer/>-->
+			<!--			<m:Title id="title2" text="Draft Bill :{MatterModel>/Inputs/selectedRow/Vbeln} {MatterModel>/LinetableResults} Line Items"/>-->
+			<!--			<m:Button type="Accept" icon="sap-icon://synchronize" tooltip="refresh" press="refreshTable"/>-->
+			<!--<m:Button type="Accept" icon="sap-icon://download" tooltip="clear selection" press="downloadfile"/>-->
+			<!--		</m:content>-->
+			<!--	</m:Toolbar>-->
+			<!--</toolbar>-->
+			<columns >
+				<!--<Column width="7rem">-->
+				<!--	<m:Label text="{i18n>info}"/>-->
+				<!--	<template>-->
+				<!--		<core:Icon tooltip="{MatterModel>info}" visible="{MatterModel>msg}" src="{MatterModel>src}" class="size5" color="{MatterModel>color}"></core:Icon>-->
+				<!--	</template>-->
+				<!--</Column>-->
+				<Column width="7rem">
+					<m:Label text="{i18n>Reviewed}"/>
+					<template>
+						<!--<core:Icon tooltip="test" visible="true" src="sap-icon://message-warning" class="size5" color="red"></core:Icon>-->
+						<!--<core:Icon tooltip="{MatterModel>info}" visible="{MatterModel>msg}" src="{MatterModel>src}" class="size5" color="{MatterModel>color}"></core:Icon>-->
+						<m:Text text="Reviewed" visible="{MatterModel>showReview}" class = "revColor"></m:Text>
+					</template>
+				</Column>
+				<Column width="5rem">
+					<m:Label text="{i18n>Item}"/>
+					<template>
+						<m:Text text="{MatterModel>Item}"/>
+					</template>
+				</Column>
+				<!--<Column width="8rem" >-->
+				<!--	<m:Label text="{i18n>WorkDate}"/>-->
+				<!--	<template>-->
+				<!--		<m:Text text="{MatterModel>lineworkDate}"/>-->
+				<!--	</template>-->
+				<!--</Column>-->
+				<Column width="10rem">
+					<m:Label text="{i18n>TimeKeeper}"/>
+					<template>
+						<m:Text text="{MatterModel>Sname}"/>
+					</template>
+				</Column>
+				<Column width="10rem">
+					<m:Label text="{i18n>TimeKeeperNo}"/>
+					<template>
+						<m:Text text="{MatterModel>Pernr}"/>
+					</template>
+				</Column>
+				<Column width="10rem">
+					<m:Label text="{i18n>WorkingOffice}"/>
+					<template>
+						<m:Text text="{MatterModel>Zzwerks}"/>
+					</template>
+				</Column>
+				<Column >
+					<m:Label text="{i18n>Narrative }"/>
+					<template>
+						<m:TextArea value="{MatterModel>Narrative}" growing="true" width="100%" liveChange="changeNarrative"/>
+					</template>
+				</Column>
+			</columns>
+		</Table>
+	</smartTable:SmartTable>
+</mvc:View>

@@ -1,10 +1,14 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"wip/model/formatter"
-], function(Controller, formatter) {
+	"sap/m/Button",
+	"sap/m/Dialog",
+	"sap/m/Label",
+	"sap/m/Text",
+	"billedit/extjs/lodash"
+], function(Controller, Button, Dialog,Label,Text) {
 	"use strict";
 
-	return Controller.extend("wip.controller.BaseController", {
+	return Controller.extend("billedit.controller.BaseController", {
 		/**
 		 * Convenience method for accessing the router.
 		 * @public
@@ -13,7 +17,12 @@ sap.ui.define([
 		getRouter: function() {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
-
+		convertToJSONDate:function(strDate){
+			var dt = new Date(strDate);
+            var newDate = new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes(), dt.getSeconds(), dt.getMilliseconds()));
+            return '/Date(' + newDate.getTime() + ')/';
+		},
+	
 		/**
 		 * Convenience method for getting the view model by name.
 		 * @public
@@ -22,6 +31,29 @@ sap.ui.define([
 		 */
 		getModel: function(sName) {
 			return this.getView().getModel(sName);
+		},
+		showAlert: function(title, message) {
+
+			var dialog = new Dialog({
+				title: title,
+				type: 'Message',
+				content: new Text({
+					text: message
+				}),
+				beginButton: new Button({
+					text: 'OK',
+					press: function() {
+						dialog.close();
+
+					}
+				}),
+
+				afterClose: function() {
+					dialog.destroy();
+				}
+			});
+
+			dialog.open();
 		},
 
 		/**
@@ -48,6 +80,12 @@ sap.ui.define([
 		 * Event handler when the share by E-Mail button has been clicked
 		 * @public
 		 */
+		showBusyIndicator: function() {
+			sap.ui.core.BusyIndicator.show(0);
+		},
+		hideBusyIndicator: function() {
+			sap.ui.core.BusyIndicator.hide(0);
+		},
 		onShareEmailPress: function() {
 			var oViewModel = (this.getModel("objectView") || this.getModel("worklistView"));
 			sap.m.URLHelper.triggerEmail(
@@ -55,51 +93,6 @@ sap.ui.define([
 				oViewModel.getProperty("/shareSendEmailSubject"),
 				oViewModel.getProperty("/shareSendEmailMessage")
 			);
-		},
-		Export: function() {
-
-			var iconTabBarFilter = this.getView().byId("idIconTabBar").getSelectedKey();
-			if (iconTabBarFilter === "Home") {
-
-				this.onExport("WipDetailsSet");
-			} else if (iconTabBarFilter === "NarrativeEdits") {
-
-				this.onExport("WipDetailsSet1");
-			} else if (iconTabBarFilter === "LineItemEdits") {
-
-				this.onExport("WipDetailsSet2");
-			} else {
-
-				this.onExport("WipDetailsSet3");
-			}
-
-		},
-		onExport: function(tableId) {
-			var oTable = this.byId(tableId);
-			var oExport = oTable.exportData();
-			var sModel = oTable.data("mainmodel");
-			if (sModel) {
-				var aExpCol = oExport.getColumns();
-				var aCol = oTable.getColumns();
-				aCol.forEach(function(oColumn, i) {
-					var oCell = new sap.ui.core.util.ExportCell();
-					console.log(oCell.getMetadata());
-					if (oColumn.data("ctype") === "DatePicker") {
-						oCell.bindProperty("content", {
-							path: sModel + ">" + oColumn.getSortProperty(),
-							formatter: formatter.getDateFormat
-						});
-						aExpCol[i].setTemplate(oCell);
-					} else if (oColumn.data("ctype") === "TimePicker") {
-						oCell.bindProperty("content", {
-							path: sModel + ">" + oColumn.getSortProperty(),
-							formatter: formatter.getTimeFormat
-						});
-						aExpCol[i].setTemplate(oCell);
-					}
-				});
-			}
-			oExport.saveFile("WipDetailsSet" + new Date());
 		}
 
 	});

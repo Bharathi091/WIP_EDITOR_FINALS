@@ -1,0 +1,395 @@
+<mvc:View controllerName="billedit.controller.Home" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:sl="sap.ui.comp.navpopover"
+	xmlns:smartChart="sap.ui.comp.smartchart" xmlns:core="sap.ui.core" xmlns:smartTable="sap.ui.comp.smarttable" xmlns:m="sap.m"
+	xmlns:l="sap.ui.layout" xmlns:smartForm="sap.ui.comp.smartform" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:tnt="sap.tnt" xmlns:smartField="sap.ui.comp.smartfield" xmlns:f="sap.ui.layout.form"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	 xmlns:semantic="sap.m.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:table="sap.ui.table">
+	<App>
+		<pages>
+			<Page title="Draft Bill Edit">
+				<content>
+					<smartFilterBar:SmartFilterBar showFilterConfiguration="true" filterChange="onFilterChange" initialized="initiatedFilterbars" id="FilterBar"
+						visible="true" entityType="BillSummary" persistencyKey="FilterBarKey" app:dateFormatSettings="\{&quot;UTC&quot;:true\}"
+						search="masterFilterGo" filterBarExpanded="{MatterModel>/Inputs/filterBarExpanded}">
+						
+						<smartFilterBar:controlConfiguration >
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Budat" index="1" label="{i18n>workDate}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<DateRangeSelection id="troDateInintut" displayFormat="dd.MM.yyyy" valueFormat="yyyy-MM-dd" change="handleChange"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Client" index="2" label="{i18n>ClientNumber}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<MultiInput id="ClientNumber" app:key="ClientNumber" valueHelpRequest="onValueHelpRequest" enableMultiLineMode="true"
+										tokenChange="validation"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="MpatnerParvw" index="3" label="{i18n>BusinessPartnerType}"
+								visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<Select id="BusinessPartnerType" items="{ path: 'MatterModel>/Inputs/partnerTypeData' , templateShareable:false }" forceSelection="false"
+										change="validation">
+										<core:Item key="{MatterModel>Parvw}" text="{MatterModel>Vtext}"/>
+									</Select>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Mpatner" index="4" label="{i18n>BusinessPartnerNumber}"
+								visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<MultiInput id="BusinessPartnerNumber" app:key="BusinessPartnerNumber" valueHelpRequest="onValueHelpRequest"
+										enableMultiLineMode="true" tokenChange="validation"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Pspid" index="5" label="{i18n>Matter}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<MultiInput id="Matter" app:key="Matter" valueHelpRequest="onValueHelpRequest" enableMultiLineMode="true" tokenChange="validation"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Rptgroup" index="6" label="{i18n>MatterReportingGroup}"
+								visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<MultiInput id="MatterReportingGroup" app:key="MatterReportingGroup" valueHelpRequest="onValueHelpRequest" enableMultiLineMode="true"
+										tokenChange="validation"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Mgbill" index="7" label="{i18n>GroupBillID}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<MultiInput id="GroupBillID" app:key="GroupBillID" valueHelpRequest="onValueHelpRequest" enableMultiLineMode="true"
+										tokenChange="validation"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Werks" index="8" label="{i18n>BillingOffice}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<MultiInput id="BillingOffice" app:key="BillingOffice" valueHelpRequest="onValueHelpRequest" enableMultiLineMode="true"
+										tokenChange="validation"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Vkorg" index="9" label="{i18n>SalesOrg}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<MultiInput id="SalesOrg" app:key="SalesOrg" valueHelpRequest="onValueHelpRequest" enableMultiLineMode="true"
+										tokenChange="validation"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<smartFilterBar:controlConfiguration>
+							<smartFilterBar:ControlConfiguration groupId="_BASIC" key="Vbeln" index="10" label="{i18n>DraftBillNo}" visibleInAdvancedArea="true">
+								<smartFilterBar:customControl>
+									<MultiInput id="DraftBillNo" app:key="DraftBillNo" enableMultiLineMode="true" tokenChange="validation"/>
+								</smartFilterBar:customControl>
+							</smartFilterBar:ControlConfiguration>
+						</smartFilterBar:controlConfiguration>
+						<CheckBox text="{i18n>CreateDraftBill}"/>
+					</smartFilterBar:SmartFilterBar>
+					<IconTabBar id="idIconTabBarNoIcons" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding myWidth" select="TabClick">
+						<items>
+							<IconTabFilter text="Home"  key="viewMode" icon="sap-icon://home" enabled="{ path: 'MatterModel>/Inputs/Modes/viewMode'}">
+								<smartTable:SmartTable id="smartTable_ResponsiveTable" editable="false" tableType="AnalyticalTable" useVariantManagement="true"
+									persistencyKey="SmartTablePKey" useTablePersonalisation="true" useExportToExcel="true"
+									beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false" class="sapUiResponsiveContentPadding" dataReceived="onDataReceived" entitySet="BillSummarySet">
+									<smartTable:noData>
+										<Text text="No Records" textAlign="Center" class="sapUiTableCtrlEmptyMsg"/>
+									</smartTable:noData>
+									<table:Table selectionMode="Multi" rowSelectionChange="enableMode" id="dataTable" rows="{path : 'MatterModel>/Inputs/viewdata/results'}"
+										 fixedColumnCount="0" class="sapUiResponsiveContentPadding" columnResize="oncolumnResize" visibleRowCount="auto">
+										<table:columns > 
+										
+										<table:Column width="11rem" sortProperty="BaName" filterProperty="BaName" showSortMenuEntry="true" showFilterMenuEntry="true" groupProperty="BaName" showGroupMenuEntry="true">
+												<Label text="Billing Partner"/>
+												<table:template>
+													<Text text="{MatterModel>BaName}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem" sortProperty="ClientName" filterProperty="ClientName" showSortMenuEntry="true" showFilterMenuEntry="true"  groupProperty="ClientName" showGroupMenuEntry="true">
+												<Label text="Client Name"/>
+												<table:template>
+													<Text text="{MatterModel>ClientName}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Matter No"/>
+												<table:template>
+													<Text text="{MatterModel>Pspid}"/>
+												</table:template>
+											</table:Column>
+											
+										
+											<table:Column width="11rem">
+												<Label text="Matter Description"/>
+												<table:template>
+													<Text text="{MatterModel>Post1}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Draft Bill"/>
+												<table:template>
+													<Text text="{MatterModel>Vbeln}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Date"/>
+												<table:template>
+													<Text text="{MatterModel>date}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Currency"/>
+												<table:template>
+													<Text text="{MatterModel>Waers}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Net Fees"/>
+												<table:template>
+													<Text text="{MatterModel>NetFees}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Net Disb"/>
+												<table:template>
+													<Text text="{MatterModel>NetCost}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="TaxView"/>
+												<table:template>
+													<Text text="{MatterModel>Tax}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Withholding Tax"/>
+												<table:template>
+													<Text text="{MatterModel>WhtTax}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Total"/>
+												<table:template>
+													<Text text="{MatterModel>NetAmount}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Final Bill"/>
+												<table:template>
+													<Text text="{MatterModel>VbelnVf}"/>
+												</table:template>
+											</table:Column>
+											<table:Column width="11rem">
+												<Label text="Billing Method"/>
+												<table:template>
+													<Text text="{MatterModel>ZzbillmthdDesc}"/>
+												</table:template>
+											</table:Column>
+										</table:columns>
+									</table:Table>
+								</smartTable:SmartTable>
+							</IconTabFilter>
+							<IconTabFilter text="Narrative Edits" key="narrativeMode"  icon="sap-icon://write-new-document" enabled="{ path: 'MatterModel>/Inputs/Modes/narrativeMode'}">
+								
+								<mvc:XMLView viewName="billedit.view.NarrativeEdits"/>
+								
+							</IconTabFilter>
+							<IconTabFilter text="Header Edits" key="headerEditMode" icon="sap-icon://request" enabled="{ path: 'MatterModel>/Inputs/Modes/headerEditMode'}">
+								<!--	<table:Table id="headerEditTable"   rows="{path : 'MatterModel>/Inputs/headerEditData'}" columnFreeze="true" -->
+								<!--	visibleRowCount="1" ariaLabelledBy="title" fixedColumnCount="1" selectionMode="None">-->
+								<!--	<table:columns displaySelectAll="false" >-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Info"/>-->
+								<!--			<table:template>-->
+								<!--				<core:Icon tooltip="{MatterModel>/Inputs/headerEditData>info}" visible="{MatterModel>/Inputs/headerEditData>msg}" src="{MatterModel>/Inputs/headerEditData>src}" class="size5" color="{MatterModel>/Inputs/headerEditData>color}"></core:Icon>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Status Message"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>Message}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Draft Bill Status"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>Status}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Work Flow Status"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>WfStatusText}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Comments"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>WfComments}"/>-->
+								<!--				<core:Icon src="sap-icon://comment" press="getWFCommentsCall" class="icon-post" visible="{path : 'HeaderEditModel>/grid/displayComments'}"></core:Icon>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Attachments"/>-->
+								<!--			<table:template>-->
+								<!--				<core:Icon src="sap-icon://documents" class="icon-post"></core:Icon>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Additional WIP"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>Status}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Billing Partner"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>BaName}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Client Name"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>ClientName}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Matter No"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>Pspid}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Matter Description"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>Post1}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Draft Bill"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>Vbeln}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Date"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>date}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Currency"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>Waers}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Net Fees"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>NetFees}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Net Disb"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>NetCost}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="TaxView"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>Tax}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Withholding Tax"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>WhtTax}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Total"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>NetAmount}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Final Bill"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>VbelnVf}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--		<table:Column width="11rem">-->
+								<!--			<m:Label text="Billing Method"/>-->
+								<!--			<table:template>-->
+								<!--				<m:Text text="{MatterModel>/Inputs/headerEditData>ZzbillmthdDesc}"/>-->
+								<!--			</table:template>-->
+								<!--		</table:Column>-->
+								<!--	</table:columns>-->
+								<!--</table:Table>-->
+								<mvc:XMLView viewName="billedit.view.HeaderEdits"/>
+							</IconTabFilter>
+							<IconTabFilter text="Lineitem Edits" key="lineItemEditsMode"  icon="sap-icon://edit" enabled="{ path: 'MatterModel>/Inputs/Modes/lineItemEditMode'}">
+							<mvc:XMLView viewName="billedit.view.LineItemEdits"/>
+							</IconTabFilter>
+							<IconTabFilter text="Lineitem transfers" key="lineItemTransferMode"  icon="sap-icon://synchronize" enabled="{ path: 'MatterModel>/Inputs/Modes/lineItemTransferMode'}">
+							<mvc:XMLView viewName="billedit.view.LineItemTransfer"/>
+							</IconTabFilter>
+							<IconTabFilter text="Bill Summary"  key="billSummaryMode"  icon="sap-icon://document" enabled="{ path: 'MatterModel>/Inputs/Modes/billSummary'}">
+								<mvc:XMLView viewName="billedit.view.BillSummary"/>
+							</IconTabFilter>
+						</items>
+					</IconTabBar>
+					
+				</content>
+				<footer>
+				
+				<m:Bar>
+				<m:contentRight>
+					<!--buttons for view mode-->
+ 
+						
+						
+					<m:Button icon="sap-icon://create" text="Create Final Bill" id="createFinalBill" type="Default"  visible="{MatterModel>/Inputs/buttons/views/homeView}"  enabled="flase"/>
+					<m:Button icon="sap-icon://cancel" text="Cancel Draft Bill" id="cancelDraftBill" type="Default"  visible="{MatterModel>/Inputs/buttons/views/homeView}"  enabled="flase"/>
+					<m:Button icon="sap-icon://print" text="Print Final Bill"   id="printFinalBill"  type="Default"  visible="{MatterModel>/Inputs/buttons/views/homeView}"  enabled="flase" press="printFinalBill"/>
+					<m:Button icon="sap-icon://print" text="Print Draft Bill"   id="printDraftBill"  type="Default"  visible="{MatterModel>/Inputs/buttons/views/homeView}"  enabled="flase" press="printDraftBill" />
+					<m:Button icon="sap-icon://edit" text="Change Status"       id="changeStatus"   type="Default"  visible="{MatterModel>/Inputs/buttons/views/homeView}"  press="footerBarMethod" enabled="flase" app:tab="view" app:button="changeStatus"/>
+					<!--buttons for headeredit mode-->
+					<m:Button icon="sap-icon://save" text="Save" type="Default"  visible="{MatterModel>/Inputs/buttons/views/headerEdit}" enabled="flase" />
+					<m:Button icon="sap-icon://print" text="Print Draft Bill" type="Default"  visible="{MatterModel>/Inputs/buttons/views/headerEdit}" />
+					<m:Button icon="sap-icon://edit" text="Change Status" type="Default" visible="{MatterModel>/Inputs/buttons/views/headerEdit}"/>
+					<m:Button icon="sap-icon://add" text="Add Comments" type="Default" visible="{MatterModel>/Inputs/buttons/views/headerEdit}"/>
+					<!-- buttons for narrative mode-->
+					<m:Button icon="sap-icon://save" text="Save" type="Default"   visible="{MatterModel>/Inputs/buttons/views/narrativeEdits}"  app:tab="Narrative" app:button="save" press="footerBarMethod"/>
+					<!--<m:Button icon="sap-icon://edit" text="Global Spell Check" type="Default" visible="{MatterModel>/Inputs/buttons/views/narrativeEdits}"/>-->
+					<m:Button enabled="true" icon="sap-icon://edit" visible="{MatterModel>/Inputs/buttons/views/narrativeEdits}" text="Replace Words" type="Default"
+						press="footerBarMethod" app:tab="Narrative" app:button="replaceWords"/>
+					<m:Button enabled="true" icon="sap-icon://add-document" visible="{MatterModel>/Inputs/buttons/views/narrativeEdits}" text="Reviewed" type="Default"
+						press="footerBarMethod" app:tab="Narrative" app:button="review"/>	
+						<m:Button enabled="true" icon="sap-icon://document-text" visible="{MatterModel>/Inputs/buttons/views/narrativeEdits}" text="UnReview" type="Default"
+						press="footerBarMethod" app:tab="Narrative" app:button="unreview"/>
+					<m:Button enabled="true" id="updateCodes" icon="sap-icon://action-settings" visible="{MatterModel>/Inputs/buttons/views/LineItemEdits}" text="Update Code" press="footerBarMethod"
+						app:tab="Line" app:button="update"/>
+					<m:Button enabled="true" icon="sap-icon://add-document" visible="{MatterModel>/Inputs/buttons/views/LineItemEdits}" text="Add Comments" type="Default"
+						press="footerBarMethod" app:tab="Line" app:button="Comments"/>
+				
+
+				</m:contentRight>
+			</m:Bar>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

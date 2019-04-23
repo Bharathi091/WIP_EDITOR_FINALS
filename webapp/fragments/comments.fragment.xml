@@ -1,0 +1,14 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog contentWidth="700px" contentHeight="300px" draggable="true" id="Alert" title="{i18n>commentsDialogTitle}">
+		<content>
+			<List
+				items="{ path: 'wfComments>/results'}"
+				headerText="Comments">
+				<StandardListItem title="{wfComments>Username} : {wfComments>Usercomment} " description= "{wfComments>Date}" />
+			</List>
+		</content>
+		<beginButton>
+			<Button type="Default" text="{i18n>Ok}" press="DialogClosedWithOk"/>
+		</beginButton>
+	</Dialog>
+</core:FragmentDefinition>

@@ -1,9 +1,9 @@
 sap.ui.define([
-		"wip/controller/BaseController"
+		"billedit/controller/BaseController"
 	], function (BaseController) {
 		"use strict";
 
-		return BaseController.extend("wip.controller.NotFound", {
+		return BaseController.extend("billedit.controller.NotFound", {
 
 			/**
 			 * Navigates to the worklist when the link is pressed

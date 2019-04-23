@@ -1,10 +1,10 @@
 sap.ui.define([
-		"wip/controller/BaseController",
+		"billedit/controller/BaseController",
 		"sap/ui/model/json/JSONModel"
 	], function (BaseController, JSONModel) {
 		"use strict";
 
-		return BaseController.extend("wip.controller.App", {
+		return BaseController.extend("billedit.controller.App", {
 
 			onInit : function () {
 				var oViewModel,

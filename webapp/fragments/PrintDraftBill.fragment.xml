@@ -1,0 +1,16 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog contentWidth="400px" contentHeight="300px" draggable="true" id="AlertPrint" title="{i18n>PleaseSelect}">
+		<content>
+			<Select width="100%" forceSelection="false" selectedKey="{printbillsData>/selected}" items="{ path: 'printbillsData>/data/results'}"
+				change="getbillDataMethod">
+				<core:Item key="{printbillsData>Kschl}" text="{printbillsData>Vtext} - {printbillsData>Kschl}"/>
+			</Select>
+		</content>
+		<beginButton>
+			<Button type="Default" text="{i18n>Ok}" press="printDialogClosedWithOk"/>
+		</beginButton>
+		<endButton>
+			<Button type="Default" text="{i18n>Cancel}" press="printDialogClosedWithCancel"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

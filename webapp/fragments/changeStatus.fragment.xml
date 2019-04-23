@@ -1,0 +1,17 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog contentWidth="700px" contentHeight="300px" draggable="true" id="Alert" title="{i18n>changeStatusTitle}">
+		<content >
+		
+			<List
+				items="{ path: 'statusList>/data/results'}"
+				headerText="Status">
+		<ActionListItem   text="{statusList>StatusT}" press="selectStatus"/>
+					<!--<ActionListItem   text="{statusList>StatusT}"  visible="{ path: 'statusList>Status', formatter: '.formatter.showItem' }" />-->
+				 <!--   <ActionListItem   text="{statusList>Text}" visible="{ path: 'statusList>Knprs', formatter: '.formatter.showItem' }" />-->
+			</List>
+		</content>
+		<beginButton>
+			<Button type="Default" text="{i18n>Cancel}" press="statusDialogClosedWithOk"/>
+		</beginButton>
+	</Dialog>
+</core:FragmentDefinition>

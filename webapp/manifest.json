@@ -1,7 +1,7 @@
 {
 	"_version": "1.4.0",
 	"sap.app": {
-		"id": "wip",
+		"id": "billedit",
 		"type": "application",
 		"i18n": "i18n/i18n.properties",
 		"title": "{{appTitle}}",
@@ -11,7 +11,7 @@
 		},
 		"dataSources": {
 			"mainService": {
-				"uri": "/sap/opu/odata/sap/ZPRS_WIP_EDITOR_SRV/",
+				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_WIP_EDITOR_SRV/",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0",
@@ -20,40 +20,24 @@
 			},
 			"ZPRS_VALUE_HELP_SRV": {
 				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_VALUE_HELP_SRV/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/ZPRS_VALUE_HELP_SRV/metadata.xml"
-				}
+				"type": "OData"
 			},
 			"ZPRS_USER_DATA_SRV": {
 				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_USER_DATA_SRV/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/ZPRS_USER_DATA_SRV/metadata.xml"
-				}
-			},
-			"ZPRS_WIPCODES_SRV": {
-				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_WIPCODES_SRV/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/ZPRS_WIPCODES_SRV/metadata.xml"
-				}
+				"type": "OData"
 			},
 			"ZPRS_BILL_EDIT_SRV": {
 				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_BILL_EDIT_SRV/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/ZPRS_BILL_EDIT_SRV/metadata.xml"
-				}
+				"type": "OData"
+			},
+			"ZPRS_WIPCODES_SRV": {
+				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_WIPCODES_SRV/",
+				"type": "OData"
 			}
 		},
 		"sourceTemplate": {
-			"id": "servicecatalog.connectivityComponent",
-			"version": "0.0.0"
+			"id": "sap.ui.ui5-template-plugin.1worklist",
+			"version": "1.38.3"
 		}
 	},
 	"sap.ui": {
@@ -75,7 +59,7 @@
 	},
 	"sap.ui5": {
 		"rootView": {
-			"viewName": "wip.view.App",
+			"viewName": "billedit.view.App",
 			"type": "XML",
 			"id": "app"
 		},
@@ -101,16 +85,11 @@
 			"compact": true,
 			"cozy": true
 		},
-		"resources": {
-			"css": [{
-				"uri": "css/style.css"
-			}]
-		},
 		"models": {
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "wip.i18n.i18n"
+					"bundleName": "billedit.i18n.i18n"
 				}
 			},
 			"": {
@@ -118,51 +97,27 @@
 				"preload": true
 			},
 			"ZPRS_VALUE_HELP_SRV": {
-				"type": "sap.ui.model.odata.v2.ODataModel",
-				"settings": {
-					"defaultOperationMode": "Server",
-					"defaultBindingMode": "OneTime",
-					"defaultCountMode": "Request"
-				},
 				"dataSource": "ZPRS_VALUE_HELP_SRV",
-				"preload": true
+				"preload": false
 			},
 			"ZPRS_USER_DATA_SRV": {
-				"type": "sap.ui.model.odata.v2.ODataModel",
-				"settings": {
-					"defaultOperationMode": "Server",
-					"defaultBindingMode": "OneTime",
-					"defaultCountMode": "Request"
-				},
 				"dataSource": "ZPRS_USER_DATA_SRV",
-				"preload": true
-			},
-			"ZPRS_WIPCODES_SRV": {
-				"type": "sap.ui.model.odata.v2.ODataModel",
-				"settings": {
-					"defaultOperationMode": "Server",
-					"defaultBindingMode": "OneTime",
-					"defaultCountMode": "Request"
-				},
-				"dataSource": "ZPRS_WIPCODES_SRV",
-				"preload": true
+				"preload": false
 			},
 			"ZPRS_BILL_EDIT_SRV": {
-				"type": "sap.ui.model.odata.v2.ODataModel",
-				"settings": {
-					"defaultOperationMode": "Server",
-					"defaultBindingMode": "OneTime",
-					"defaultCountMode": "Request"
-				},
 				"dataSource": "ZPRS_BILL_EDIT_SRV",
-				"preload": true
+				"preload": false
+			},
+			"ZPRS_WIPCODES_SRV": {
+				"dataSource": "ZPRS_WIPCODES_SRV",
+				"preload": false
 			}
 		},
 		"routing": {
 			"config": {
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
-				"viewPath": "wip.view",
+				"viewPath": "billedit.view",
 				"controlId": "app",
 				"controlAggregation": "pages",
 				"bypassed": {
@@ -171,28 +126,13 @@
 				"async": true
 			},
 			"routes": [{
-				"pattern": "AddWordsToDictionarySet/{objectId}",
-				"name": "object",
-				"target": ["object"]
-			}, {
-				"name": "Report",
+				"name": "Home",
 				"pattern": "",
 				"titleTarget": "",
-				"greedy": false,
-				"target": ["Report"]
-			}, {
-				"name": "splitapp",
-				"pattern": "Cat/{objectName}",
-				"titleTarget": "",
-				"greedy": false,
-				"target": ["splitapp"]
+				"greedy": true,
+				"target": ["Home"]
 			}],
 			"targets": {
-				"object": {
-					"viewName": "Object",
-					"viewId": "object",
-					"viewLevel": 3
-				},
 				"objectNotFound": {
 					"viewName": "ObjectNotFound",
 					"viewId": "objectNotFound"
@@ -201,24 +141,20 @@
 					"viewName": "NotFound",
 					"viewId": "notFound"
 				},
-				"Report": {
+				"Home": {
 					"viewType": "XML",
 					"transition": "slide",
 					"clearAggregation": true,
-					"viewName": "Report",
+					"viewName": "Home",
 					"viewLevel": 1
-				},
-				"splitapp": {
-					"viewType": "XML",
-					"transition": "slide",
-					"clearAggregation": true,
-					"viewName": "splitapp",
-					"viewLevel": 2
 				}
 			}
 		},
-		"config": {
-			"fullWidth": true
+		"resources": {
+			"css": [{
+				"uri": "css/style.css",
+				"id": ""
+			}]
 		}
 	}
 }

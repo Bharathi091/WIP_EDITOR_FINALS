@@ -1,0 +1,158 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:m="sap.m" controllerName="billedit.controller.LineItemTransfer"
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns="sap.ui.table" xmlns:smartTable="sap.ui.comp.smarttable">
+
+		
+		<smartTable:SmartTable useVariantManagement="true" persistencyKey="SmartTablePKey1" useTablePersonalisation="false"
+		showRowCount="false" useExportToExcel="true" enableAutoBinding="false" class="sapUiResponsiveContentPadding" id="smartTable_LineItemsTransfersTable"
+		editable="false" tableType="AnalyticalTable" entitySet="OrderItemSet">
+	<smartTable:customToolbar>
+					<m:Toolbar>
+					<m:Label text="Draft Bill :"/>
+				<m:Title text="{MatterModel>/Inputs/selectedRow/Vbeln}"/>
+				<m:Label text="{MatterModel>/LinetableResults} Line Items"/>
+				<m:ToolbarSpacer/>
+					<m:Button type="Default" icon="sap-icon://synchronize" tooltip="refresh" press="refreshTable"/>
+					<m:Button type="Default" icon="sap-icon://filter" tooltip="filter" press="filterMethod"/>
+					<!--<m:Button type="Accept" icon="sap-icon://download" tooltip="downlosd" press="downloadfile"/>-->
+					</m:Toolbar>
+				</smartTable:customToolbar>
+<Table id="LinItemEditsTable" rows="{MatterModel>/LineItemEdits}" rowSelectionChange="enableButtons" selectionMode="MultiToggle" visibleRowCount="10" ariaLabelledBy="title">
+		<!--<toolbar>-->
+		<!--	<m:Toolbar>-->
+		<!--		<m:content>-->
+		<!--			<m:ToolbarSpacer/>-->
+		<!--			<m:Title id="title2" text="Draft Bill : {MatterModel>/Inputs/selectedRow/Vbeln} - {MatterModel>/LinetableResults} Line Items"/>-->
+					
+		<!--			<m:Button type="Accept" icon="sap-icon://synchronize" tooltip="refresh" press="refreshTable"/>-->
+		<!--			<m:Button type="Accept" icon="sap-icon://filter" tooltip="filter" press="filterMethod"/>-->
+		<!--			<m:Button type="Accept" icon="sap-icon://download" tooltip="downlosd" press="downloadfile"/>-->
+		<!--		</m:content>-->
+		<!--	</m:Toolbar>-->
+		<!--</toolbar>-->
+
+		<columns >
+				<Column width="4rem">
+				<m:Label text="{i18n>Info}"/>
+				<template>
+					<m:Text text=""/>
+				</template>
+			</Column>
+			<Column width="4rem">
+				<m:Label text="{i18n>Item}"/>
+				<template>
+					<m:Text text="{ path: 'MatterModel>Posnr', formatter: '.formatter.RemoveLeadingZeros' }"/>
+				</template>
+			</Column>
+			<Column width="9rem">
+				<m:Label text="{i18n>WorkingOffice}"/>
+				<template>
+					<m:Text text="{MatterModel>Zzwerks}"/>
+				</template>
+			</Column>
+			<Column width="6rem">
+				<m:Label text="{i18n>WorkDate}"/>
+				<template>
+					<!--<m:Text text="{MatterModel>lineworkDate}"/>-->
+					<m:Text text="{ path: 'MatterModel>Budat', formatter: '.formatter.dateText' }"/>
+					<!--<m:Text text="{ path: 'MatterModel>Budat', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium' } }" />-->
+				</template>
+			</Column>
+			<Column width="6rem">
+				<m:Label text="{i18n>Team}"/>
+				<template>
+					<m:Text text="{MatterModel>Zzteam}"/>
+				</template>
+			</Column>
+			<Column width="8rem">
+				<m:Label text="{i18n>TimeKeeper}"/>
+				<template>
+					<m:Text text="{MatterModel>Sname}"/>
+				</template>
+			</Column>
+			<Column width="6rem">
+				<m:Label text="{i18n>TransType}"/>
+				<template>
+					<m:Text text="{MatterModel>Awtyp}"/>
+				</template>
+			</Column>
+			<Column width="6rem">
+				<m:Label text="{i18n>Hours/QTY }"/>
+				<template>
+					<m:Text text="{MatterModel>BaseQty}"/>
+				</template>
+			</Column>
+			<Column width="6rem">
+				<m:Label text="{i18n>BaseRate}"/>
+				<template>
+					<m:Text text="{MatterModel>BaseRate}"/>
+				</template>
+			</Column>
+			<Column width="8rem">
+				<m:Label text="{i18n>NetValue}"/>
+				<template>
+					<m:Text text="{MatterModel>NetBillValue}"/>
+				</template>
+			</Column>
+			<Column width="12rem">
+				<m:Label text="{i18n>PhaseCode}"/>
+				<template>
+					<m:Select width="11rem" forceSelection="false" id="phaseCodeId"  selectedKey="{MatterModel>selectedPhaseCode}"
+						change="phaseCodesChange" items="{ path: 'MatterModel>phaseCodes' , templateShareable:false }">
+						<core:Item key="{MatterModel>Phasecode}" text="{MatterModel>Phasecode}-{MatterModel>PhasecodeDesc}"/>
+					</m:Select>
+							<!--<m:ComboBox items="{ path: '/PhasecodeSet' }" showSecondaryValues="true">-->
+							<!--		<core:ListItem key="{GBSTK}" text="{GBSTK}" additionalText="{DDTEXT}"/>-->
+							<!--	</m:ComboBox>-->
+				</template>
+			</Column>
+			<Column width="12rem">
+				<m:Label text="{i18n>TaskCode}"/>
+				<template>
+					<m:Select width="11rem" forceSelection="false" id="taskCodeId"  change="CodesChange"
+						selectedKey="{MatterModel>selectedTaskCode}" items="{ path: 'MatterModel>taskCodes' , templateShareable:false }">
+						<core:Item key="{MatterModel>TaskCodes}" text="{MatterModel>TaskCodes}-{MatterModel>TaskCodeDesc}"/>
+					</m:Select>
+				</template>
+			</Column>
+			<Column width="12rem">
+				<m:Label text="{i18n>ActivityCode}"/>
+				<template>
+					<m:Select width="11rem" forceSelection="false" id="ActCodeId" change="CodesChange"
+						selectedKey="{MatterModel>selectedActCode}" items="{ path: 'MatterModel>actCodes' , templateShareable:false }">
+						<core:Item key="{MatterModel>ActivityCodes}" text="{MatterModel>ActivityCodes}-{MatterModel>ActivityCodeDesc}"/>
+					</m:Select>
+				</template>
+			</Column>
+			<Column width="12rem">
+				<m:Label text="{i18n>FlatFeeTaskCode}"/>
+				<template>
+					<m:Select width="11rem" forceSelection="false" id="FFTaskCodeId"  selectedKey="{MatterModel>selectedFFTaskCode}"
+						change="getFFActivitycodes" items="{ path: 'MatterModel>ffTskCodes' , templateShareable:false }">
+						<core:Item key="{MatterModel>FfTaskCodes}" text="{MatterModel>FfTaskCodes}-{MatterModel>FfTaskCodeDesc}"/>
+					</m:Select>
+				</template>
+			</Column>
+			<Column width="12rem">
+				<m:Label text="{i18n>FlatFeeActivityCode}"/>
+				<template>
+					<m:Select width="11rem" forceSelection="false" id="FFActCodeId" change="CodesChange"
+						selectedKey="{MatterModel>selectedFFActCode}" items="{ path: 'MatterModel>ffActCodes' , templateShareable:false }">
+						<core:Item key="{MatterModel>FfActivityCodes}" text="{MatterModel>FfActivityCodes}-{MatterModel>FfActivityCodeDesc}"/>
+					</m:Select>
+				</template>
+			</Column>
+			<Column width="8rem">
+				<m:Label text="{i18n>WriteUp/Down }"/>
+				<template>
+					<m:Text text="{MatterModel>ZwriteoffAmt}"/>
+				</template>
+			</Column>
+			<Column width="6rem">
+				<m:Label text="{i18n>Comments }"/>
+				<template>
+					<m:Button type="Emphasized" visible="{ path: 'MatterModel>WfComments', formatter: '.formatter.isLineItemComments' }"  icon="sap-icon://comment" tooltip="chat" press="LinecommentsMethod"/>
+				</template>
+			</Column>
+		</columns>
+	</Table>
+</smartTable:SmartTable>	</mvc:View>

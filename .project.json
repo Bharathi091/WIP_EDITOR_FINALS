@@ -23,26 +23,18 @@
     },
     "/webapp/view/ObjectNotFound.view.xml": {
       "entitySet": "UNBINDKEY"
-    },
-    "/webapp/view/Worklist.view.xml": {
-      "entitySet": "AddWordsToDictionarySet"
     }
   },
   "generation": [
     {
       "templateId": "sap.ui.ui5-template-plugin.1worklist",
       "templateVersion": "1.38.3",
-      "dateTimeStamp": "Wed, 13 Feb 2019 09:59:50 GMT"
+      "dateTimeStamp": "Thu, 26 Apr 2018 10:11:25 GMT"
     },
     {
       "templateId": "ui5template.basicSAPUI5ApplicationComponent",
       "templateVersion": "1.4.0",
-      "dateTimeStamp": "Wed, 13 Feb 2019 12:09:27 GMT"
-    },
-    {
-      "templateId": "servicecatalog.connectivityComponent",
-      "templateVersion": "0.0.0",
-      "dateTimeStamp": "Mon, 18 Feb 2019 13:09:38 GMT"
+      "dateTimeStamp": "Fri, 29 Jun 2018 10:06:25 GMT"
     }
   ],
   "translation": {
@@ -53,8 +45,8 @@
     "resourceModelName": "i18n"
   },
   "mockpreview": {
-    "mockUri": "/sap/opu/odata/sap/ZPRS_WIP_EDITOR_SRV/",
-    "metadataFilePath": "localService/metadata.xml",
+    "mockUri": "/FS6/sap/opu/odata/SAP/ZPRS_WIP_EDITOR_SRV",
+    "metadataFilePath": "",
     "loadJSONFiles": false,
     "loadCustomRequests": false,
     "mockRequestsFilePath": ""

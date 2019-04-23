@@ -1,6 +1,6 @@
 <mvc:View
 	xmlns:mvc="sap.ui.core.mvc"
-	controllerName="wip.controller.App"
+	controllerName="billedit.controller.App"
 	displayBlock="true"
 	xmlns="sap.m">
 

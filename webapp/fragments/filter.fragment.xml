@@ -1,0 +1,11 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<ViewSettingsDialog confirm="handleConfirm" cancel="removefiltersToTable" id="reset" filterItems="{filters>/results}">
+		<filterItems>
+			<ViewSettingsFilterItem text="{filters>displayColumn}" key="{filters>orgColumn}" items="{filters>columnData}">
+				<items >
+					<ViewSettingsItem text="{filters>}" key="{filters>}"/>
+				</items>
+			</ViewSettingsFilterItem>
+		</filterItems>
+	</ViewSettingsDialog>
+</core:FragmentDefinition>

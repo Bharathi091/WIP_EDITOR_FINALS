@@ -1,601 +1,15 @@
 sap.ui.define([
-	"wip/model/BaseObject",
-	"sap/ui/model/resource/ResourceModel"
-], function(BaseObject, ResourceModel) {
+	"billedit/model/BaseObject"
+], function(BaseObject) {
 	"use strict";
-	return BaseObject.extend("wip.model.ReportModel", {
-
+	return BaseObject.extend("billedit.model.ReportModel", {
 		constructor: function(data) {
 			BaseObject.call(this);
 
 			this.Inputs = {
-				hideFilterBar: true,
-				isChanged: false,
-				rootPspid: "",
-				masterItems: [],
-				
-				IconTabs: {
-					Home: true,
-					Narrative_Edits: false,
-					Line_Item_Edits: false,
-					Line_Item_Transfers: false
-				},
-					editableIndexes: [0],
-				currentCol: {},
-				createMatter: [
-					{
-								"key": "Pspid",
-								"type": "smartfield",
-								"userCol": "To Matter",
-								 "width" : "90px"
-							}
 
-						],
-						Column:[{
-							Pspid: ""
-
-						}],
-				createcontrols: [
-					{
-								"key": "Pspid",
-								"type": "smartfield",
-								"userCol": "To Matter",
-								 "width" : "90px"
-							},
-							{
-								"key": "Zzphase",
-								"type": "Select",
-								"userCol": "Phase Code",
-							    "width" : "80px"
-							
-							},
-						 {
-								"key": "Zztskcd",
-								"type": "Select",
-								"userCol": "Task Code",
-								"width" : "80px"
-							},
-								{
-								"key": "Zzactcd",
-								"type": "Select",
-								"userCol": "Activity Code",
-							    "width" : "80px"
-							},{
-								"key": "Zzfftskcd",
-								"type": "Select",
-								"userCol": "Flat Fee taskCode",
-								"width" : "80px"
-							},
-
-							{
-								"key": "Zzffactcd",
-								"type": "Select",
-								"userCol": "Flat Fee ActivityCode",
-								"width" : "80px"
-							},
-							 {
-								"key": "Megbtr",
-								"type": "Input",
-								"userCol": "Hours/Quantity",
-								"width" : "80px"
-							},
-							{
-								"key": "Percent",
-								"type": "Input",
-								"userCol": "Percentage",
-								"width" : "60px"
-							},
-							{
-								"type": "Button",
-								"userCol": "",
-								"width" : "50px"
-							},
-							{
-								"type": "Icon",
-								"userCol": "",
-								 "width" :"50px"
-							}
-							
-
-						],
-						Columns:[{
-							Pspid: "",
-							Zzphase:[],
-							Zzactcd: [],
-							Zztskcd: [],
-							Zzfftskcd: [],
-							Zzffactcd: [],
-							Megbtr: "",
-							Percent: "",
-				            selPhaseKey:"",
-				            selTskKey:"",
-				            selActKey:"", 
-				            selFfTskKey:"",
-				            selFfActKey:""
-
-						}],
-
-				qParms: {
-					ACTION: "?Action=",
-					JSON: "&$format=json"
-				},
-				action: {
-					CONSOLIDATE: "'CONSOLIDATE'"
-				},
-				lsValues: {
-					CONUMBER: "&CoNumber=",
-					Buzei: "&Buzei=",
-					Hours: "&Hours=",
-					Percentage: "&Percentage=",
-					ToActivityCode: "&ToActivityCode=",
-					ToFfActivityCode: "&ToFfActivityCode=",
-					ToFfTaskCode: "&ToFfTaskCode=",
-					ToMatter: "&ToMatter=",
-					ToTaskCode: "&ToTaskCode="
-
-				},
-
-				Filters: {
-					filters: ["Filter1", "Filter2", "Filter3", "Filter4"],
-					Filter1: {
-						table: "smartTable_ResponsiveTable0",
-						uitbale: "WipDetailsSet",
-						createcontrols: [{
-								"key": "Belnr",
-								"type": "text",
-								"userCol": "Document Number"
-							}, {
-								"key": "Awtyp",
-								"type": "text",
-								"userCol": "Transtype"
-							}
-
-							, {
-								"key": "ZzbgrpDesc",
-								"type": "text",
-								"userCol": "Activity Description"
-							}, {
-								"key": "Bldat",
-								"type": "DatePicker",
-								"userCol": "Activity Description"
-							}, {
-								"key": "Tdid",
-								"type": "text",
-								"userCol": "Time Keeper no "
-							}, {
-								"key": "Tdname",
-								"type": "text",
-								"userCol": "Time Keeper Name"
-							}, {
-								"key": "Quantity",
-								"type": "text",
-								"userCol": "Quantity"
-							}, {
-								"key": "Zzblvl",
-								"type": "text",
-								"userCol": "Band Level"
-							}, {
-								"key": "ZzblvlDesc",
-								"type": "text",
-								"userCol": "BandLevel Description"
-							}, {
-								"key": "Zzbgrp",
-								"type": "text",
-								"userCol": "Practise Group"
-							}, {
-								"key": "ZzbgrpDesc",
-								"type": "text",
-								"userCol": "PractiseGroup Description"
-							}, {
-								"key": "Zzteam",
-								"type": "text",
-								"userCol": "Earner Team"
-							}, {
-								"key": "Zzfepgrp",
-								"type": "text",
-								"userCol": " Team Group"
-							}, {
-								"key": "ZzfepgrpDesc",
-								"type": "text",
-								"userCol": "Description"
-							}, {
-								"key": "ToZzactcd",
-								"type": "DropDown",
-								"userCol": "Activity Code"
-							}, {
-								"key": "ToZztskcd",
-								"type": "DropDown",
-								"userCol": "Task Code"
-							}, {
-								"key": "ToZzfftskcd",
-								"type": "DropDown",
-								"userCol": "Flat Fee taskCode"
-							},
-
-							{
-								"key": "ToZzffactcd",
-								"type": "DropDown",
-								"userCol": "Flat Fee ActivityCode"
-							}
-						],
-
-						Columns: {
-							Belnr: "",
-							Awtyp: "",
-
-							ZzbgrpDesc: "",
-							Bldat: "",
-							Tdid: "",
-							Tdname: "",
-							Quantity: ""
-
-						}
-
-					},
-
-					"Filter2": {
-						table: "smartTable_ResponsiveTable1",
-						uitbale: "WipDetailsSet1",
-						createcontrols: [{
-								"key": "Belnr",
-								"type": "text",
-								"userCol": "Document Number"
-							}, {
-								"key": "Awtyp",
-								"type": "text",
-								"userCol": "Transtype"
-							}
-
-							, {
-								"key": "ZzbgrpDesc",
-								"type": "text",
-								"userCol": "Activity Description"
-							}, {
-								"key": "Bldat",
-								"type": "DatePicker",
-								"userCol": "Activity Description"
-							}, {
-								"key": "Tdid",
-								"type": "text",
-								"userCol": "Time Keeper no "
-							}, {
-								"key": "Tdname",
-								"type": "text",
-								"userCol": "Time Keeper Name"
-							}, {
-								"key": "Quantity",
-								"type": "text",
-								"userCol": "Quantity"
-							}
-
-						],
-
-						Columns: {
-							Belnr: "",
-							Awtyp: "",
-
-							ZzbgrpDesc: "",
-							Bldat: "",
-							Tdid: "",
-							Tdname: "",
-							Quantity: ""
-
-						}
-
-					},
-					"Filter3": {
-						table: "smartTable_ResponsiveTable2",
-						uitbale: "WipDetailsSet2",
-						createcontrols: [{
-								"key": "Belnr",
-								"type": "text",
-								"userCol": "Document Number"
-							}, {
-								"key": "Awtyp",
-								"type": "text",
-								"userCol": "Transtype"
-							}
-
-							, {
-								"key": "ZzbgrpDesc",
-								"type": "text",
-								"userCol": "Activity Description"
-							}, {
-								"key": "Bldat",
-								"type": "DatePicker",
-								"userCol": "Activity Description"
-							}, {
-								"key": "Tdid",
-								"type": "text",
-								"userCol": "Time Keeper no "
-							}, {
-								"key": "Tdname",
-								"type": "text",
-								"userCol": "Time Keeper Name"
-							}, {
-								"key": "Quantity",
-								"type": "text",
-								"userCol": "Quantity"
-							}, {
-								"key": "Zzblvl",
-								"type": "text",
-								"userCol": "Band Level"
-							}, {
-								"key": "ZzblvlDesc",
-								"type": "text",
-								"userCol": "BandLevel Description"
-							}, {
-								"key": "Zzbgrp",
-								"type": "text",
-								"userCol": "Practise Group"
-							}, {
-								"key": "ZzbgrpDesc",
-								"type": "text",
-								"userCol": "PractiseGroup Description"
-							}, {
-								"key": "Zzteam",
-								"type": "text",
-								"userCol": "Earner Team"
-							}, {
-								"key": "Zzfepgrp",
-								"type": "text",
-								"userCol": " Team Group"
-							}, {
-								"key": "ZzfepgrpDesc",
-								"type": "text",
-								"userCol": "Description"
-							}, {
-								"key": "ToZzactcd",
-								"type": "DropDown",
-								"userCol": "Activity Code"
-							}, {
-								"key": "ToZztskcd",
-								"type": "DropDown",
-								"userCol": "Task Code"
-							}, {
-								"key": "ToZzfftskcd",
-								"type": "DropDown",
-								"userCol": "Flat Fee taskCode"
-							},
-
-							{
-								"key": "ToZzffactcd",
-								"type": "DropDown",
-								"userCol": "Flat Fee ActivityCode"
-							}
-
-						],
-
-						Columns: {
-							Belnr: "",
-							Awtyp: "",
-
-							ZzbgrpDesc: "",
-							Bldat: "",
-							Tdid: "",
-							Tdname: "",
-							Quantity: ""
-
-						}
-
-					},
-					"Filter4": {
-						table: "smartTable_ResponsiveTable3",
-						uitbale: "WipDetailsSet3",
-						createcontrols: [{
-								"key": "Belnr",
-								"type": "text",
-								"userCol": "Document Number"
-							}, {
-								"key": "Awtyp",
-								"type": "text",
-								"userCol": "Transtype"
-							}
-
-							, {
-								"key": "ZzbgrpDesc",
-								"type": "text",
-								"userCol": "Activity Description"
-							}, {
-								"key": "Bldat",
-								"type": "DatePicker",
-								"userCol": "Activity Description"
-							}, {
-								"key": "Tdid",
-								"type": "text",
-								"userCol": "Time Keeper no "
-							}, {
-								"key": "Tdname",
-								"type": "text",
-								"userCol": "Time Keeper Name"
-							}, {
-								"key": "Quantity",
-								"type": "text",
-								"userCol": "Quantity"
-							}, {
-								"key": "Zzblvl",
-								"type": "text",
-								"userCol": "Band Level"
-							}, {
-								"key": "ZzblvlDesc",
-								"type": "text",
-								"userCol": "BandLevel Description"
-							}, {
-								"key": "Zzbgrp",
-								"type": "text",
-								"userCol": "Practise Group"
-							}, {
-								"key": "ZzbgrpDesc",
-								"type": "text",
-								"userCol": "PractiseGroup Description"
-							}, {
-								"key": "Zzteam",
-								"type": "text",
-								"userCol": "Earner Team"
-							}, {
-								"key": "Zzfepgrp",
-								"type": "text",
-								"userCol": " Team Group"
-							}, {
-								"key": "ZzfepgrpDesc",
-								"type": "text",
-								"userCol": "Description"
-							}, {
-								"key": "ToZzactcd",
-								"type": "DropDown",
-								"userCol": "Activity Code"
-							}, {
-								"key": "ToZztskcd",
-								"type": "DropDown",
-								"userCol": "Task Code"
-							}, {
-								"key": "ToZzfftskcd",
-								"type": "DropDown",
-								"userCol": "Flat Fee taskCode"
-							},
-
-							{
-								"key": "ToZzffactcd",
-								"type": "DropDown",
-								"userCol": "Flat Fee ActivityCode"
-							}
-
-						],
-
-						Columns: {
-							Belnr: "",
-							Awtyp: "",
-
-							ZzbgrpDesc: "",
-							Bldat: "",
-							Tdid: "",
-							Tdname: "",
-							Quantity: ""
-
-						}
-
-					}
-				},
-				
-				changedLang:"en_US",
-		
-		Countries_collection: [
-					 //{
-					// 	Key: "ca",
-					// 	Text: "Catalan",
-					// 	lang:"ca"
-					// }, {
-					// 	Key: "cs_CZ",
-					// 	Text: "Czech",
-					// 		lang:"cs"
-					// }, {
-					// 	Key: "de_DE_frami",
-					// 	Text: "Dutch",
-					// 		lang:"nl"
-					// }, {
-					// 	Key: "en_AU",
-					// 	Text: "English(AU)",
-					// 		lang:"en"
-					// }, {
-					// 	Key: "en_CA",
-					// 	Text: "English(CA)",
-					// 		lang:"en"
-					// },
-					{
-						Key: "en_US",
-						Text: "English(US)",
-							lang:"en"
-					},
-					{
-						Key: "ar",
-						Text: "Arabic",
-						lang:"ar"
-					 },
-					// {
-					// 	Key: "en_GB",
-					// 	Text: "English(UK)",
-					// 		lang:"en"
-					// }, 
-					{
-						Key: "fr",
-						Text: "French",
-							lang:"fr"
-					}
-					// {
-					// 	Key: "dataEn",
-					// 	Text: "German",
-					// 		lang:"de"
-					// }, {
-					// 	Key: "hu_HU",
-					// 	Text: "Hungarian",
-					// 		lang:"hu"
-					// }, {
-					// 	Key: "id_ID",
-					// 	Text: "Indonesian",
-					// 		lang:"id"
-					// },
-
-					// {
-					// 	Key: "it_IT",
-					// 	Text: "Italian",
-					// 		lang:"it"
-					// }, {
-					// 	Key: "pl_PL",
-					// 	Text: "Polish",
-					// 		lang:"pl"
-					// }, {
-					// 	Key: "pt_PT",
-					// 	Text: "Portugese",
-					// 		lang:"pt"
-					// }, {
-					// 	Key: "ru_RU",
-					// 	Text: "Russian",
-					// 		lang:"ru"
-					// }, {
-					// 	Key: "dataEn",
-					// 	Text: "Spanish",
-					// 		lang:"es"
-					// }, {
-					// 	Key: "sv_SE",
-					// 	Text: "Swedish",
-					// 		lang:"sv"
-					// }, {
-					// 	Key: "th_TH",
-					// 	Text: "Thai",
-					// 		lang:"th"
-					// }, {
-					// 	Key: "tr_TR",
-					// 	Text: "Turkish",
-					// 		lang:"tr"
-					// }
-				],
-				Toolbar: {
-					Reviewed: false,
-					Unreview: false,
-					Save: false,
-					Save_Layout: true,
-					Modify_Reverse: false,
-					Consolidate: false,
-					Updatecodes: false,
-					Updatecodestransfers: false,
-					GlobalSpellCheck: false,
-					Mass_Transfer: false,
-					Split_Transfer: false,
-					Replace_Words: false
-				},
-
-				ToolbarEnable: {
-					Reviewed: false,
-					Unreview: false,
-					Replace_Words: false,
-					Modify_Reverse: false,
-					Updatecodes: false,
-					Updatecodestransfers: false,
-					Consolidate: false,
-					Mass_Transfer: false,
-					Split_Transfer: false
-				},
-				services: {
+				"title": "Bill Edit",
+				"services": {
 					"InitialuserDataset": "/UserDataSet(Uname='')",
 					"UpdateduserDataset": "/UserDataSet(Bname='",
 					"Matter": "/Matter",
@@ -667,8 +81,333 @@ sap.ui.define([
 					"WipAmountsSet": "/WipAmountsSet",
 					"billdataset": "/BillSummarySet('"
 
-				}
+				},
+				qParms: {
+					SESSION_ID: "?session_id=",
+					FILTER: "?$filter=",
+					JSON: "&$format=json",
+					DATAJSON: "?$format=json",
+					METADATA: "/$metadata",
+					ACTION: "?Action=",
+					ACTION2: "?ACTION=",
+					DBToStatus: "/DBToStatus",
+					HeaderToGroupInfo: "/HeaderToGroupInfo",
+					PriceByMatnr: "/PriceByMatnr",
+					value: "/$value",
+					Top20: "&$top=20"
 
+				},
+				lsValues: {
+					SESSION_ID: localStorage.getItem("sid"),
+					USER_ID: localStorage.getItem("uid"),
+					CONUMBER: "&CoNumber=",
+					Buzei: "&Buzei=",
+					Hours: "&Hours=",
+					WBS_NODE2: "&WBS_NODE2=",
+					Percentage: "&Percentage=",
+					ToActivityCode: "&ToActivityCode=",
+					ToFfActivityCode: "&ToFfActivityCode=",
+					ToFfTaskCode: "&ToFfTaskCode=",
+					ToMatter: "&ToMatter=",
+					ToTaskCode: "&ToTaskCode=",
+					PSPID: "&PSPID=",
+					Submit: "&Submit=",
+					budat_to: "&budat_to=",
+					budat_from: "&budat_from=",
+					Budat: "&Budat=",
+					Belnr: "?Belnr=",
+					Vbeln: "&Vbeln=",
+					FinalVbeln: "VBELN=",
+					GROUPBILL: "&GROUPBILL=",
+					FKDAT: "&FKDAT=",
+					FKART: "&FKART=",
+					STATUS: "&STATUS=",
+					TYPEOFAPPROVAL: "&TYPEOFAPPROVAL=",
+					CancelVbeln: "Vbeln=",
+					Posnr: "&Posnr=",
+					ToVbeln: "&ToVbeln=",
+					Counter: "&Counter=",
+					ToPhaseCode: "&ToPhaseCode="
+				},
+				"DateFields": ["Budat"],
+				"SelectFields": ["MpatnerParvw"],
+				"InputFields": ["Client", "Mpatner", "Pspid", "Rptgroup", "Mgbill", "Werks", "Vkorg", "Vbeln"],
+				"Dictionaries": {},
+				"Mode": {
+					viewMode: true,
+					headerMode: false
+				},
+				"constants": {},
+				"formatterData": {},
+				"partnerTypeData": [],
+				"AdvFilter": {},
+				"MasterFilterinputs": {
+					"ValuhelpInput": [
+						"ClientNumber",
+						"BusinessPartnerNumber",
+						"Matter",
+						"MatterReportingGroup",
+						"GroupBillID",
+						"BillingOffice",
+						"SalesOrg",
+						"DraftBillNo"
+					],
+					"DateInput": [
+						"fromDateInput",
+						"toDateInput"
+					],
+					"DropdownInput": [
+						"BusinessPartnerType"
+					],
+					"Input": ["DraftBillNo"],
+					"goButton": {
+						enable: false
+					}
+
+				},
+				"AdvFilters": {
+
+					"Keys": {
+
+						"ClientNumber": "Client",
+						"BusinessPartnerNumber": "BusinessPartnerNumber",
+						"Matter": "MatterNumber",
+						"MatterReportingGroup": "MatterReportingGroup",
+						"GroupBillID": "GroupBillID",
+						"BillingOffice": "BillingOffice",
+						"SalesOrg": "SalesOrg"
+
+					},
+
+					"ClientNumber": [{
+						label: "Search Term",
+						template: "SearchTerm",
+						field: "Sortl"
+					}, {
+						label: "Country",
+						template: "Country",
+						field: "Land1"
+					}, {
+						label: "Postal Code",
+						template: "PostalCode",
+						field: "Pstlz"
+					}, {
+						label: "City",
+						template: "City",
+						field: "Mcod3"
+					}, {
+						label: "Client Name",
+						template: "ClientName",
+						field: "Mcod1"
+					}, {
+						label: "Client",
+						template: "Client",
+						field: "Kunnr"
+					}],
+					"BusinessPartnerNumber": [{
+						label: "Business Partner Number",
+						template: "BusinessPartnerNumber",
+						field: "Pernr"
+					}, {
+						label: "First Name",
+						template: "FirstName",
+						field: "Vorna"
+					}, {
+						label: "Last Name",
+						template: "LastName",
+						field: "Nachn"
+					}],
+					"Matter": [{
+						label: "Matter Number",
+						template: "MatterNumber",
+						field: "Pspid"
+					}, {
+						label: "Description",
+						template: "Description",
+						field: "Post1"
+					}],
+					"MatterReportingGroup": [{
+						label: "Matter Reporting Group",
+						template: "MatterReportingGroup",
+						field: "Rptgroup"
+					}, {
+						label: "Description",
+						template: "Description",
+						field: "Post1"
+					}],
+					"GroupBillID": [{
+						label: "Group Bill ID",
+						template: "GroupBillID",
+						field: "Zzgrpbill"
+					}, {
+						label: "Description",
+						template: "Description",
+						field: "Post1"
+					}],
+					"BillingOffice": [{
+						label: "Billing Office",
+						template: "BillingOffice",
+						field: "Werks"
+					}, {
+						label: "Description",
+						template: "Description",
+						field: "Name1"
+					}],
+					"SalesOrg": [{
+						label: "Sales Org",
+						template: "SalesOrg",
+						field: "Vkorg"
+					}, {
+						label: "Description",
+						template: "Description",
+						field: "Vtext"
+					}]
+
+				},
+				"Modes": {
+					"viewMode": true,
+					"headerEditMode": false,
+					"narrativeMode": false,
+					"lineItemEditMode": false,
+					"lineItemTransferMode": false,
+					"billSummary": false,
+					"createDraftBillMode": false
+				},
+				"viewMode": {
+					"settingFields": [{
+						name: "Status Message",
+						checked: false,
+						id: "StatusMessage",
+						enable: true,
+						settings: true
+					}, {
+						name: "Draft Bill Status",
+						checked: false,
+						id: "DraftBillStatus",
+						enable: true,
+						settings: true
+					}, {
+						name: "Work Flow Status",
+						checked: false,
+						id: "WorkFlowStatus",
+						enable: true,
+						settings: true
+					}, {
+						name: "Comments",
+						checked: false,
+						id: "Comments",
+						enable: true,
+						settings: true
+					}, {
+						name: "Attachments",
+						checked: false,
+						id: "Attachments",
+						enable: true,
+						settings: false
+					}, {
+						name: "Additional WIP",
+						checked: false,
+						id: "AdditionalWIP",
+						enable: true,
+						settings: false
+					}, {
+						name: "Billing Partner",
+						checked: false,
+						id: "BillingPartner",
+						enable: true,
+						settings: true
+					}, {
+						name: "Client Name",
+						checked: false,
+						id: "ClientName",
+						enable: true,
+						settings: true
+					}, {
+						name: "Matter No",
+						checked: false,
+						id: "MatterNo",
+						enable: true,
+						settings: true
+					}, {
+						name: "Matter Description",
+						checked: false,
+						id: "MatterDescription",
+						enable: true,
+						settings: true
+					}, {
+						name: "Draft Bill",
+						checked: false,
+						id: "DraftBill",
+						enable: true,
+						settings: true
+					}, {
+						name: "Date",
+						checked: false,
+						id: "Date",
+						enable: true,
+						settings: true
+					}, {
+						name: "Currency",
+						checked: false,
+						id: "Currency",
+						enable: true,
+						settings: true
+					}, {
+						name: "Net Fees",
+						checked: false,
+						id: "NetFees",
+						enable: true,
+						settings: true
+					}, {
+						name: "Net Disb",
+						checked: false,
+						id: "NetDisb",
+						enable: true,
+						settings: true
+					}, {
+						name: "TaxView",
+						checked: false,
+						id: "TaxView",
+						enable: true,
+						settings: true
+					}, {
+						name: "Withholding Tax",
+						checked: false,
+						id: "WithholdingTax",
+						enable: true,
+						settings: true
+					}, {
+						name: "Total",
+						checked: false,
+						id: "Total",
+						enable: true,
+						settings: true
+					}, {
+						name: "Final Bill",
+						checked: false,
+						id: "FinalBill",
+						enable: true,
+						settings: true
+					}, {
+						name: "Billing Method",
+						checked: false,
+						id: "BillingMethod",
+						enable: true,
+						settings: true
+					}]
+				},
+				buttons: {
+					views: {
+						homeView: false,
+						headerEdit: false,
+						narrativeEdits: false,
+						LineItemEdits: false,
+						LineItemTransfers: false
+					}
+				},
+				filterBarExpanded:true,  
+				"headerEditData": [],
+				"billSummaryData": []
 			};
 
 		}

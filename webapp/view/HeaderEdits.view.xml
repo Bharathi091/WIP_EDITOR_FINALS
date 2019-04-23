@@ -1,0 +1,138 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:m="sap.m" controllerName="billedit.controller.HeaderEdits"
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns="sap.ui.table" xmlns:smartTable="sap.ui.comp.smarttable">
+
+<smartTable:SmartTable id="smartTable_headerEditsTable" editable="false" tableType="AnalyticalTable" entitySet="BillSummarySet" >
+	<Table id="headerEditTable" rows="{MatterModel>/Inputs/headerEditData/results}" columnFreeze="true" visibleRowCount="1"
+		ariaLabelledBy="title" fixedColumnCount="1" selectionMode="None">
+		<columns displaySelectAll="false">
+			<Column width="11rem">
+				<m:Label text="Info"/>
+				<template>
+					<core:Icon tooltip="{MatterModel>info}" visible="{MatterModel>msg}" src="{MatterModel>src}" class="size5" color="{MatterModel>color}"></core:Icon>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Status Message"/>
+				<template>
+					<m:Text text="{MatterModel>Message}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Draft Bill Status"/>
+				<template>
+					<m:Text text="{MatterModel>Status}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Work Flow Status"/>
+				<template>
+					<m:Text text="{MatterModel>WfStatusText}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Comments"/>
+				<template>
+					<m:Text text="{MatterModel>WfComments}"/>
+					<core:Icon src="sap-icon://comment" press="getWFCommentsCall" class="icon-post" visible="{path : 'HeaderEditModel>/grid/displayComments'}"></core:Icon>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Attachments"/>
+				<template>
+					<core:Icon src="sap-icon://documents" class="icon-post"></core:Icon>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Additional WIP"/>
+				<template>
+					<m:Text text="{MatterModel>Status}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Billing Partner"/>
+				<template>
+					<m:Text text="{MatterModel>BaName}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Client Name"/>
+				<template>
+					<m:Text text="{MatterModel>ClientName}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Matter No"/>
+				<template>
+					<m:Text text="{MatterModel>Pspid}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Matter Description"/>
+				<template>
+					<m:Text text="{MatterModel>Post1}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Draft Bill"/>
+				<template>
+					<m:Text text="{MatterModel>Vbeln}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Date"/>
+				<template>
+					<m:Text text="{MatterModel>date}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Currency"/>
+				<template>
+					<m:Text text="{MatterModel>Waers}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Net Fees"/>
+				<template>
+					<m:Text text="{MatterModel>NetFees}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Net Disb"/>
+				<template>
+					<m:Text text="{MatterModel>NetCost}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="TaxView"/>
+				<template>
+					<m:Text text="{MatterModel>Tax}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Withholding Tax"/>
+				<template>
+					<m:Text text="{MatterModel>WhtTax}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Total"/>
+				<template>
+					<m:Text text="{MatterModel>NetAmount}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Final Bill"/>
+				<template>
+					<m:Text text="{MatterModel>VbelnVf}"/>
+				</template>
+			</Column>
+			<Column width="11rem">
+				<m:Label text="Billing Method"/>
+				<template>
+					<m:Text text="{MatterModel>ZzbillmthdDesc}"/>
+				</template>
+			</Column>
+		</columns>
+	</Table>
+</smartTable:SmartTable>
+</mvc:View>
