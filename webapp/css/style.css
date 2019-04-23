@@ -1,27 +1,123 @@
-.sapUiSizeCompact .sapUiTableCell .sapMLabel, .sapUiSizeCondensed .sapUiTableCell .sapMLabel, .sapUiSizeCompact .sapUiTableColCell>.sapMLabel, .sapUiSizeCondensed .sapUiTableColCell>.sapMLabel{
-	font-weight: bold !important;
+/* Enter your custom styles here */
+
+.revColor {
+    color: green;
 }
-.sapMLabel {
-    color: #66635a;
-    font-weight: bold;
+.target
+{
+	   background-color:#F6B9B9;
 }
-.revColor{
-	color: green;
-	font-weight: bold;
+.smartTable
+{
+	border: 2.5px solid  #DBDADA;
+	
+}
+.sapUiTableTd {
+box-sizing: border-box;
+
+}
+/*.sapUiTableTdLast{*/
+/*box-sizing: border-box;*/
+/*overflow-y :scroll;*/
+/*overflow-x : hidden;*/
+/*}*/
+.fulcrum-editor{
+	
+}
+.fulcrum-editor-textarea{
+	
+ 
+word-wrap: break-word;
+ white-space: pre-wrap;
+ display:inline-block;
+ width:100%;height:100%;
+ 
+
+}
+.searchPosition{
+	 color:white !important;
+}
+.comboPosition{
+		 background-color:white !important;
+}
+.footer{
+	top:500px;
+}
+
+.toolbar{
+	background-color:#2f3c48;
+
+}
+
+.sapUiTableTr>td {
+    vertical-align: top;
+    box-sizing: border-box;
+}
+.sapUiTableTdLast {
+    resize: both;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    padding:0px 8px;
+    /*display: inline-block;*/
+}
+.sapUiTableCell .sapMText {
+    vertical-align: end;
+     line-height: 33px;
+}
+.menuitems {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid #CCC;
+    white-space: nowrap;
+    font-family: sans-serif;
+    background: #FFF;
+    color: #333;
+    border-radius: 5px;
+    padding: 0;
+}
+
+.menuitems li {
+    padding: 8px 12px;
+    cursor: pointer;
+    list-style-type: none;
+    transition: all .3s ease;
+    user-select: none;
+}
+
+.menuitems li:hover {
+    background-color: #DEF;
+}
+.ignoreall{
+    border-top: 1px solid #ccc;
 }
 
 
-.panelClass h1{
-	border-bottom: none !important;
-}
 
-.sapMPanelContent:not(.sapMPanelBGTransparent) {
-    border-bottom: 0px !important;
-}
-.sapMPanel>.sapMPanelHdr, .sapMPanelWrappingDiv, .sapMPanelWrappingDivTb {
-    border-bottom: 0px !important;
-}
-.sapMITBFilter .sapMITBText{
-	width:auto !important;
-	font-weight: bold !important;
-}
+/*.fulcrum-editor-textarea {*/
+/*    min-height: 26px;*/
+/*    border-bottom: rgba(0,0,0,0.12);*/
+/*    color: rgba(0,0,0,0.87);*/
+/*    -webkit-order: 2;*/
+/*    -ms-flex-order: 2;*/
+/*    order: 2;*/
+/*    display: block;*/
+    /*margin-top: 10px;
+    margin-bottom: 10px;*/
+/*    background: none;*/
+/*    border-width: 0 0 1px 0;*/
+/*    line-height: normal;*/
+/*    height: 30px;*/
+/*    -ms-flex-preferred-size: 26px;*/
+/*    border-radius: 0;*/
+/*    border-style: solid;*/
+/*    width: 100%;*/
+/*    box-sizing: border-box;*/
+/*    float: left;*/
+/*    overflow: hidden;*/
+/*    resize: none;*/
+/*    border-bottom: 0px;*/
+/*    padding: 0px 10px;*/
+/*}*/

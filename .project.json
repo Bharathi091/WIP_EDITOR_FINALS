@@ -12,7 +12,8 @@
     "excludedFiles": [
       "test.html"
     ],
-    "buildRequired": true
+    "buildRequired": true,
+    "lastBuildDateTime": "Thu, 18 Apr 2019 14:24:51 GMT"
   },
   "dataBinding": {
     "/webapp/view/App.view.xml": {
@@ -29,12 +30,12 @@
     {
       "templateId": "sap.ui.ui5-template-plugin.1worklist",
       "templateVersion": "1.38.3",
-      "dateTimeStamp": "Thu, 26 Apr 2018 10:11:25 GMT"
+      "dateTimeStamp": "Tue, 02 Apr 2019 14:28:57 GMT"
     },
     {
       "templateId": "ui5template.basicSAPUI5ApplicationComponent",
       "templateVersion": "1.4.0",
-      "dateTimeStamp": "Fri, 29 Jun 2018 10:06:25 GMT"
+      "dateTimeStamp": "Wed, 03 Apr 2019 09:58:43 GMT"
     }
   ],
   "translation": {
@@ -45,7 +46,7 @@
     "resourceModelName": "i18n"
   },
   "mockpreview": {
-    "mockUri": "/FS6/sap/opu/odata/SAP/ZPRS_WIP_EDITOR_SRV",
+    "mockUri": "/G4B/sap/opu/odata/sap/ZPRS_WIP_EDITOR_SRV",
     "metadataFilePath": "",
     "loadJSONFiles": false,
     "loadCustomRequests": false,
@@ -53,8 +54,8 @@
   },
   "basevalidator": {
     "services": {
-      "xml": "fioriXmlAnalysis",
-      "js": "fioriJsValidator"
+      "js": "fioriJsValidator",
+      "xml": "fioriXmlAnalysis"
     }
   },
   "codeCheckingTriggers": {
@@ -62,5 +63,9 @@
     "notifyBeforePushLevel": "Error",
     "blockPush": false,
     "blockPushLevel": "Error"
+  },
+  "deploy": {
+    "destination": "G4B",
+    "name": "ZPRS_WIPEDIT_UI"
   }
 }

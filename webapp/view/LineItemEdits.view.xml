@@ -1,158 +1,250 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:m="sap.m" controllerName="billedit.controller.LineItemEdits"
-	xmlns:html="http://www.w3.org/1999/xhtml" xmlns="sap.ui.table" xmlns:smartTable="sap.ui.comp.smarttable">
-	<smartTable:SmartTable useVariantManagement="true" persistencyKey="SmartTablePKey1" useTablePersonalisation="false"
-		showRowCount="false" useExportToExcel="true" enableAutoBinding="false" class="sapUiResponsiveContentPadding" id="smartTable_LineItemsTable"
-		editable="false" tableType="AnalyticalTable" entitySet="OrderItemSet">
-		<smartTable:customToolbar>
-			<m:Toolbar>
-				<m:Label text="Draft Bill :"/>
-				<m:Title text="{MatterModel>/Inputs/selectedRow/Vbeln}"/>
-				<m:Label text="{MatterModel>/LinetableResults} Line Items"/>
-				<m:ToolbarSpacer/>
-				<!--<m:Title id="title2" text="Draft Bill : {MatterModel>/Inputs/selectedRow/Vbeln} - {MatterModel>/LinetableResults} Line Items"/>-->
-				<m:Button type="Default" icon="sap-icon://synchronize" tooltip="refresh" press="refreshTable"/>
-				<m:Button type="Default" icon="sap-icon://filter" tooltip="filter" press="filterMethod"/>
-				<!--<m:Button type="Accept" icon="sap-icon://download" tooltip="downlosd" press="downloadfile"/>-->
-			</m:Toolbar>
-		</smartTable:customToolbar>
-		<Table id="LinItemEditsTable" rows="{MatterModel>/LineItemEdits}" rowSelectionChange="enableButtons" selectionMode="MultiToggle"
-			visibleRowCount="auto" ariaLabelledBy="title">
-			<!--<toolbar>-->
-			<!--	<m:Toolbar>-->
-			<!--		<m:content>-->
-			<!--			<m:ToolbarSpacer/>-->
-			<!--			<m:Title id="title2" text="Draft Bill : {MatterModel>/Inputs/selectedRow/Vbeln} - {MatterModel>/LinetableResults} Line Items"/>-->
-			<!--			<m:Button type="Accept" icon="sap-icon://synchronize" tooltip="refresh" press="refreshTable"/>-->
-			<!--			<m:Button type="Accept" icon="sap-icon://filter" tooltip="filter" press="filterMethod"/>-->
-			<!--			<m:Button type="Accept" icon="sap-icon://download" tooltip="downlosd" press="downloadfile"/>-->
-			<!--		</m:content>-->
-			<!--	</m:Toolbar>-->
-			<!--</toolbar>-->
-			<columns >
-				<Column width="4rem">
-					<m:Label text="{i18n>Info}"/>
-					<template>
-						<m:Text text=""/>
-					</template>
-				</Column>
-				<Column width="4rem">
-					<m:Label text="{i18n>Item}"/>
-					<template>
-						<m:Text text="{ path: 'MatterModel>Posnr', formatter: '.formatter.RemoveLeadingZeros' }"/>
-					</template>
-				</Column>
-				<Column width="9rem">
-					<m:Label text="{i18n>WorkingOffice}"/>
-					<template>
-						<m:Text text="{MatterModel>Zzwerks}"/>
-					</template>
-				</Column>
-				<Column width="6rem">
-					<m:Label text="{i18n>WorkDate}"/>
-					<template>
-						<!--<m:Text text="{MatterModel>lineworkDate}"/>-->
-						<m:Text text="{ path: 'MatterModel>Budat', formatter: '.formatter.dateText' }"/>
-						<!--<m:Text text="{ path: 'MatterModel>Budat', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium' } }" />-->
-					</template>
-				</Column>
-				<Column width="6rem">
-					<m:Label text="{i18n>Team}"/>
-					<template>
-						<m:Text text="{MatterModel>Zzteam}"/>
-					</template>
-				</Column>
-				<Column width="8rem">
-					<m:Label text="{i18n>TimeKeeper}"/>
-					<template>
-						<m:Text text="{MatterModel>Sname}"/>
-					</template>
-				</Column>
-				<Column width="6rem">
-					<m:Label text="{i18n>TransType}"/>
-					<template>
-						<m:Text text="{MatterModel>Awtyp}"/>
-					</template>
-				</Column>
-				<Column width="6rem">
-					<m:Label text="{i18n>Hours/QTY }"/>
-					<template>
-						<m:Text text="{MatterModel>BaseQty}"/>
-					</template>
-				</Column>
-				<Column width="6rem">
-					<m:Label text="{i18n>BaseRate}"/>
-					<template>
-						<m:Text text="{MatterModel>BaseRate}"/>
-					</template>
-				</Column>
-				<Column width="8rem">
-					<m:Label text="{i18n>NetValue}"/>
-					<template>
-						<m:Text text="{MatterModel>NetBillValue}"/>
-					</template>
-				</Column>
-				<Column width="12rem">
-					<m:Label text="{i18n>PhaseCode}"/>
-					<template>
-						<m:Select width="11rem" forceSelection="false" id="phaseCodeId" selectedKey="{MatterModel>selectedPhaseCode}" change="phaseCodesChange"
-							items="{ path: 'MatterModel>phaseCodes' , templateShareable:false }">
-							<core:Item key="{MatterModel>Phasecode}" text="{MatterModel>Phasecode}-{MatterModel>PhasecodeDesc}"/>
-						</m:Select>
-						<!--<m:ComboBox items="{ path: '/PhasecodeSet' }" showSecondaryValues="true">-->
-						<!--		<core:ListItem key="{GBSTK}" text="{GBSTK}" additionalText="{DDTEXT}"/>-->
-						<!--	</m:ComboBox>-->
-					</template>
-				</Column>
-				<Column width="12rem">
-					<m:Label text="{i18n>TaskCode}"/>
-					<template>
-						<m:Select width="11rem" forceSelection="false" id="taskCodeId" change="CodesChange" selectedKey="{MatterModel>selectedTaskCode}"
-							items="{ path: 'MatterModel>taskCodes' , templateShareable:false }">
-							<core:Item key="{MatterModel>TaskCodes}" text="{MatterModel>TaskCodes}-{MatterModel>TaskCodeDesc}"/>
-						</m:Select>
-					</template>
-				</Column>
-				<Column width="12rem">
-					<m:Label text="{i18n>ActivityCode}"/>
-					<template>
-						<m:Select width="11rem" forceSelection="false" id="ActCodeId" change="CodesChange" selectedKey="{MatterModel>selectedActCode}"
-							items="{ path: 'MatterModel>actCodes' , templateShareable:false }">
-							<core:Item key="{MatterModel>ActivityCodes}" text="{MatterModel>ActivityCodes}-{MatterModel>ActivityCodeDesc}"/>
-						</m:Select>
-					</template>
-				</Column>
-				<Column width="12rem">
-					<m:Label text="{i18n>FlatFeeTaskCode}"/>
-					<template>
-						<m:Select width="11rem" forceSelection="false" id="FFTaskCodeId" selectedKey="{MatterModel>selectedFFTaskCode}" change="getFFActivitycodes"
-							items="{ path: 'MatterModel>ffTskCodes' , templateShareable:false }">
-							<core:Item key="{MatterModel>FfTaskCodes}" text="{MatterModel>FfTaskCodes}-{MatterModel>FfTaskCodeDesc}"/>
-						</m:Select>
-					</template>
-				</Column>
-				<Column width="12rem">
-					<m:Label text="{i18n>FlatFeeActivityCode}"/>
-					<template>
-						<m:Select width="11rem" forceSelection="false" id="FFActCodeId" change="CodesChange" selectedKey="{MatterModel>selectedFFActCode}"
-							items="{ path: 'MatterModel>ffActCodes' , templateShareable:false }">
-							<core:Item key="{MatterModel>FfActivityCodes}" text="{MatterModel>FfActivityCodes}-{MatterModel>FfActivityCodeDesc}"/>
-						</m:Select>
-					</template>
-				</Column>
-				<Column width="8rem">
-					<m:Label text="{i18n>WriteUp/Down }"/>
-					<template>
-						<m:Text text="{MatterModel>ZwriteoffAmt}"/>
-					</template>
-				</Column>
-				<Column width="6rem">
-					<m:Label text="{i18n>Comments }"/>
-					<template>
-						<m:Button type="Emphasized" visible="{ path: 'MatterModel>WfComments', formatter: '.formatter.isLineItemComments' }"
-							icon="sap-icon://comment" tooltip="chat" press="LinecommentsMethod"/>
-					</template>
-				</Column>
-			</columns>
-		</Table>
-	</smartTable:SmartTable>
+<mvc:View controllerName="zprs.wipeditor.controller.LineItemEdits" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:sl="sap.ui.comp.navpopover" xmlns:smartChart="sap.ui.comp.smartchart" xmlns:core="sap.ui.core"
+	xmlns:smartTable="sap.ui.comp.smarttable" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:uitbl="sap.ui.table"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:tnt="sap.tnt" xmlns:smartField="sap.ui.comp.smartfield"
+	xmlns:smartFilter="sap.ui.core.Control" xmlns:f="sap.ui.layout.form"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:semantic="sap.m.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartList="sap.ui.comp.smartlist" xmlns:a="sap.m.IconTabFilterDesign">
+	<f:SimpleForm id="formData2" maxContainerCols="4" class="form" layout="Layout">
+		<l:HorizontalLayout class="sapUiSmallMargin">
+			<Label text="Matter Number : "/>
+			<Text text="{InputsModel>/Inputs/formMatter}"/>
+		</l:HorizontalLayout>
+		<!--<Input  editable="false" id="Matterform" value=""/>-->
+		<l:HorizontalLayout class="sapUiSmallMargin">
+			<Label text="Lead Partner : "/>
+			<Text text="{InputsModel>/Inputs/formLeadPartner}"/>
+		</l:HorizontalLayout>
+		<!--<Input editable="false" id="BillingDateform" value=""/>-->
+		<l:HorizontalLayout class="sapUiSmallMargin">
+			<Label text="Billing Office : "/>
+			<Text text="{InputsModel>/Inputs/formBillingOffice}"/>
+		</l:HorizontalLayout>
+		<!--<SearchField width="100%" liveChange="onGlobalSearch" class="searchPosition" id="searchText3"/>-->
+	</f:SimpleForm>
+<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable2" editable="false" entitySet="WipDetailsSet"
+											tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
+											header="{i18n>Results} ({JSONModel>/RowCount2})" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
+											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" class="smartTable">
+											<smartTable:customToolbar>
+												<Toolbar>
+													<m:ToolbarSpacer/>
+															<Select items="{ path: 'InputsModel>/Inputs/Countries_collection'}" class="comboPosition" id="comboPosition" width="20%"
+								change="dictionaryChange" visible="false">
+								<core:Item key="{InputsModel>key}" text="{InputsModel>Text}"/>
+							</Select>
+							<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText"/>
+												
+													<Button icon="sap-icon://synchronize" press="Reload"/>
+														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
+												</Toolbar>
+											</smartTable:customToolbar>
+											<uitbl:Table id="WipDetailsSet2" sort="onSort" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemEditsSelection">
+												<uitbl:columns>
+													<uitbl:Column width="8rem" filterProperty="Zzwipcur" sortProperty="Zzwipcur" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Zzwipcur" , "maxLength": "5","columnIndex":"2", "leadingProperty": "Zzwipcur" }'/>
+														</uitbl:customData>
+														<uitbl:label>
+															<Text text="Info"/>
+														</uitbl:label>
+														<uitbl:template>
+															<core:Icon src="sap-icon://alert" class="size3" visible="false" id="alert" color="green"/>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="ReviewComplete" sortProperty="ReviewComplete" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData"
+																value='\{"columnKey": "ReviewComplete" , "maxLength": "5","columnIndex":"2", "leadingProperty": "ReviewComplete" }'/>
+														</uitbl:customData>
+														<uitbl:label>
+															<Text text="Review"/>
+														</uitbl:label>
+														<uitbl:template>
+															<m:Text class="revColor" text="{ path: 'ReviewComplete', formatter: '.formatter.isReviewByStatus' }"/>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Belnr" sortProperty="Belnr" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Belnr" , "maxLength": "5","columnIndex":"3", "leadingProperty": "Belnr" }'/>
+														</uitbl:customData>
+														<uitbl:label>
+															<Text text="Document No"/>
+														</uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Belnr2" value="{Belnr}"/>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Awtyp" sortProperty="Awtyp" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Awtyp" , "maxLength": "5","columnIndex":"4", "leadingProperty": "Awtyp" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Trans Type"/></uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Awtyp2" value="{Awtyp}"/></uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Budat" showFilterMenuEntry="false" sortProperty="Budat" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Budat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Budat" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Work Date"/></uitbl:label>
+														<uitbl:template>
+															<!--<smartField:SmartField editable="false" id="Blda2t" value="{Bldat}"/>-->
+															<m:Text width="100%" text="{ path: 'Budat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Tdid" sortProperty="Tdid" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Tdid" , "maxLength": "5","columnIndex":"7", "leadingProperty": "Tdid" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="TimeKeeper no"/></uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Tdid2" value="{Tdid}"/></uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Tdname" sortProperty="Tdname" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Tdname" , "maxLength": "5","columnIndex":"8", "leadingProperty": "Tdname" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="TimeKeeper Name"/></uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Tdname2" value="{Tdname}"/></uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Quantity" sortProperty="Quantity" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Quantity" , "maxLength": "5","columnIndex":"9", "leadingProperty": "Quantity" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Quantity"/></uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Quantity2" value="{Quantity}"/></uitbl:template>
+													</uitbl:Column>
+													<!--<uitbl:Column width="8rem" filterProperty="Zzblvl" sortProperty="Zzblvl" showSortMenuEntry="true" autoResizable="true">-->
+													<!--	<uitbl:customData>-->
+													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" , "maxLength": "5","columnIndex":"10", "leadingProperty": "Zzblvl" }'/></uitbl:customData>-->
+													<!--	<uitbl:label>-->
+													<!--		<Text text="Band Level"/></uitbl:label>-->
+													<!--	<uitbl:template>-->
+													<!--		<smartField:SmartField editable="false" id="Zzblvl2" value="{Zzblvl}"/></uitbl:template>-->
+													<!--</uitbl:Column>-->
+													<!--<uitbl:Column width="8rem" filterProperty="ZzblvlDesc" sortProperty="ZzblvlDesc" showSortMenuEntry="true" autoResizable="true">-->
+													<!--	<uitbl:customData>-->
+													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzblvlDesc" , "maxLength": "5","columnIndex":"11", "leadingProperty": "ZzblvlDesc" }'/></uitbl:customData>-->
+													<!--	<uitbl:label>-->
+													<!--		<Text text="Band Level Description"/></uitbl:label>-->
+													<!--	<uitbl:template>-->
+													<!--		<smartField:SmartField editable="false" id="ZzblvlDesc2" value="{ZzblvlDesc}"/></uitbl:template>-->
+													<!--</uitbl:Column>-->
+													<!--<uitbl:Column width="8rem" filterProperty="Zzbgrp" sortProperty="Zzbgrp" showSortMenuEntry="true" autoResizable="true">-->
+													<!--	<uitbl:customData>-->
+													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzbgrp" , "maxLength": "5","columnIndex":"12", "leadingProperty": "Zzbgrp" }'/></uitbl:customData>-->
+													<!--	<uitbl:label>-->
+													<!--		<Text text="Bang Group"/></uitbl:label>-->
+													<!--	<uitbl:template>-->
+													<!--		<smartField:SmartField editable="false" id="Zzbgrp2" value="{Zzbgrp}"/></uitbl:template>-->
+													<!--</uitbl:Column>-->
+													<!--<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
+													<!--	<uitbl:customData>-->
+													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"13", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>-->
+													<!--	<uitbl:label>-->
+													<!--		<Text text="Band Group Description"/></uitbl:label>-->
+													<!--	<uitbl:template>-->
+													<!--		<smartField:SmartField editable="false" id="ZzbgrpDesc2" value="{ZzbgrpDesc}"/></uitbl:template>-->
+													<!--</uitbl:Column>-->
+													<!--<uitbl:Column width="8rem" filterProperty="Zzteam" sortProperty="Zzteam" showSortMenuEntry="true" autoResizable="true">-->
+													<!--	<uitbl:customData>-->
+													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzteam" , "maxLength": "5","columnIndex":"14", "leadingProperty": "Zzteam" }'/></uitbl:customData>-->
+													<!--	<uitbl:label>-->
+													<!--		<Text text="Fee Earner Team"/></uitbl:label>-->
+													<!--	<uitbl:template>-->
+													<!--		<smartField:SmartField editable="false" id="Zzteam2" value="{Zzteam}"/></uitbl:template>-->
+													<!--</uitbl:Column>-->
+													<!--<uitbl:Column width="8rem" filterProperty="Zzfepgrp" sortProperty="Zzfepgrp" showSortMenuEntry="true" autoResizable="true">-->
+													<!--	<uitbl:customData>-->
+													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzfepgrp" , "maxLength": "5","columnIndex":"15", "leadingProperty": "Zzfepgrp" }'/></uitbl:customData>-->
+													<!--	<uitbl:label>-->
+													<!--		<Text text="Practise Group"/></uitbl:label>-->
+													<!--	<uitbl:template>-->
+													<!--		<smartField:SmartField editable="false" id="Zzfepgrp2" value="{Zzfepgrp}"/></uitbl:template>-->
+													<!--</uitbl:Column>-->
+													<!--<uitbl:Column width="8rem" filterProperty="ZzfepgrpDesc" sortProperty="ZzfepgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
+													<!--	<uitbl:customData>-->
+													<!--		<core:CustomData key="p13nData"-->
+													<!--			value='\{"columnKey": "ZzfepgrpDesc" , "maxLength": "5","columnIndex":"16", "leadingProperty": "ZzfepgrpDesc" }'/></uitbl:customData>-->
+													<!--	<uitbl:label>-->
+													<!--		<Text text="Practise Group Description"/></uitbl:label>-->
+													<!--	<uitbl:template>-->
+													<!--		<smartField:SmartField editable="false" id="ZzfepgrpDesc2" value="{ZzfepgrpDesc}"/></uitbl:template>-->
+													<!--</uitbl:Column>-->
+													<!--<uitbl:Column width="8rem" showSortMenuEntry="true" autoResizable="true">-->
+													<!--	<uitbl:customData>-->
+													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "" , "maxLength": "5","columnIndex":"17", "leadingProperty": "" }'/></uitbl:customData>-->
+													<!--	<uitbl:label>-->
+													<!--		<Text text="Phase Code"/></uitbl:label>-->
+													<!--	<uitbl:template>-->
+													<!--		<m:Select width="11rem" forceSelection="false" id="phaseCodeId" change="phaseCodesChange" selectedKey="{selectedPhaseCode}"-->
+													<!--			items="{ path:'phaseCodes',  templateShareable:false}">-->
+													<!--			<core:Item key="{Phasecode}" text="{Phasecode} {PhasecodeDesc}"/>-->
+													<!--		</m:Select>-->
+													<!--	</uitbl:template>-->
+													<!--</uitbl:Column>-->
+													<uitbl:Column width="8rem" filterProperty="Zztskcd " sortProperty="Zztskcd " showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Zztskcd" , "maxLength": "5","columnIndex":"18", "leadingProperty": "Zztskcd" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Task Code"/></uitbl:label>
+														<uitbl:template>
+															<m:Select width="11rem" forceSelection="false" id="taskCodeId" selectedKey="{selectedTaskCode}"
+																items="{ path: 'taskCodes', templateShareable:false}">
+																<core:Item key="{TaskCodes}" text="{TaskCodes} {TaskCodeDesc}"/>
+															</m:Select>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Zzactcd " sortProperty="Zzactcd " showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Zzactcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "Zzactcd" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Activity Code"/></uitbl:label>
+														<uitbl:template>
+															<m:Select width="11rem" forceSelection="false" id="ActCodeId" change="CodesChange" selectedKey="{selectedActCode}"
+																items="{ path: 'actCodes' , templateShareable:false }">
+																<core:Item key="{ActivityCodes}" text="{ActivityCodes} {ActivityCodeDesc}"/>
+															</m:Select>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Zzfftskcd" sortProperty="Zzfftskcd" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Zzfftskcd" , "maxLength": "5","columnIndex":"20", "leadingProperty": "Zzfftskcd" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Flat Fee Task Code"/></uitbl:label>
+														<uitbl:template>
+															<m:Select width="11rem" forceSelection="false" id="FfTaskCodes" change="fftaskCodeChange"
+																items="{ path: 'ffTskCodes', templateShareable:false }" selectedKey="{selectedFFTaskCode}">
+																<core:Item key="{FfTaskCodes}" text="{FfTaskCodes} {FfTaskCodes}"/>
+															</m:Select>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Zzffactcd" sortProperty="Zzffactcd" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Zzffactcd" , "maxLength": "5","columnIndex":"21", "leadingProperty": "Zzffactcd" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Flat Fee Activity Code"/></uitbl:label>
+														<uitbl:template>
+															<m:Select width="11rem" forceSelection="false" id="ffActCodeId" items="{ path: 'ffActCodes', templateShareable:false}"
+																selectedKey="{selectedFFActCode}">
+																<core:Item key="{FfActivityCodes}" text="{FfActivityCodes} {FfActivityCodeDesc}"/>
+															</m:Select>
+														</uitbl:template>
+													</uitbl:Column>
+												</uitbl:columns>
+											</uitbl:Table>
+										</smartTable:SmartTable>
+<!--<Toolbar class="toolbar">-->
+<!--	<ToolbarSpacer/>-->
+<!--	<Button text="Save" press="onLineItemEditsSave" id="Save"></Button>-->
+<!--	<Button text="Review" press="ReviewUnreview" id="Review" visible="false"></Button>-->
+<!--	<Button text="UnReview" press="ReviewUnreview" id="UnReview" visible="false" ></Button>-->
+<!--	<Button text="Modify/Reverse" press="onModifyReverse" id="ModifyReverse" visible="false"></Button>-->
+<!--	<Button text="UpdateCodes" press="onUpdateCodes" id="UpdateCodes" visible="false"></Button>-->
+<!--</Toolbar>-->
+
+
 </mvc:View>

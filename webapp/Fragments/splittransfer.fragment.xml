@@ -1,0 +1,70 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core"
+	xmlns:smartField="sap.ui.comp.smartfield" xmlns:m="sap.m">
+	
+	<Dialog  draggable="true">
+		 <customHeader>
+        <Bar>
+           
+            <contentMiddle class="customHeaderStyle">
+                <Title text="Split Transfer {JSONModel>/docno}" class="headerText" />
+            </contentMiddle>
+        </Bar>
+    </customHeader>
+     
+		
+		<l:Grid defaultSpan="L12 M12 S12" width="auto" id="idGrid" class ="dlg">
+			<l:content>
+				<Table id="splitTable" class="row">
+					<columns class="col">
+						<Column width="120px">
+							<Text text="Matter" class="label"/>
+						</Column>
+						<Column width="160px">
+							<Text text="Phase Code" class="label"/>
+						</Column>
+						<Column width="160px">
+							<Text text="Task Code" class="label"/>
+						</Column>
+						<Column width="160px">
+							<Text text="Activity Code" class="label"/>
+						</Column>
+						<Column width="160px">
+							<Text text="FF Task Code" class="label"/>
+						</Column>
+						<Column width="160px">
+							<Text text="FF Activity Code" class="label"/>
+						</Column>
+						<Column width="160px">
+							<Text text="Hours/Quantity" class="label"/>
+						</Column>
+						<Column width="160px">
+							<Text text="Document No" class="label"/>
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem>
+							<cells>
+								<Text text="{JSONModel>/matter}"/>
+								<Text text=""/>
+								<Text text="{JSONModel>/selTask}"/>
+								<Text text="{JSONModel>/selAct}"/>
+								<Text text="{JSONModel>/selFfTsk}"/>
+								<Text text="{JSONModel>/selFfAct}"/>
+								<Text text="{JSONModel>/quantity}"/>
+								<Text text="{JSONModel>/docno}"/>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+				<Table id="splitTable2" >
+				
+				</Table>
+			</l:content>
+		</l:Grid>
+		<buttons>
+			<Button text="Transfer" press="onTransfer" type="Accept"/>
+			<Button text="Cancel" press="closeSplitDialog" type="Reject"/>
+		</buttons>
+	</Dialog>
+
+</core:FragmentDefinition>

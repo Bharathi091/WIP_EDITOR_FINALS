@@ -1,12 +1,12 @@
 sap.ui.define([
 		"sap/ui/core/UIComponent",
 		"sap/ui/Device",
-		"billedit/model/models",
-		"billedit/controller/ErrorHandler"
+		"zprs/wipeditor/model/models",
+		"zprs/wipeditor/controller/ErrorHandler"
 	], function (UIComponent, Device, models, ErrorHandler) {
 		"use strict";
 
-		return UIComponent.extend("billedit.Component", {
+		return UIComponent.extend("zprs.wipeditor.Component", {
 
 			metadata : {
 				manifest: "json"

@@ -41,6 +41,15 @@
       "description": "SAPUI5 Test Resources"
     },
     {
+      "path": "/sap/opu/odata",
+      "target": {
+        "type": "destination",
+        "name": "G4B",
+        "entryPath": "/sap/opu/odata"
+      },
+      "description": "G4B"
+    },
+    {
       "path": "/G4B",
       "target": {
         "type": "destination",

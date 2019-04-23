@@ -3,7 +3,7 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel"
 ], function(Object,JSONModel) {
 	"use strict";
-	return Object.extend("billedit.model.BaseObject", {
+	return Object.extend("zprs.wipeditor.model.BaseObject", {
       constructor: function() {
   			this.model = new JSONModel();
   			this.model.setData(this);

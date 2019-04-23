@@ -1,81 +1,122 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:m="sap.m" controllerName="billedit.controller.NarrativeEdits"
-	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:u="sap.ui.unified" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form"
-	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns="sap.ui.table" xmlns:smartTable="sap.ui.comp.smarttable">
-	<smartTable:SmartTable id="smartTable_LineItemsTable" editable="false" tableType="AnalyticalTable" entitySet="OrderItemSet">
-		<smartTable:customToolbar>
-			<m:Toolbar>
-			
-				<m:Label   text="Draft Bill :"/>
-				<m:Title   text="{MatterModel>/Inputs/selectedRow/Vbeln}"/>
-				<m:Label   text="{MatterModel>/LinetableResults}  Line Items"/>
-			
-				<m:ToolbarSpacer/>
-				<m:Button type="Default" icon="sap-icon://synchronize" tooltip="refresh" press="refreshTable"/>
-			</m:Toolbar>
-		</smartTable:customToolbar>
-		<Table id="lineTable" rows="{MatterModel>/LineitemsCopy/results}" selectionMode="MultiToggle" visibleRowCount="10" ariaLabelledBy="title">
-			<!--<toolbar>-->
-			<!--	<m:Toolbar>-->
-			<!--		<m:content>-->
-			<!--			<m:ToolbarSpacer/>-->
-			<!--			<m:Title id="title2" text="Draft Bill :{MatterModel>/Inputs/selectedRow/Vbeln} {MatterModel>/LinetableResults} Line Items"/>-->
-			<!--			<m:Button type="Accept" icon="sap-icon://synchronize" tooltip="refresh" press="refreshTable"/>-->
-			<!--<m:Button type="Accept" icon="sap-icon://download" tooltip="clear selection" press="downloadfile"/>-->
-			<!--		</m:content>-->
-			<!--	</m:Toolbar>-->
-			<!--</toolbar>-->
-			<columns >
-				<!--<Column width="7rem">-->
-				<!--	<m:Label text="{i18n>info}"/>-->
-				<!--	<template>-->
-				<!--		<core:Icon tooltip="{MatterModel>info}" visible="{MatterModel>msg}" src="{MatterModel>src}" class="size5" color="{MatterModel>color}"></core:Icon>-->
-				<!--	</template>-->
-				<!--</Column>-->
-				<Column width="7rem">
-					<m:Label text="{i18n>Reviewed}"/>
-					<template>
-						<!--<core:Icon tooltip="test" visible="true" src="sap-icon://message-warning" class="size5" color="red"></core:Icon>-->
-						<!--<core:Icon tooltip="{MatterModel>info}" visible="{MatterModel>msg}" src="{MatterModel>src}" class="size5" color="{MatterModel>color}"></core:Icon>-->
-						<m:Text text="Reviewed" visible="{MatterModel>showReview}" class = "revColor"></m:Text>
-					</template>
-				</Column>
-				<Column width="5rem">
-					<m:Label text="{i18n>Item}"/>
-					<template>
-						<m:Text text="{MatterModel>Item}"/>
-					</template>
-				</Column>
-				<!--<Column width="8rem" >-->
-				<!--	<m:Label text="{i18n>WorkDate}"/>-->
-				<!--	<template>-->
-				<!--		<m:Text text="{MatterModel>lineworkDate}"/>-->
-				<!--	</template>-->
-				<!--</Column>-->
-				<Column width="10rem">
-					<m:Label text="{i18n>TimeKeeper}"/>
-					<template>
-						<m:Text text="{MatterModel>Sname}"/>
-					</template>
-				</Column>
-				<Column width="10rem">
-					<m:Label text="{i18n>TimeKeeperNo}"/>
-					<template>
-						<m:Text text="{MatterModel>Pernr}"/>
-					</template>
-				</Column>
-				<Column width="10rem">
-					<m:Label text="{i18n>WorkingOffice}"/>
-					<template>
-						<m:Text text="{MatterModel>Zzwerks}"/>
-					</template>
-				</Column>
-				<Column >
-					<m:Label text="{i18n>Narrative }"/>
-					<template>
-						<m:TextArea value="{MatterModel>Narrative}" growing="true" width="100%" liveChange="changeNarrative"/>
-					</template>
-				</Column>
-			</columns>
-		</Table>
-	</smartTable:SmartTable>
+<mvc:View controllerName="zprs.wipeditor.controller.NarrativeEdits" height="100%" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:sl="sap.ui.comp.navpopover" xmlns:smartChart="sap.ui.comp.smartchart" xmlns:core="sap.ui.core"
+	xmlns:smartTable="sap.ui.comp.smarttable" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:uitbl="sap.ui.table"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:tnt="sap.tnt" xmlns:smartField="sap.ui.comp.smartfield"
+	xmlns:smartFilter="sap.ui.core.Control" xmlns:f="sap.ui.layout.form"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:semantic="sap.m.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartList="sap.ui.comp.smartlist" xmlns:a="sap.m.IconTabFilterDesign">
+	<f:SimpleForm id="formData1" maxContainerCols="4" class="form" layout="Layout">
+		<l:HorizontalLayout class="sapUiSmallMargin">
+			<Label text="Matter Number : "/>
+			<Text text="{InputsModel>/Inputs/formMatter}"/>
+		</l:HorizontalLayout>
+		<!--<Input  editable="false" id="Matterform" value=""/>-->
+		<l:HorizontalLayout class="sapUiSmallMargin">
+			<Label text="Lead Partner : "/>
+			<Text text="{InputsModel>/Inputs/formLeadPartner}"/>
+		</l:HorizontalLayout>
+		<!--<Input editable="false" id="BillingDateform" value=""/>-->
+		<l:HorizontalLayout class="sapUiSmallMargin">
+			<Label text="Billing Office : "/>
+			<Text text="{InputsModel>/Inputs/formBillingOffice}"/>
+		</l:HorizontalLayout>
+		<!--<SearchField width="100%" liveChange="onGlobalSearch" class="searchPosition" id="searchText1"/>-->
+	</f:SimpleForm>
+	<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable1" editable="false" entitySet="WipDetailsSet"
+											tableType="AnalyticalTable" showRowCount="false" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
+											header="{i18n>Results} ({JSONModel>/RowCount1})" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
+											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" class="smartTable" >
+											<smartTable:customToolbar>
+												<Toolbar>
+													<m:ToolbarSpacer/>
+															<Select items="{ path: 'InputsModel>/Inputs/Countries_collection'}" class="comboPosition" id="comboPosition" width="20%"
+								change="dictionaryChange" visible="true">
+								<core:Item key="{InputsModel>key}" text="{InputsModel>Text}"/>
+							</Select>
+							<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText"/>
+											
+													<Button icon="sap-icon://text-formatting" press="capitalization"/>
+													<Button icon="sap-icon://play" press="removeSpaces" />
+													<Button icon="sap-icon://synchronize" press="Reload"/>
+													
+													<!--<Button icon="sap-icon://download" press="Export"/>-->
+														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
+												</Toolbar>
+											</smartTable:customToolbar>
+										
+											<uitbl:Table id="WipDetailsSet1" sort="onNarrativeSort"  firstVisibleRowChanged="scrollChange" filter="filter" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="NarrativeEditsSelection" >
+												<uitbl:columns>
+													<uitbl:Column width="8rem" filterProperty="ReviewComplete" sortProperty="ReviewComplete" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData"
+																value='\{"columnKey": "ReviewComplete" , "maxLength": "5","columnIndex":"1", "leadingProperty": "ReviewComplete" }'/>
+														</uitbl:customData>
+														<uitbl:label>
+															<Text text="Review"/>
+														</uitbl:label>
+														<uitbl:template>
+															<m:Text class="revColor" text="{ path: 'ReviewComplete', formatter: '.formatter.isReviewByStatus' }"/>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Budat" showFilterMenuEntry="false" sortProperty="Budat" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Budat" , "maxLength": "5","columnIndex":"2", "leadingProperty": "Budat" }'/>
+														</uitbl:customData>
+														<uitbl:label>
+															<Text text="Work Date"/>
+														</uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Belnr0" value="{Budat}"/>
+															<m:Text width="100%" text="{ path: 'Budat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
+														</uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Sname" sortProperty="Sname" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Sname" , "maxLength": "5","columnIndex":"3", "leadingProperty": "Sname" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="TimeKeeper"/></uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Awtyp0" value="{Sname}"/></uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Pernr" sortProperty="Pernr" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Pernr" , "maxLength": "5","columnIndex":"4", "leadingProperty": "Pernr" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="TimeKeeper Number"/></uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Audat0" value="{Pernr}"/></uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column width="8rem" filterProperty="Werks" sortProperty="Werks" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData key="p13nData" value='\{"columnKey": "Werks" , "maxLength": "5","columnIndex":"5", "leadingProperty": "Werks" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Working Office"/></uitbl:label>
+														<uitbl:template>
+															<smartField:SmartField editable="false" id="Werks" value="{Werks}"/></uitbl:template>
+													</uitbl:Column>
+													<uitbl:Column    width="100%" filterProperty="NarrativeString" sortProperty="NarrativeString" showSortMenuEntry="true" autoResizable="true">
+														<uitbl:customData>
+															<core:CustomData class = "fulcrum-editor" key="p13nData"
+																value='\{"columnKey": "NarrativeString" , "maxLength": "5","columnIndex":"6", "leadingProperty": "NarrativeString" }'/></uitbl:customData>
+														<uitbl:label>
+															<Text text="Narrative"/></uitbl:label>
+														<uitbl:template>
+															<!--<TextArea value="{NarrativeString}" growing="true" width="80%" liveChange="changeNarrative"/>-->
+																<core:HTML
+															content=" &lt;div  spellcheck=false class=fulcrum-editor-textarea contenteditable='true' rows='4' fulcrum-editor&gt;{path:'NarrativeString'}&lt;/div&gt;"  preferDOM="true" afterRendering="onAfterRenderingEvent" ></core:HTML>
+														</uitbl:template>
+													</uitbl:Column>
+												</uitbl:columns>
+											</uitbl:Table>
+										
+										</smartTable:SmartTable>
+									
+	<!--<Toolbar class="toolbar">-->
+	<!--	<ToolbarSpacer/>-->
+	<!--	<Button text="Save" press="onNarrativeEditsSave" id="Save"></Button>-->
+	<!--	<Button text="Review" press="ReviewUnreview" id="Review" visible="false"></Button>-->
+	<!--	<Button text="Unreview" press="ReviewUnreview" id="Unreview" visible="false"></Button>-->
+	<!--	<Button text="GlobalSpellCheck" press="onGlobalSpellCheck"></Button>-->
+	<!--	<Button text="ReplaceWords" press="onReplacewords" id="ReplaceWords" visible="false"></Button>-->
+	<!--</Toolbar>-->
 </mvc:View>

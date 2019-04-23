@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="billedit.controller.NotFound"
+	controllerName="zprs.wipeditor.controller.NotFound"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m">
 

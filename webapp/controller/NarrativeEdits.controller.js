@@ -1,615 +1,806 @@
-/* global _:true */
 sap.ui.define([
-	"billedit/controller/BaseController",
-	"billedit/Services/LineItemsServices"
-], function(BaseController, LineItemsServices) {
+	"zprs/wipeditor/controller/BaseController",
+	"zprs/wipeditor/model/formatter",
+	"sap/ui/model/Filter",
+	"sap/ui/model/json/JSONModel",
+	"zprs/wipeditor/model/ReportModel",
+	"zprs/wipeditor/services/LineItemsServices",
+	"zprs/wipeditor/spell/spellChek",
+	"sap/m/MessageBox"
+
+], function(BaseController, formatter, Filter, JSONModel, ReportModel, LineItemsServices, spellChek, MessageBox) {
 	"use strict";
 
-	return BaseController.extend("billedit.controller.NarrativeEdits", {
+	return BaseController.extend("zprs.wipeditor.controller.NarrativeEdits", {
+		formatter: formatter,
 
-		/**
-		 * Called when a controller is instantiated and its View controls (if available) are already created.
-		 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
-		 * @memberOf billedit.view.NarrativeEdits
-		 */
 		onInit: function() {
 
 			this.bus = sap.ui.getCore().getEventBus();
-			this.bus.subscribe("narrativeMode", "row", this._getButtonEvent, this);
-			this.bus.subscribe("footerChannel", "footerButtons", this._getfooterButtonEvent, this);
+
+			this.bus.subscribe("homeChannelNarrative", "toSummaryEditNarrative", this.narrativeEditData, this);
+
+			this.jsonModel = new sap.ui.model.json.JSONModel();
+			this.getView().setModel(this.jsonModel, "JSONModel");
+
 		},
-		_getButtonEvent: function(narrativeMode, row, data) {
-			this.BillEditModel = this.getModel("MatterModel");
-			this.serviceInstance = LineItemsServices.getInstance();
-			var Btnviews = {
-				homeView: false,
-				headerEdit: false,
-				narrativeEdits: true,
-				LineItemEdits: false,
-				LineItemTransfers: false
+		narrativeEditData: function(homeChannelNarrative, toSummaryEditNarrative, data) {
+	if (!data.button) {
+			var InputFields = this.getModel("InputsModel");
+			var results = InputFields.getProperty("/Inputs/homeTable");
+			this.jsonModel.setProperty("/modelData", results);
+			var Otable = this.getView().byId("WipDetailsSet1");
+			Otable.setModel(this.jsonModel);
+			this.jsonModel.setProperty("/RowCount1", results.length);
+		
+				Otable.bindRows("/modelData");
+			
+			this.byId("searchText").setValue("");
+
+			var OtableSmart0 = this.getView().byId("smartTable_ResponsiveTable1");
+			var that = this;
+			var oPersButton = OtableSmart0._oTablePersonalisationButton;
+			oPersButton.attachPress(function() {
+
+				var oPersController = OtableSmart0._oPersController;
+				var oPersDialog = oPersController._oDialog;
+
+				oPersDialog.attachOk(function(oEvent) {
+
+					setTimeout(function() {
+
+						that.jsonModel.setProperty("/modelData", that.getModel("InputsModel").getProperty("/Inputs/homeTable"));
+						var Otablenew = that.getView().byId("WipDetailsSet1");
+						Otablenew.bindRows("/modelData");
+					}, 1000);
+				
+
+				});
+
+			});
+		
+				this.spellCheck();
+				var tableLineEdits = this.getView().byId("WipDetailsSet1");
+
+			var index = this.getModel("InputsModel").getProperty("/Inputs/rowLineCount");
+			for (var i = 0; i < index.length; i++) {
+				tableLineEdits.getRows()[index[i]].getCells()[0].setVisible(false);
+				tableLineEdits.getRows()[index[i]].getCells()[1].setVisible(true);
+
+			}
+			var change = InputFields.getProperty("/Inputs/isChanged");
+
+			if (change === true) {
+
+				this._Dialog = sap.ui.xmlfragment("zprs.wipeditor.Fragments.Fragment", this);
+				this._Dialog.open();
+			} else  {
+				
+				
+				this.ReloadTable();
+				
+
+			}
+	}
+		else {
+			if (data.button === "Reviewed" || data.button === "Unreview") {
+				this.ReviewUnreview(data.button);
+			} else if (data.button === "Replace Words") {
+				this.onReplacewords(data.button);
+			} else if (data.button === "Save") {
+				this.onNarrativeEditsSave();
+			}
+		}
+		
+
+		},
+		scrollChange: function(oEvent) {
+		this.logValueScroll = 1;
+
+			this.spellCheck();
+			this.getModel("InputsModel").setProperty("/Inputs/spellCheckLogValue",0);
+			
+
+		},
+
+		filter: function(oEvent) {
+
+			oEvent.preventDefault();
+
+			var value = oEvent.getParameters().value;
+
+			var oFilter4 = new sap.ui.model.Filter(oEvent.getParameters().column.getFilterProperty(), sap.ui.model.FilterOperator.Contains,
+				value);
+
+			this.byId("WipDetailsSet1").getBinding("rows").filter(oFilter4, "Application");
+
+			
+			this.spellCheck();
+
+		},
+
+		ReviewUnreview: function(button) {
+			
+
+			var text = button;
+
+			var oTable = [];
+
+			var otable = this.byId("WipDetailsSet1");
+			 var selectedIndex = this.getModel("InputsModel").getProperty("/Inputs/rowNarrativeCount");
+
+			$.each(selectedIndex, function(k, o) {
+				var selContext = otable.getContextByIndex(o);
+
+				var obj = selContext.getObject();
+				if (text === "Reviewed") {
+					selContext.getModel().setProperty(selContext.getPath() + "/ReviewComplete", "X");
+					obj.ReviewComplete = "X";
+
+				} else {
+					selContext.getModel().setProperty(selContext.getPath() + "/ReviewComplete", "");
+					obj.ReviewComplete = "";
+
+				}
+				oTable.push(obj);
+
+			});
+
+			this.makeBatchCallsReviewUnreview(oTable);
+		
+			
+		},
+		makeBatchCallsReviewUnreview: function(oList) {
+
+			var oComponent = this.getOwnerComponent(),
+
+				oFModel = oComponent.getModel(),
+
+				tData = $.extend(true, [], oList),
+
+				urlParams,
+				ReviewArray = [],
+				WorkDateArray = [],
+				TimekeeperArray = [],
+				TimekeepernameArray = [],
+				WorkingofficeArray = [],
+				NarrativeArray = [],
+				CoNumber = [],
+				Buzei = [];
+
+			$.each(tData, function(i, o) {
+				ReviewArray.push(o.ReviewComplete);
+				WorkDateArray.push(o.Budat);
+				TimekeeperArray.push(o.Sname);
+				TimekeepernameArray.push(o.Pernr);
+				WorkingofficeArray.push(o.Werks);
+				NarrativeArray.push(o.NarrativeString);
+				CoNumber.push(o.Belnr);
+				Buzei.push(o.Buzei);
+
+			});
+
+			urlParams = {
+
+				CoNumber: CoNumber,
+				Buzei: Buzei,
+				ReviewStatus: ReviewArray
+
 			};
-			this.BillEditModel.setProperty("/Inputs/buttons/views", Btnviews);
-			this.BillEditModel.setProperty("/replaceItems", []);
-
-			this.getLineItemsData(data['data'].Vbeln);
-		},
-		refreshTable: function() {
-			this.getLineItemsData(this.BillEditModel.getProperty("/Inputs/selectedRow/Vbeln"));
-		},
-		getLineItemsData: function(Vbeln) {
-
-			this.showBusyIndicator();
 
 			var that = this;
-			that.serviceInstance.getLineItemsData(this.BillEditModel, Vbeln, that)
-				.done(function(oData) {
-					that.hideBusyIndicator();
+			var jsonModel = that.getView().getModel("JSONModel");
 
-					if (oData.d.results.length > 0) {
-						that.BillEditModel.setProperty("/LinetableResults", oData.d.results.length);
-						var lineItems = oData.d;
-						lineItems.results.sort(function compare(a, b) {
-							return a.Posnr - b.Posnr;
-						});
+			oFModel.callFunction("/WIPREVIEW", {
+				method: "GET",
+				urlParameters: urlParams,
 
-						$.each(lineItems.results, function(index) {
+				success: function(oData) {
+					sap.ui.core.BusyIndicator.hide();
 
-							lineItems.results[index].lineworkDate = sap.ui.core.format.DateFormat.getDateInstance({
-								source: {
-									pattern: "timestamp"
-								},
-								pattern: "dd.MM.yyyy"
-							}).format(new Date(lineItems.results[index].Budat.match(/\d+/)[0] * 1));
-							lineItems.results[index].Item = lineItems.results[index].Posnr.replace(/\b0+/g, '');
-							lineItems.results[index].BaseQty = lineItems.results[index].BaseQty.toString();
-							lineItems.results[index].msg = true;
-							lineItems.results[index].showReview = false;
-							lineItems.results[index].Index = index;
-							if (lineItems.results[index].Zzreview.toUpperCase() === 'X') {
-								lineItems.results[index].showReview = true;
-							}
+					var res = oData.results;
+					var msgTxt = res[0].message;
+					MessageBox.show(
+						msgTxt, {
+							icon: sap.m.MessageBox.Icon.SUCCESS,
+							title: "Save",
+							actions: [sap.m.MessageBox.Action.OK]
+						}
+					);
+					that.hideShow();
 
-						});
+					jsonModel.setProperty("/modelData", oData.results);
 
-						that.BillEditModel.setProperty("/Lineitems", lineItems);
-						var Lineitems = that.BillEditModel.getProperty("/Lineitems");
-						var LineitemsCopy = that.BillEditModel.getProperty("/Lineitems");
-						$.extend({}, Lineitems, LineitemsCopy);
-						that.BillEditModel.setProperty("/LineitemsCopy", LineitemsCopy);
-					} else {
-						that.showAlert("Work Flow", "No Data Found");
+				},
+				error: function(oData) {
+					MessageBox.show(JSON.parse(oData.responseText).error.message.value);
+
+				}
+			});
+		},
+
+		capitalizeFirstLetter: function(string) {
+
+			return string.charAt(0).toUpperCase() + string.slice(1);
+
+		},
+
+		capitalization: function() {
+
+			var InputFields = this.getView().getModel("InputsModel");
+
+			InputFields.setProperty("/Inputs/isChanged", true);
+			var data = InputFields.getProperty("/Inputs/homeTable");
+			var saveObjects = InputFields.getProperty("/Inputs/saveObjects");
+			var res = [];
+			var Otable = this.getView().byId("WipDetailsSet1");
+
+			var NarStr;
+
+			var that = this;
+
+			var endChars = [".", "?", "!", "\"", "'"];
+
+			res = $.each(data, function(item) {
+				var narString = data[item].NarrativeString.trim();
+				NarStr = that.capitalizeFirstLetter(data[item].NarrativeString.trim());
+				data[item].NarrativeString = NarStr;
+
+				if (NarStr !== "") {
+					var lastChar = NarStr.charAt(NarStr.length - 1);
+					if (endChars.indexOf(lastChar.slice(-1)) === -1) {
+						NarStr = NarStr + ".";
+
+						data[item].NarrativeString = NarStr;
+
 					}
+
+					if (narString != data[item].NarrativeString) {
+						saveObjects.push(data[item]);
+					}
+					InputFields.setProperty("/Inputs/saveObjects", saveObjects);
+
+
+					return data[item].NarrativeString;
+				}
+
+			});
+
+			this.jsonModel.setProperty("/modelData", data);
+
+			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+			Otable.bindRows("/modelData");
+			InputFields.setProperty("/Inputs/isChanged", true);
+			InputFields.setProperty("/Inputs/scope", this.getView().byId("WipDetailsSet1"));
+		
+			this.spellCheck();
+
+		},
+
+		remove_character: function(str, char_pos) {
+			var part1 = str.substring(0, char_pos);
+			var part2 = str.substring(char_pos + 1, str.length);
+			return (part1 + part2);
+		},
+
+		removeSpaces: function(oEvt) {
+
+			var InputFields = this.getView().getModel("InputsModel");
+
+			InputFields.setProperty("/Inputs/isChanged", true);
+			var data = InputFields.getProperty("/Inputs/homeTable");
+			var saveObjects = InputFields.getProperty("/Inputs/saveObjects");
+			var result;
+
+			var that = this;
+			var res = [];
+			res = $.each(data, function(item) {
+				var narStr = data[item].NarrativeString;
+
+				result = data[item].NarrativeString.replace(/\s+/g, " ").trim();
+				var lastChar = result.charAt(result.length - 1);
+				var spaceLastChar = result.charAt(result.length - 2);
+
+				if (lastChar === "." && spaceLastChar === " ") {
+
+					result = that.remove_character(result, result.length - 2);
+
+				}
+
+				data[item].NarrativeString = result;
+
+				if (narStr != result) {
+					saveObjects.push(data[item]);
+				}
+
+				return data[item].NarrativeString;
+			});
+
+			this.jsonModel.setProperty("/modelData", data);
+			var Otable = this.getView().byId("WipDetailsSet1");
+
+			this.getView().byId("WipDetailsSet1").setModel(this.jsonModel);
+			Otable.bindRows("/modelData");
+			InputFields.setProperty("/Inputs/isChanged", true);
+			InputFields.setProperty("/Inputs/scope", this.getView().byId("WipDetailsSet1"));
+
+	
+			this.spellCheck();
+
+		},
+
+		onReplacewords: function(evt) {
+			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+			var selectedIndex = this.getModel("InputsModel").getProperty("/Inputs/rowNarrativeCount");
+			if (selectedIndex.length === 0) {
+
+				MessageBox.show(
+					"Select atleast one item!", {
+						icon: sap.m.MessageBox.Icon.WARNING,
+						title: "Replace",
+						actions: [sap.m.MessageBox.Action.OK]
+					}
+				);
+				return;
+			} else {
+				var odialog = this._getreplaceDialogbox();
+				odialog.open();
+			}
+		},
+		_getreplaceDialogbox: function() {
+			if (!this._oreplaceDialog) {
+				this._oreplaceDialog = sap.ui.xmlfragment("replaceword", "zprs.wipeditor.Fragments.popup", this);
+				this.getView().addDependent(this._oreplaceDialog);
+			}
+			return this._oreplaceDialog;
+		},
+		closereplaceDialog: function() {
+			sap.ui.getCore().byId("replaceword--string0").setValue("");
+			sap.ui.getCore().byId("replaceword--replace0").setValue("");
+			sap.ui.getCore().byId("replaceword--word").setSelected(true);
+			var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+			$.each(tbl.getItems(), function(d, o) {
+				if (d > 0) {
+					var rowid = o.getId();
+					tbl.removeItem(rowid);
+				}
+			});
+			this._oreplaceDialog.close();
+		},
+		onreplace: function() {
+			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+
+			var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+			this.replaceItems = [];
+			var that = this;
+			var data = this.getModel("InputsModel").getProperty("/Inputs/homeTable");
+			var saveObjects = this.getModel("InputsModel").getProperty("/Inputs/saveObjects");
+			var selectedIndex = this.getModel("InputsModel").getProperty("/Inputs/rowNarrativeCount");
+			$.each(selectedIndex, function(i, o) {
+
+				var ctx = oTable.getContextByIndex(o);
+				var m = ctx.getObject();
+				var str = m.NarrativeString;
+				var res;
+
+				var items = oTable1.getItems();
+				$.each(items, function(l, obj) {
+
+					var cells = obj.getCells();
+					var string = cells[0].getValue();
+					var replacewith = cells[1].getValue();
+					var check = cells[3].getSelected();
+					if (check) {
+						var stringarr = str.split(" ");
+						$.each(stringarr, function(d, o) {
+							if (stringarr[d] === string) {
+								stringarr[d] = replacewith;
+							} else {
+								if (stringarr[d].endsWith(".")) {
+									var newSplitWord = stringarr[d].split(".");
+									if (newSplitWord[0] === string) {
+										stringarr[d] = replacewith + ".";
+									}
+								}
+							}
+						});
+						res = stringarr.join(" ");
+					} else {
+
+						res = str.split(string).join(replacewith);
+					}
+					data.forEach(function(obj, k) {
+						that.replaceItems[k] = obj;
+					});
+
+					that.replaceItems[o].NarrativeString = res;
+
+					if (str != res) {
+						saveObjects.push(that.replaceItems[o]);
+					}
+
+					str = that.replaceItems[o].NarrativeString;
+
+				});
+
+				that.jsonModel.setProperty("/modelData", that.replaceItems);
+				oTable.setModel(that.jsonModel);
+				oTable.bindRows("/modelData");
+
+			});
+			sap.ui.getCore().byId("replaceword--string0").setValue("");
+			sap.ui.getCore().byId("replaceword--replace0").setValue("");
+			sap.ui.getCore().byId("replaceword--word").setSelected(true);
+			var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+			$.each(tbl.getItems(), function(d, o) {
+				if (d > 0) {
+					var rowid = o.getId();
+					tbl.removeItem(rowid);
+				}
+			});
+			this._getreplaceDialogbox().close();
+			this.getView().getModel("InputsModel").setProperty("/Inputs/isChanged", true);
+			this.getView().getModel("InputsModel").setProperty("/Inputs/scope", this.getView().byId("WipDetailsSet1"));
+			this.spellCheck();
+		},
+		replaceall: function() {
+
+			var oTable = this.getView().byId("smartTable_ResponsiveTable1").getTable();
+			var oTable1 = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+
+			var replaceItems = [];
+			var data = this.getModel("InputsModel").getProperty("/Inputs/homeTable");
+			var saveObjects = this.getModel("InputsModel").getProperty("/Inputs/saveObjects");
+			data.forEach(function(obj, k) {
+				replaceItems[k] = obj;
+			});
+			this.replace = [];
+			var that = this;
+			var result = $.each(replaceItems, function(i, o) {
+
+				var m = o;
+				var str = m.NarrativeString;
+				var res;
+				var items = oTable1.getItems();
+				$.each(items, function(l, obj) {
+					var cells = obj.getCells();
+					var string = cells[0].getValue();
+					var replacewith = cells[1].getValue();
+					var check = cells[3].getSelected();
+					if (check) {
+						var stringarr = str.split(" ");
+						$.each(stringarr, function(d, o) {
+							if (stringarr[d] === string) {
+								stringarr[d] = replacewith;
+							} else {
+								if (stringarr[d].endsWith(".")) {
+									var newSplitWord = stringarr[d].split(".");
+									if (newSplitWord[0] === string) {
+										stringarr[d] = replacewith + ".";
+									}
+								}
+							}
+						});
+						res = stringarr.join(" ");
+						data.forEach(function(obj, k) {
+							that.replace[k] = obj;
+						});
+
+						that.replace[i].NarrativeString = res;
+
+						if (str != res) {
+							saveObjects.push(that.replace[i]);
+						}
+
+						str = that.replace[i].NarrativeString;
+
+					} else {
+
+						var searchindex = str.search(string);
+						if (searchindex >= 0) {
+							res = str.split(string).join(replacewith);
+
+							data.forEach(function(obj, k) {
+								that.replace[k] = obj;
+							});
+							that.replace[i].NarrativeString = res;
+
+							str = that.replace[i].NarrativeString;
+						}
+					}
+
+				});
+				return that.replace;
+			});
+
+			this.jsonModel.setProperty("/modelData", result);
+			oTable.setModel(this.jsonModel);
+			oTable.bindRows("/modelData");
+
+			sap.ui.getCore().byId("replaceword--string0").setValue("");
+			sap.ui.getCore().byId("replaceword--replace0").setValue("");
+			sap.ui.getCore().byId("replaceword--word").setSelected(true);
+			var tbl = sap.ui.core.Fragment.byId("replaceword", "bottomTable0");
+			$.each(tbl.getItems(), function(d, o) {
+				if (d > 0) {
+					var rowid = o.getId();
+					tbl.removeItem(rowid);
+				}
+			});
+			this._getreplaceDialogbox().close();
+			this.getView().getModel("InputsModel").setProperty("/Inputs/isChanged", true);
+			this.getModel("InputsModel").setProperty("/Inputs/scope", this.getView().byId("WipDetailsSet1"));
+			this.spellCheck();
+
+		},
+
+		onNarrativeEditsSave: function() {
+			var sServiceUrl = this.getOwnerComponent().getModel().sServiceUrl;
+			var that = this;
+
+			var saveObjects = this.getModel("InputsModel").getProperty("/Inputs/saveObjects");
+			this.uniqueId = [];
+			var changeObj = saveObjects;
+
+			if (saveObjects.length === 0) {
+				MessageBox.show(
+					"No changes exists please verify and save.", {
+						icon: sap.m.MessageBox.Icon.INFORMATION,
+						title: "Narrative Edits",
+						actions: [sap.m.MessageBox.Action.OK]
+					}
+				);
+			} else {
+				sap.ui.core.BusyIndicator.show(0);
+				$.each(changeObj, function(i, obj) {
+					var obj1 = {
+						NarrativeString: obj.NarrativeString
+					};
+					var obj2 = {
+						Pspid: obj.Pspid,
+						Tdid: obj.Tdid,
+						Tdname: obj.Tdname,
+						Tdobject: obj.Tdobject,
+						Pernr: obj.Pernr
+					};
+					var req = {},
+						requestBody = {};
+					var oModel = new sap.ui.model.odata.ODataModel(sServiceUrl, true);
+					requestBody = obj1;
+					req = obj2;
+					var sPath = "/WipDetailsSet(Pspid='" + req.Pspid + "',Tdid='" + req.Tdid + "',Tdname='" + req.Tdname + "',Tdobject='" + req.Tdobject +
+						"',Pernr='" + req.Pernr + "')";
+
+					oModel.update(sPath, requestBody, req);
+
+				});
+				sap.ui.core.BusyIndicator.hide(0);
+				MessageBox.show(
+					"Narrative Updated Successfully", {
+						icon: sap.m.MessageBox.Icon.SUCCESS,
+						title: "Success",
+						actions: [sap.m.MessageBox.Action.OK]
+					}
+				);
+
+			}
+
+			saveObjects = this.getModel("InputsModel").setProperty("/Inputs/saveObjects", []);
+			var InputFields = this.getView().getModel("InputsModel");
+			InputFields.setProperty("/Inputs/isChanged", false);
+		},
+		Reload: function(oEvent) {
+
+			this.table = oEvent.getSource().getParent().getParent().getTable();
+
+			var InputFields = this.getModel("InputsModel");
+
+			var change = InputFields.getProperty("/Inputs/isChanged");
+
+			if (change === true) {
+
+				this._Dialog = sap.ui.xmlfragment("zprs.wipeditor.Fragments.Fragment", this);
+				this._Dialog.open();
+			} else {
+				this.ReloadTable();
+
+			}
+
+		},
+
+		ReloadTable: function() {
+
+			this.ignoreLog = 1;
+			var aFilter = [];
+			var table = this.getView().byId("WipDetailsSet1");
+			var that = this;
+			this.byId("searchText").setValue("");
+			var InputFields = this.getModel("InputsModel");
+
+			var Pspid = InputFields.getProperty("/Inputs/rootPspid");
+
+			var Otable = that.getView().byId("WipDetailsSet1");
+			var odatefrom = InputFields.getProperty("/Inputs/odatefrom");
+			var odateto = InputFields.getProperty("/Inputs/odateto");
+			aFilter.push(new Filter("Pspid", sap.ui.model.FilterOperator.EQ, Pspid));
+			aFilter.push(new Filter("Budat", sap.ui.model.FilterOperator.BT, odatefrom, odateto));
+
+			var oModel = this.getOwnerComponent().getModel();
+			sap.ui.core.BusyIndicator.show(0);
+		
+
+			LineItemsServices.getInstance().selectListItem(oModel, aFilter)
+				.done(function(oData) {
+
+					sap.ui.core.BusyIndicator.hide(0);
+
+					that.getModel("InputsModel").setProperty("/Inputs/homeTable", oData.results);
+
+					that.jsonModel.setProperty("/modelData", oData.results);
+
+					Otable.setModel(that.jsonModel);
+					Otable.bindRows("/modelData");
 
 				})
 				.fail(function() {
 
-					that.hideBusyIndicator();
-
-				});
-		},
-		replaceWordsOpen: function() {
-
-			var aIndices = this.getView().byId("lineTable").getSelectedIndices();
-			var sMsg;
-			if (aIndices.length < 1) {
-				sMsg = "Please Select Atleast One item";
-				this.showAlert("Bill Edit", sMsg);
-			} else {
-				this.BillEditModel.setProperty("/replaceItems", []);
-				var oView = this.getView();
-				var oDialog = this._getreplaceWordssDialog();
-				oView.addDependent(oDialog);
-				oDialog.open();
-			}
-		},
-		Replace: function() {
-
-		},
-		DialogClosedWithOk: function() {
-			this._replaceWordsDialog.close();
-
-		},
-		_getreplaceWordssDialog: function() {
-			if (!this._replaceWordsDialog) {
-				this._replaceWordsDialog = sap.ui.xmlfragment("replace", "billedit.fragments.replaceWords", this.getView().getController());
-			}
-			return this._replaceWordsDialog;
-		},
-		_getfooterButtonEvent: function(footerChannel, footerButtons, data) {
-				if (data.tab === "Narrative") {
-			if (data.button === "replaceWords") {
-				this.replaceWordsOpen();
-			}
-			if (data.button === "review") {
-				this.ReviewUnReview('X');
-			}
-			if (data.button === "unreview") {
-				this.ReviewUnReview('');
-			}
-			if (data.button === "save") {
-				this.save();
-			}
-				}
-
-		},
-		save: function() {
-			var transferitemsCpy = this.BillEditModel.getProperty("/LineitemsCopy/results");
-			var indices = [];
-			_.each(transferitemsCpy, function(item) {
-				if (item.isRowEdited) {
-
-					indices.push(item.Index);
-				}
-			});
-				this.showBusyIndicator();
-			var transferitems = _.filter(transferitemsCpy, function(o) {
-				return o.isRowEdited;
-			});
-			var detaildata = [];
-			var sMsg = '';
-			if (transferitems.length < 1) {
-				sMsg = "Please change Atleast One item";
-				this.showAlert("Bill Edit", sMsg);
-			} else {
-				if (transferitems.length !== 0) {
-					_.each(transferitems, function(item) {
-						var ip_data = $.extend({}, item);
-						delete ip_data.__metadata;
-						delete ip_data.DBToStatus;
-						delete ip_data.taxlistcopy;
-						delete ip_data.FileList;
-						delete ip_data.info;
-						delete ip_data.imagedisplay;
-						delete ip_data.isRowEdited;
-						delete ip_data.isRowEditedValid;
-						delete ip_data.isSelect;
-						delete ip_data.ToVbeln;
-						delete ip_data.ToPhase;
-						delete ip_data.Ffactivitycodesdetails;
-						delete ip_data.taxlistcopy;
-						delete ip_data.taskcodesdetails;
-						delete ip_data.activitycodesdetails;
-						delete ip_data.Fftaskcodesdetails;
-						delete ip_data.ToMatter;
-						//new items
-						delete ip_data.lineworkDate;
-						delete ip_data.msg;
-						delete ip_data.color;
-						delete ip_data.src;
-						delete ip_data.Item;
-						delete ip_data.showReview;
-						delete ip_data.Index;
-
-						ip_data.ToMegbtr = ip_data.ToMegbtr.toString();
-						ip_data.ToWtgbtr = ip_data.ToWtgbtr.toString();
-						detaildata.push(ip_data);
-					});
-console.log(detaildata);
-					var jsontopush = $.extend({}, this.BillEditModel.getProperty("/Inputs/selectedRow"));
-
-					jsontopush.Audat = this.convertToJSONDate(jsontopush.Audat);
-					jsontopush.Bstdk = this.convertToJSONDate(jsontopush.Bstdk);
-					jsontopush['OrderItemSet'] = detaildata;
-
-					var that = this;
-					that.serviceInstance.saveBillDetailOrderItemSet(that.BillEditModel, jsontopush, 'LINEEDIT', that)
-						.done(function(oData) {
-							that.hideBusyIndicator();
-							var LineitemsCopy = that.BillEditModel.getProperty("/LineitemsCopy/results");
-							if (oData) {
-								that.hideBusyIndicator();
-								if (!(_.isUndefined(oData))) {
-									var results = oData;
-									var message = results.Message;
-									//set only for changed rows
-									that.showAlert("Bill Edit", message);
-									_.each(indices, function(item) {
-										
-										LineitemsCopy[item].info = message;
-										LineitemsCopy[item].msg = true;
-
-										if (LineitemsCopy[item].info.indexOf("ERROR") !== -1 || LineitemsCopy[item].info.indexOf("Error") !== -1 ||
-											LineitemsCopy[item].info.indexOf("error") !== -1) {
-											LineitemsCopy[item].src ='sap-icon://alert';
-											LineitemsCopy[item].color = 'red';
-										} else {
-											if (results.Iserror !== 'X') {
-												LineitemsCopy[item].src = 'sap-icon://alert';
-												LineitemsCopy[item].color = 'green';
-											} else {
-												LineitemsCopy[item].src = 'sap-icon://alert';
-												LineitemsCopy[item].color = 'red';
-											}
-										}
-										if(indices.length===item-1){
-											that.BillEditModel.setProperty("/LineitemsCopy/results", LineitemsCopy);
-											that.BillEditModel.setProperty("/Lineitems/results", LineitemsCopy);
-										}
-
-									});
-
-								}
-								if (!(_.isUndefined(oData.error))) {
-
-									_.each(indices, function(item) {
-
-										LineitemsCopy[item].info = oData.error.message.value;
-										LineitemsCopy[item].msg = true;
-										LineitemsCopy[item].color = 'red';
-										LineitemsCopy[item].src = 'sap-icon://alert';
-
-									});
-
-								}
-
-								that.BillEditModel.setProperty("/LineitemsCopy/results", LineitemsCopy);
-								that.BillEditModel.setProperty("/Lineitems/results", LineitemsCopy);
-								that.refreshTable();
-							}
-
-						})
-						.fail(function() {
-
-							that.hideBusyIndicator();
-
-						});
-
-				}
-			}
-
-		},
-		changeNarrative: function(oEvent) {
-			var thisRow = oEvent.getSource().getBindingContext("MatterModel").getObject();
-			thisRow.isRowEdited = true;
-			thisRow.Narrativechange='X';
-
-		},
-		ReviewUnReview: function(type) {
-
-			var aIndices = this.getView().byId("lineTable").getSelectedIndices();
-			var sMsg;
-			if (aIndices.length < 1) {
-				sMsg = "Please Select Atleast One item";
-				this.showAlert("Bill Edit", sMsg);
-			} else {
-
-				this.showBusyIndicator();
-				var transferitemsCpy = this.getView().byId("lineTable").getSelectedIndices();
-				var LineitemsCopy = this.BillEditModel.getProperty("/LineitemsCopy/results");
-
-				if (type === 'X') {
-					_.each(transferitemsCpy, function(item) {
-						LineitemsCopy[item].Zzreview = "X";
-						LineitemsCopy[item].isRowEdited = true;
-					});
-				} else {
-					_.each(transferitemsCpy, function(item) {
-						LineitemsCopy[item].Zzreview = "";
-						LineitemsCopy[item].isRowEdited = true;
-					});
-				}
-				this.BillEditModel.setProperty("/LineitemsCopy/results", LineitemsCopy);
-
-				var detaildata = [];
-
-				var transferitems = _.filter(this.BillEditModel.getProperty("/LineitemsCopy/results"), function(o) {
-					return o.isRowEdited;
 				});
 
-				if (transferitems.length !== 0) {
-					_.each(transferitems, function(item) {
-						var ip_data = $.extend({}, item);
-						delete ip_data.__metadata;
-						delete ip_data.DBToStatus;
-						delete ip_data.taxlistcopy;
-						delete ip_data.FileList;
-						delete ip_data.info;
-						delete ip_data.imagedisplay;
-						delete ip_data.isRowEdited;
-						delete ip_data.isRowEditedValid;
-						delete ip_data.isSelect;
-						delete ip_data.ToVbeln;
-						delete ip_data.ToPhase;
-						delete ip_data.Ffactivitycodesdetails;
-						delete ip_data.taxlistcopy;
-						delete ip_data.taskcodesdetails;
-						delete ip_data.activitycodesdetails;
-						delete ip_data.Fftaskcodesdetails;
-						delete ip_data.ToMatter;
-						//new items
-						delete ip_data.lineworkDate;
-						delete ip_data.msg;
-						delete ip_data.color;
-						delete ip_data.src;
-						delete ip_data.Item;
-						delete ip_data.showReview;
-						delete ip_data.Index;
+			InputFields.setProperty("/Inputs/isChanged", false);
+			InputFields.setProperty("/Inputs/scope", "");
+			if (this._Dialog) {
 
-						ip_data.ToMegbtr = ip_data.ToMegbtr.toString();
-						ip_data.ToWtgbtr = ip_data.ToWtgbtr.toString();
-						detaildata.push(ip_data);
-					});
+				this._Dialog.close();
 
-					var jsontopush = $.extend({}, this.BillEditModel.getProperty("/Inputs/selectedRow"));
-
-					jsontopush.Audat = this.convertToJSONDate(jsontopush.Audat);
-					jsontopush.Bstdk = this.convertToJSONDate(jsontopush.Bstdk);
-					jsontopush['OrderItemSet'] = detaildata;
-
-					var that = this;
-					that.serviceInstance.saveBillDetailOrderItemSet(that.BillEditModel, jsontopush, 'LINEEDIT', that)
-						.done(function(oData) {
-							that.hideBusyIndicator();
-						//	var LineitemsCopy = that.BillEditModel.getProperty("/LineitemsCopy/results");
-							if (oData) {
-
-								if (!(_.isUndefined(oData))) {
-									var results = oData;
-
-									_.each(transferitemsCpy, function(item) {
-										var message = results.Message;
-										
-										LineitemsCopy[item].info = message;
-										LineitemsCopy[item].msg = true;
-
-										// if (LineitemsCopy[item].info.indexOf("ERROR") !== -1 || LineitemsCopy[item].info.indexOf("Error") !== -1 ||
-										// 	LineitemsCopy[item].info.indexOf("error") !== -1) {
-										// 	LineitemsCopy[item].src = './assets/images/img_alert_split-screen.png';
-										// 	LineitemsCopy[item].color = 'red';
-										// } else {
-										// 	if (results.Iserror !== 'X') {
-										// 		LineitemsCopy[item].src = 'sap-icon://message-warning';
-										// 		LineitemsCopy[item].color = 'green';
-										// 	} else {
-										// 		LineitemsCopy[item].src = 'sap-icon://message-warning';
-										// 		LineitemsCopy[item].color = 'red';
-										// 	}
-										// }
-
-									});
-								}
-								if (!(_.isUndefined(oData.error))) {
-									for (var j = 0; j < LineitemsCopy.results.length; j++) {
-										// LineitemsCopy[j].info = oData.error.message.value;
-										// LineitemsCopy[j].msg = true;
-										// LineitemsCopy[j].color = 'red';
-										// LineitemsCopy[j].src = 'sap-icon://message-warning';
-									}
-								}
-
-								that.BillEditModel.setProperty("/LineitemsCopy/results", LineitemsCopy);
-								that.BillEditModel.setProperty("/Lineitems/results", LineitemsCopy);
-								that.refreshTable();
-							}
-
-						})
-						.fail(function() {
-
-							that.hideBusyIndicator();
-
-						});
-
-				}
 			}
+	
+			this.getView().byId("WipDetailsSet1").getModel().refresh(true);
+			this.spellCheck();
 		},
-		replaceAllele: function(str, target, replacement, word) {
-			if (word) {
-				return str.split(target).join(replacement);
+
+		NarrativeEditsSelection: function(oEvent) {
+
+			var InputFields = this.getView().getModel("InputsModel");
+			var rowCount = this.byId("WipDetailsSet1").getSelectedIndices();
+			var rowLineCount = [];
+				this.getModel("InputsModel").setProperty("/Inputs/spellCheckLogValue",1);
+
+			for (var i = 0; i < rowCount.length; i++) {
+				rowLineCount.push(rowCount[i]);
+			}
+			this.getModel("InputsModel").setProperty("/Inputs/rowNarrativeCount", rowLineCount);
+
+			if (rowCount.length) {
+
+				InputFields.setProperty("/Inputs/ToolbarEnable/NarrativeReviewed", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/NarrativeUnreview", true);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", true);
+
 			} else {
-				return str.replace(target, "$1" + replacement);
-			}
-		},
 
-		ReplaceSelected: function(oEvent) {
-			if (sap.ui.core.Fragment.byId("replace", "replaceTxt").getValue().trim() !== '') {
-				this.addToReplace();
+				InputFields.setProperty("/Inputs/ToolbarEnable/NarrativeReviewed", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/NarrativeUnreview", false);
+				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
+
 			}
-			var LineitemsCopy = this.BillEditModel.getProperty("/LineitemsCopy/results");
-			var replaceItems = this.BillEditModel.getProperty("/replaceItems");
+
+		},
+		onGlobalSearch: function() {
+
+			var searchValue = this.byId("searchText").getValue();
+
+			var result = [];
+
+			this.getModel("InputsModel").getProperty("/Inputs/homeTable").forEach(
+				function(value, index) {
+
+					var date = value.Budat;
+
+					var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+						pattern: "dd.MM.yyyy"
+					});
+					var dateFormatted = dateFormat.format(date).toString();
+
+					var myJSON = JSON.stringify(jQuery.extend({}, value));
+					var obj1 = myJSON + dateFormatted;
+
+					if (obj1.toLowerCase().includes(searchValue.toLowerCase())) {
+						result.push(value);
+					}
+				}
+			);
+
+			var otable = this.byId("WipDetailsSet1");
+
+			this.jsonModel.setData({
+				modelData: result
+			});
+			otable.setModel(this.jsonModel);
+
+			otable.bindRows("/modelData");
+			this.jsonModel.setProperty("/RowCount1", result.length);
+			this.spellCheck();
+
+		},
+		dictionaryChange: function(oEvent) {
+
+			var key;
 			var that = this;
-			_.each(replaceItems, function(item) {
+			var selectedText = this.getView().byId("comboPosition").getSelectedItem().getText();
+			var otable = this.getView().byId("WipDetailsSet1");
+			var InputFields = this.getView().getModel("InputsModel");
+			var dictionary = InputFields.getProperty("/Inputs/Countries_collection");
+			for (var i = 0; i < dictionary.length; i++) {
+				if (dictionary[i].Text === selectedText) {
+					key = dictionary[i].Key;
 
-				if (item.isSelect) {
-					var narrativeswithwords = _.filter(LineitemsCopy, function(o) {
+					var language = dictionary[i].lang;
+					InputFields.setProperty("/Inputs/changedLang", language);
+					that.getView().getModel("InputsModel").setProperty("/Inputs/dicDefLanguage", dictionary[i].Key);
 
-						return o.Narrative.indexOf(item.word) > -1;
-					});
-					var narrativeswithwordsforalert = _.filter(narrativeswithwords, function(o) {
-						return o.Narrative.indexOf(item.word) > -1;
-					});
-					_.each(narrativeswithwords, function(itemwords) {
-
-						var index = _.findIndex(LineitemsCopy, itemwords);
-
-						var indexofele = LineitemsCopy[index].Narrative.indexOf(item.word);
-						var word = item.word;
-						var replace = item.replace;
-						var replaceelement = true;
-						if (item.isSelectWord) {
-							var find = word.replace(/[-\\()\[\]{}^$*+.?|]/g, '\\$&');
-							word = new RegExp('(\\s|^)(?:' + find + ')(?=\\s|$)', "g");
-							// word = new RegExp('\\b' + item.word + '\\b', "g")
-							replaceelement = false;
-						}
-						//  $scope.matterLineItemDetaillistCopy[index].Narrative = $scope.matterLineItemDetaillistCopy[index].Narrative.replaceAll(item.word, item.replace);
-						LineitemsCopy[index].Narrative = that.replaceAllele(LineitemsCopy[index].Narrative, word, item.replace, replaceelement);
-
-						LineitemsCopy[index].Narrativechange = 'X';
-						LineitemsCopy[index].isRowEdited = true;
-					});
-
+			
+					this.spellCheck();
 				}
-			});
-
-			that.BillEditModel.setProperty("/LineitemsCopy/results", LineitemsCopy);
-
-			that.DialogClosedWithOk();
-
-		},
-		deleteRow: function(oEvent) {
-
-			var replaceItems = this.BillEditModel.getProperty("/replaceItems");
-			replaceItems.splice(oEvent.getSource().getBindingContext("MatterModel").getObject(), 1);
-			this.BillEditModel.setProperty("/replaceItems", replaceItems);
-			if (replaceItems.length === 0) {
-				sap.ui.core.Fragment.byId("replace", "replaceTable").setVisible(false);
 			}
 
 		},
-		addToReplace: function(oController) {
-			sap.ui.core.Fragment.byId("replace", "replaceTable").setVisible(true);
-			var items = {
-				word: sap.ui.core.Fragment.byId("replace", "replaceTxt").getValue(),
-				replace: sap.ui.core.Fragment.byId("replace", "replacewith").getValue(),
-				isSelect: sap.ui.core.Fragment.byId("replace", "default").getSelected(),
-				isSelectWord: sap.ui.core.Fragment.byId("replace", "word").getSelected()
-			};
-			var replaceItems = this.BillEditModel.getProperty("/replaceItems");
-			replaceItems.push(items);
-			this.BillEditModel.setProperty("/replaceItems", replaceItems);
-			sap.ui.core.Fragment.byId("replace", "replaceTxt").setValue('');
-			sap.ui.core.Fragment.byId("replace", "replacewith").setValue('');
+		onNarrativeSort: function(oEvent) {
+			oEvent.preventDefault();
+			var InputsModel = this.getView().getModel("InputsModel");
+			var tableItems = this.jsonModel.getProperty("/modelData");
+			var sortProperty = oEvent.getParameter("column").getProperty("sortProperty");
 
-			// var oTable = sap.ui.core.Fragment.byId("replace", "bottomTable1");
+			var sortOrder = oEvent.getParameter("sortOrder");
 
-			// var FirstTableitems = new sap.m.ColumnListItem({
+			var sortedData = tableItems.sort(function(a, b) {
+				if (sortProperty === "Budat") {
 
-			// 	cells: [new sap.m.Input({
-			// 			text: sap.ui.core.Fragment.byId("replace", "replaceTxt").getValue(),
-			// 			width: "100%",
-			// 			name: "replaceTxt[]"
-			// 		}),
-			// 		new sap.m.Input({
-			// 			text: sap.ui.core.Fragment.byId("replace", "replacewith").getValue(),
-			// 			width: "100%",
-			// 			name: "replaceWith[]"
-			// 		}),
-			// 		new sap.m.CheckBox({
-			// 			selected: sap.ui.core.Fragment.byId("replace", "default").getSelected(),
-			// 			name: "default[]"
+					return new Date(a.Budat) - new Date(b.Budat);
+				} else {
 
-			// 		}),
-			// 		new sap.m.CheckBox({
-			// 			selected: sap.ui.core.Fragment.byId("replace", "word").getSelected(),
-			// 			name: "word[]"
+					var x = a[sortProperty].toLowerCase();
+					var y = b[sortProperty].toLowerCase();
+					if (x < y) {
+						return -1;
+					}
+					if (x > y) {
+						return 1;
+					}
+					return 0;
+				}
 
-			// 		}),
-			// 		new sap.ui.core.Icon({
-			// 			src: "sap-icon://delete",
-			// 			hoverColor: "red",
-			// 			activeColor: "red",
-			// 			press: [oController.onDeleteIconPress, oController]
-			// 		})
-			// 	]
+			});
+			if (sortOrder == "Descending") {
+				sortedData = sortedData.reverse();
+			}
 
-			// });
-			// oTable.addItem(FirstTableitems);
+			this.jsonModel.setProperty("/modelData", sortedData);
 
-			// //	var oTable = this.getView().byId("bottomTable0")
-			// //	var oTable = sap.ui.xmlfragment("replace").getView().byId("bottomTable0");
+			var self = this;
 
-			// console.log(oTable);
-			// if (this.selectedKey === 0) {
+		
+			this.spellCheck();
 
-			// 	for (var i = 0; i < data.results.length; i++) {
+			oEvent.getSource().getParent().getTable().setModel(this.jsonModel);
 
-			// 		var oContext = this._createTableItemContext(data.results[i]);
-
-			// 		var FirstTableitems = new sap.m.ColumnListItem({
-			// 			cells: [
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Docnum,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Currency,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Sendcctr,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.ui.comp.smartfield.SmartField({
-			// 					value: "{Recwbsel}",
-			// 					editable: "{localModel>isEditable}",
-			// 					change: $.proxy(this.handlChange, this),
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Actvtyqty,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Price,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Acttype,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Personno,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Plant,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Segtext,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Valuetotal,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Zzworloc,
-			// 					width: "100%"
-			// 				}),
-			// 				new sap.m.Text({
-			// 					text: data.results[i].Narrative,
-			// 					width: "100%"
-			// 				})
-			// 			]
-			// 		});
-			// 		FirstTableitems.setBindingContext(oContext);
-			// 		oTable.addItem(FirstTableitems);
-			// 		var delayInvk = (function(itm) {
-			// 			return function() {
-			// 				var c = itm.getCells()[3];
-			// 				c.setEditable(true);
-			// 			};
-			// 		})(FirstTableitems);
-			// 		jQuery.sap.delayedCall(500, this, delayInvk);
-			// 	}
 		},
+		spellCheck: function() {
+			var that = this;
+			var Otable = this.getView().byId("WipDetailsSet1");
+			setTimeout(function() {
 
-		/**
-		 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
-		 * (NOT before the first rendering! onInit() is used for that one!).
-		 * @memberOf billedit.view.NarrativeEdits
-		 */
-		//	onBeforeRendering: function() {
-		//
-		//	},
-
-		/**
-		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
-		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf billedit.view.NarrativeEdits
-		 */
-		//	onAfterRendering: function() {
-		//
-		//	},
-
-		/**
-		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
-		 * @memberOf billedit.view.NarrativeEdits
-		 */
-		//	onExit: function() {
-		//
-		//	}
+				$(document).ready(function() {
+					$(".fulcrum-editor-textarea").spellCheker({
+						lang_code: that.getView().getModel("InputsModel").getProperty("/Inputs/dicDefLanguage"),
+						scope1: that,
+						table: Otable,
+						scope: that.getModel("InputsModel").getProperty("/Inputs"),
+						outputTex: 'NarrativeString',
+						dictionaryPath: "./spell/typo/dictionaries"
+					});
+				});
+			}, 1000);
+		}
 
 	});
 

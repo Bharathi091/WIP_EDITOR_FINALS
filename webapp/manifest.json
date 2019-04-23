@@ -1,7 +1,7 @@
 {
 	"_version": "1.4.0",
 	"sap.app": {
-		"id": "billedit",
+		"id": "zprs.wipeditor",
 		"type": "application",
 		"i18n": "i18n/i18n.properties",
 		"title": "{{appTitle}}",
@@ -11,7 +11,7 @@
 		},
 		"dataSources": {
 			"mainService": {
-				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_WIP_EDITOR_SRV/",
+				"uri": "/sap/opu/odata/sap/ZPRS_WIP_EDITOR_SRV/",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0",
@@ -19,20 +19,36 @@
 				}
 			},
 			"ZPRS_VALUE_HELP_SRV": {
-				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_VALUE_HELP_SRV/",
-				"type": "OData"
+				"uri": "/sap/opu/odata/SAP/ZPRS_VALUE_HELP_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZPRS_VALUE_HELP_SRV/metadata.xml"
+				}
 			},
 			"ZPRS_USER_DATA_SRV": {
-				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_USER_DATA_SRV/",
-				"type": "OData"
-			},
-			"ZPRS_BILL_EDIT_SRV": {
-				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_BILL_EDIT_SRV/",
-				"type": "OData"
+				"uri": "/sap/opu/odata/SAP/ZPRS_USER_DATA_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZPRS_USER_DATA_SRV/metadata.xml"
+				}
 			},
 			"ZPRS_WIPCODES_SRV": {
-				"uri": "/G4B/sap/opu/odata/SAP/ZPRS_WIPCODES_SRV/",
-				"type": "OData"
+				"uri": "/sap/opu/odata/SAP/ZPRS_WIPCODES_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZPRS_WIPCODES_SRV/metadata.xml"
+				}
+			},
+			"ZPRS_BILL_EDIT_SRV": {
+				"uri": "/sap/opu/odata/SAP/ZPRS_BILL_EDIT_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZPRS_BILL_EDIT_SRV/metadata.xml"
+				}
 			}
 		},
 		"sourceTemplate": {
@@ -55,11 +71,14 @@
 			"tablet": true,
 			"phone": true
 		},
-		"supportedThemes": ["sap_hcb", "sap_bluecrystal"]
+		"supportedThemes": [
+			"sap_hcb",
+			"sap_bluecrystal"
+		]
 	},
 	"sap.ui5": {
 		"rootView": {
-			"viewName": "billedit.view.App",
+			"viewName": "zprs.wipeditor.view.App",
 			"type": "XML",
 			"id": "app"
 		},
@@ -85,11 +104,18 @@
 			"compact": true,
 			"cozy": true
 		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
+		},
 		"models": {
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "billedit.i18n.i18n"
+					"bundleName": "zprs.wipeditor.i18n.i18n"
 				}
 			},
 			"": {
@@ -97,41 +123,98 @@
 				"preload": true
 			},
 			"ZPRS_VALUE_HELP_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "OneTime",
+					"defaultCountMode": "Request"
+				},
 				"dataSource": "ZPRS_VALUE_HELP_SRV",
-				"preload": false
+				"preload": true
 			},
 			"ZPRS_USER_DATA_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "OneTime",
+					"defaultCountMode": "Request"
+				},
 				"dataSource": "ZPRS_USER_DATA_SRV",
-				"preload": false
-			},
-			"ZPRS_BILL_EDIT_SRV": {
-				"dataSource": "ZPRS_BILL_EDIT_SRV",
-				"preload": false
+				"preload": true
 			},
 			"ZPRS_WIPCODES_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "OneTime",
+					"defaultCountMode": "Request"
+				},
 				"dataSource": "ZPRS_WIPCODES_SRV",
-				"preload": false
+				"preload": true
+			},
+			"ZPRS_BILL_EDIT_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "OneTime",
+					"defaultCountMode": "Request"
+				},
+				"dataSource": "ZPRS_BILL_EDIT_SRV",
+				"preload": true
 			}
 		},
 		"routing": {
 			"config": {
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
-				"viewPath": "billedit.view",
+				"viewPath": "zprs.wipeditor.view",
 				"controlId": "app",
 				"controlAggregation": "pages",
 				"bypassed": {
-					"target": ["notFound"]
+					"target": [
+						"notFound"
+					]
 				},
 				"async": true
 			},
-			"routes": [{
-				"name": "Home",
-				"pattern": "",
-				"titleTarget": "",
-				"greedy": true,
-				"target": ["Home"]
-			}],
+			"routes": [
+				{
+					"name": "Home",
+					"pattern": "",
+					"titleTarget": "",
+					"greedy": true,
+					"target": [
+						"Home"
+					]
+				},
+				{
+					"name": "NarrativeEdits",
+					"pattern": "",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"NarrativeEdits"
+					]
+				},
+				{
+					"name": "LineItemEdits",
+					"pattern": "",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"LineItemEdits"
+					]
+				},
+				{
+					"name": "LineItemTransfers",
+					"pattern": "",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"LineItemTransfers"
+					]
+				}
+			],
 			"targets": {
 				"objectNotFound": {
 					"viewName": "ObjectNotFound",
@@ -146,15 +229,35 @@
 					"transition": "slide",
 					"clearAggregation": true,
 					"viewName": "Home",
+					"viewId": "Home",
 					"viewLevel": 1
+				},
+				"NarrativeEdits": {
+					"viewType": "",
+					"transition": "",
+					"clearAggregation": "",
+					"viewName": "NarrativeEdits"
+				},
+				"LineItemEdits": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "LineItemEdits"
+				},
+				"LineItemTransfers": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "LineItemTransfers"
 				}
 			}
 		},
-		"resources": {
-			"css": [{
-				"uri": "css/style.css",
-				"id": ""
-			}]
+		"config": {
+			"fullWidth": true
 		}
+	},
+	"sap.platform.abap": {
+		"uri": "/sap/bc/ui5_ui5/sap/zprs_wipedit_ui/webapp",
+		"_version": "1.1.0"
 	}
 }

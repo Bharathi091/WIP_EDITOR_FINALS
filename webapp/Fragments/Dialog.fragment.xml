@@ -1,0 +1,54 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout">
+	<Dialog contentWidth="770px" contentHeight="450px" draggable="true" id="Alert0" title="{i18n>UpdateCodes}">
+		<content>
+			<l:VerticalLayout class="sapUiSmallMargin">
+				<l:HorizontalLayout class="sapUiSmallMargin">
+					<Label class="updateCodeLBL" text="To Phase code:" width="150px"/>
+					<Select forceSelection="false" width="430px" id="selectedPhaseCode0"
+						items="{ path: 'updatesCodesModel>/phaseCodes' , templateShareable:false }" selectedKey="{path:'updatesCodesModel>/selectedPhaseCode'}">
+						<core:Item key="{updatesCodesModel>Phasecode}" text="{updatesCodesModel>Phasecode}-{updatesCodesModel>PhasecodeDesc}"/>
+					</Select>
+					<CheckBox class="updateCodeCheck" text="Apply" id="phaseCodeChk0"/>
+				</l:HorizontalLayout>
+				<l:HorizontalLayout class="sapUiSmallMargin">
+					<Label class="updateCodeLBL" text="To Task Code:" width="150px"/>
+					<Select forceSelection="false" width="430px" id="selectedTaskCode0"
+						items="{ path: 'updatesCodesModel>/taskCodes' , templateShareable:false }" selectedKey="{path:'updatesCodesModel>/selectedTaskCode'}">
+						<core:Item key="{updatesCodesModel>TaskCodes}" text="{updatesCodesModel>TaskCodes}-{updatesCodesModel>TaskCodeDesc}"/>
+					</Select>
+					<CheckBox class="updateCodeCheck" text="Apply" id="taskCodeChk0"/>
+				</l:HorizontalLayout>
+				<l:HorizontalLayout class="sapUiSmallMargin">
+					<Label class="updateCodeLBL" text="To Activity Code:" width="150px"/>
+					<Select forceSelection="false" width="430px" id="selectedActCode0" items="{ path: 'updatesCodesModel>/actCodes' , templateShareable:false }"
+						selectedKey="{path:'updatesCodesModel>/selectedActCode'}">
+						<core:Item key="{updatesCodesModel>ActivityCodes}" text="{updatesCodesModel>ActivityCodes}-{updatesCodesModel>ActivityCodeDesc}"/>
+					</Select>
+					<CheckBox class="updateCodeCheck" text="Apply" id="ActivityCodeChk0"/>
+				</l:HorizontalLayout>
+				<l:HorizontalLayout class="sapUiSmallMargin">
+					<Label class="updateCodeLBL" text="To FF Task Code:" width="150px"/>
+					<Select forceSelection="false" width="430px" id="selectedFFTaskCode0" change="UpdateCodesffTaskcodechange" selectedKey="{path:'updatesCodesModel>/selectedFFTaskCode'}"
+						items="{ path: 'updatesCodesModel>/ffTskCodes' , templateShareable:false }" >
+						<core:Item key="{updatesCodesModel>FfTaskCodes}" text="{updatesCodesModel>FfTaskCodes}-{updatesCodesModel>FfTaskCodeDesc}"/>
+					</Select>
+					<CheckBox class="updateCodeCheck" text="Apply" id="FFTaskCodeChk0"/>
+				</l:HorizontalLayout>
+				<l:HorizontalLayout class="sapUiSmallMargin">
+					<Label class="updateCodeLBL" text="To FF Activity Code:" width="150px"/>
+					<Select forceSelection="false" width="430px" id="selectedFFActCode0"
+						items="{ path: 'updatesCodesModel>/ffActCodes' , templateShareable:false }" selectedKey="{updatesCodesModel>/selectedFFActCode}">
+						<core:Item key="{updatesCodesModel>FfActivityCodes}" text="{updatesCodesModel>FfActivityCodes}-{updatesCodesModel>FfActivityCodeDesc}"/>
+					</Select>
+					<CheckBox class="updateCodeCheck" text="Apply" id="FFActCodeChk0"/>
+				</l:HorizontalLayout>
+			</l:VerticalLayout>
+		</content>
+		<beginButton>
+			<Button type="Default" text="{i18n>UpdateCodes}" press="UpdateCodes"/>
+		</beginButton>
+		<endButton>
+			<Button type="Default" text="{i18n>Cancel}" press="UpdateCodesCancel"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>
