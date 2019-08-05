@@ -13,7 +13,7 @@
       "test.html"
     ],
     "buildRequired": true,
-    "lastBuildDateTime": "Thu, 18 Apr 2019 14:24:51 GMT"
+    "lastBuildDateTime": "Wed, 17 Jul 2019 13:19:16 GMT"
   },
   "dataBinding": {
     "/webapp/view/App.view.xml": {
@@ -22,22 +22,37 @@
     "/webapp/view/NotFound.view.xml": {
       "entitySet": "UNBINDKEY"
     },
-    "/webapp/view/ObjectNotFound.view.xml": {
+    "/webapp/view/DetailObjectNotFound.view.xml": {
       "entitySet": "UNBINDKEY"
+    },
+    "/webapp/view/DetailNoObjectsAvailable.view.xml": {
+      "entitySet": "UNBINDKEY"
+    },
+    "/webapp/view/Master.view.xml": {
+      "entitySet": "Categories"
+    },
+    "/webapp/view/Detail.view.xml": {
+      "entitySet": "Categories"
     }
   },
   "generation": [
     {
-      "templateId": "sap.ui.ui5-template-plugin.1worklist",
+      "templateId": "sap.ui.ui5-template-plugin.2masterdetail",
       "templateVersion": "1.38.3",
-      "dateTimeStamp": "Tue, 02 Apr 2019 14:28:57 GMT"
+      "dateTimeStamp": "Mon, 03 Jun 2019 09:57:42 GMT"
     },
     {
       "templateId": "ui5template.basicSAPUI5ApplicationComponent",
       "templateVersion": "1.4.0",
-      "dateTimeStamp": "Wed, 03 Apr 2019 09:58:43 GMT"
+      "dateTimeStamp": "Mon, 10 Jun 2019 08:04:39 GMT"
     }
   ],
+  "codeCheckingTriggers": {
+    "notifyBeforePush": true,
+    "notifyBeforePushLevel": "Error",
+    "blockPush": false,
+    "blockPushLevel": "Error"
+  },
   "translation": {
     "translationDomain": "",
     "supportedLanguages": "en,fr,de",
@@ -46,7 +61,7 @@
     "resourceModelName": "i18n"
   },
   "mockpreview": {
-    "mockUri": "/G4B/sap/opu/odata/sap/ZPRS_WIP_EDITOR_SRV",
+    "mockUri": "/Northwind/V2/Northwind/Northwind.svc",
     "metadataFilePath": "",
     "loadJSONFiles": false,
     "loadCustomRequests": false,
@@ -54,15 +69,9 @@
   },
   "basevalidator": {
     "services": {
-      "js": "fioriJsValidator",
-      "xml": "fioriXmlAnalysis"
+      "xml": "fioriXmlAnalysis",
+      "js": "fioriJsValidator"
     }
-  },
-  "codeCheckingTriggers": {
-    "notifyBeforePush": true,
-    "notifyBeforePushLevel": "Error",
-    "blockPush": false,
-    "blockPushLevel": "Error"
   },
   "deploy": {
     "destination": "G4B",

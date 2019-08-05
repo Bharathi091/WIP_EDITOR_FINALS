@@ -1,0 +1,21 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core"  xmlns:l="sap.ui.layout" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog contentWidth="500px" contentHeight="130px" draggable="true" id="Alert" title="Add To Dictionary">
+		<content>
+			<l:VerticalLayout width="500px"  class="sapUiContentPadding" >
+				<l:HorizontalLayout>
+						<Label text="Suggestion for:  " /> 
+		<Label text="{CountriesList>/data}" class="suggestColor" />
+					
+				</l:HorizontalLayout>
+	
+			<Input  width="85%" id="TypeHere1" />
+			</l:VerticalLayout>
+		</content>
+		<beginButton>
+			<Button type="Default" text="Ok" press="suggestionDialogClosedWithOk"/>
+		</beginButton>
+		<endButton>
+			<Button type="Default" text="Cancel" press="suggestionDialogClosedWithCancel"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

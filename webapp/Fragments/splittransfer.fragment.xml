@@ -12,51 +12,59 @@
     </customHeader>
      
 		
-		<l:Grid defaultSpan="L12 M12 S12" width="auto" id="idGrid" class ="dlg">
+		<l:Grid defaultSpan="L12 M12 S12" width="100%" id="idGrid" class ="dlg" >
 			<l:content>
-				<Table id="splitTable" class="row">
+				<Table id="splitTable" class="row" width="80%">
 					<columns class="col">
-						<Column width="120px">
-							<Text text="Matter" class="label"/>
+						<Column width="130px">
+							<Label text="Matter" design="Bold"/>
 						</Column>
-						<Column width="160px">
-							<Text text="Phase Code" class="label"/>
+						<Column width="130px">
+							<Label text="Phase Code" design="Bold"/>
 						</Column>
-						<Column width="160px">
-							<Text text="Task Code" class="label"/>
+						<Column width="130px">
+							<Label text="Task Code" design="Bold"/>
 						</Column>
-						<Column width="160px">
-							<Text text="Activity Code" class="label"/>
+						<Column width="130px">
+							<Label text="Activity Code" design="Bold"/>
 						</Column>
-						<Column width="160px">
-							<Text text="FF Task Code" class="label"/>
+						<Column width="130px">
+							<Label text="FF Task Code" design="Bold"/>
 						</Column>
-						<Column width="160px">
-							<Text text="FF Activity Code" class="label"/>
+						<Column width="130px">
+							<Label text="FF Activity Code" design="Bold"/>
 						</Column>
-						<Column width="160px">
-							<Text text="Hours/Quantity" class="label"/>
+						<Column width="130px">
+							<Label text="Hours/Quantity" design="Bold"/>
 						</Column>
-						<Column width="160px">
-							<Text text="Document No" class="label"/>
+						<Column width="130px">
+							<Label text="Document No" design="Bold"/>
+						</Column>
+						<Column width="70px">
+						
+						</Column>
+						<Column width="70px">
+						
 						</Column>
 					</columns>
 					<items>
 						<ColumnListItem>
 							<cells>
-								<Text text="{JSONModel>/matter}"/>
-								<Text text=""/>
+								<Text text="{JSONModel>/matter}"  />
+								<Text text="{JSONModel>/selPhase}"/>
 								<Text text="{JSONModel>/selTask}"/>
 								<Text text="{JSONModel>/selAct}"/>
 								<Text text="{JSONModel>/selFfTsk}"/>
 								<Text text="{JSONModel>/selFfAct}"/>
 								<Text text="{JSONModel>/quantity}"/>
 								<Text text="{JSONModel>/docno}"/>
+								<Text/>
+								<Text/>
 							</cells>
 						</ColumnListItem>
 					</items>
 				</Table>
-				<Table id="splitTable2" >
+				<Table id="splitTable2" width="100%">
 				
 				</Table>
 			</l:content>

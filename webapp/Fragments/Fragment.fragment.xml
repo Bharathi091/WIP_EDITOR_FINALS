@@ -1,8 +1,8 @@
 <core:FragmentDefinition
    xmlns="sap.m"
    xmlns:core="sap.ui.core" >
-   <Dialog>
-   	<Text text="There are Unsaved record Do you want to continue??"/>
+   <Dialog title = "Please Confirm?" class="title">
+   	<Text text= "  There are changes unsaved. Do you want to continue?  "/>
    	<buttons>
 			<Button text="Cancel" press="closeDialog" type="Reject"/>
 			<Button text="OK" press="ReloadTable" type="Accept"/>

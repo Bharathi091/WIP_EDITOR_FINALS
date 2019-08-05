@@ -51,15 +51,17 @@ sap.ui.define([
 					this._sErrorText,
 					{
 						id : "serviceErrorMessageBox",
-						details: sDetails,
-						styleClass: this._oComponent.getContentDensityClass(),
-						actions: [MessageBox.Action.CLOSE],
-						onClose: function () {
+						details : sDetails,
+						styleClass : this._oComponent.getContentDensityClass(),
+						actions : [MessageBox.Action.CLOSE],
+						onClose : function () {
 							this._bMessageOpen = false;
 						}.bind(this)
 					}
 				);
 			}
+
 		});
+
 	}
 );

@@ -1,0 +1,70 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core"
+	xmlns:smartField="sap.ui.comp.smartfield" xmlns:smartMultiInput="sap.ui.comp.smartmultiinput" xmlns:m="sap.m"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Dialog title="Spell Check">
+		<l:VerticalLayout class="sapUiNoContentPadding" id="MainFragment" visible="true" height="100px" width="800px">
+			<l:HorizontalLayout class="sapUiContentPadding" width="50%">
+				<l:VerticalLayout class="sapUiResponsiveContentPadding" width="500px">
+					<l:VerticalLayout>
+						<Label text="Dictionary : " design="Bold"/>
+						<Select items="{ path: 'CountriesList>/data'}" id="fragmentDictionary" width="200px" selectedKey="" change="dictionaryChangeFragment">
+							<core:Item key="{CountriesList>Key}" text="{CountriesList>Text}"/>
+						</Select>
+					</l:VerticalLayout>
+					<Label text="Narrative :" design="Bold"/>
+					<core:HTML
+						content=" &lt;div spellcheck=false class=fulcrum-editor-textarea1 contenteditable='true' width='500px' fulcrum-editor&gt;{path:'CountriesList>/narrative'}&lt;/div&gt;"
+						preferDOM="true" afterRendering="onAfterRenderingEvent"></core:HTML>
+					<l:HorizontalLayout class="sapUiNoContentPadding">
+								<Label text="Spelling Suggestions for :" design="Bold"/>
+								<Label text="{CountriesList>/word}" class="suggestColor" design="Bold"/>
+					</l:HorizontalLayout>
+						<ScrollContainer height='150px' class="scrollId" id="scrollId" horizontal="true" vertical="true" focusable="true" width="450px">
+									<Table id="WipDetailsSet" inset="false" class="sapUiSizeCompact" mode="SingleSelectMaster" items="{path: 'CountriesList>/suggest'}"
+										selectionChange="LineItemEditsSelection" fixedLayout="false" sticky="ColumnHeaders" >
+										<columns>
+											<Column demandPopin="false">
+												<customData>
+													<core:CustomData key="p13nData" value='\{"columnKey": "Belnr" ,"columnIndex":"1" ,"leadingProperty": "Belnr"}'/>
+												</customData>
+											
+											</Column>
+									
+										
+										</columns>
+										<ColumnListItem >
+											<cells>
+												<Label text="{CountriesList>}"/>
+												
+											</cells>
+										</ColumnListItem>
+									</Table>
+								</ScrollContainer>
+				
+			</l:VerticalLayout>
+				<l:VerticalLayout width="150px">
+					<Label text=" "/>
+					<Label text=" "/>
+					<Label text=" "/>
+					<Label text=" "/>
+					<Label text=" "/>
+					<Label text=" "/>
+					<Label text=" "/>
+					
+					<Button text="Apply" type="Accept" press="GlobalIgnore" width="100%"/>
+					<Button text="Replace" type="Accept" press="GlobalRep" width="100%"/>
+					<Button text="Replace All" type="Accept" press="GlobalRepAll" width="100%"/>
+					<Button text="Ignore" press="GlobalApply" width="100%"/>
+					<Button text="Ignore All" press="GlobalIgnoreAll" width="100%"/>
+					<Button text="Add To Dictionary" press="GlobalAddDictionary" width="100%"/>
+					<Button text="Undo" press="GlobalUndo" width="100%"/>
+				</l:VerticalLayout>
+			</l:HorizontalLayout>
+		</l:VerticalLayout>
+		<Label class="sapUiSmallMargin" text="No Misspelled Words Found" visible="false" id="noSpell"/>
+		<buttons>
+			<Button text="Ok" press="GlobalSpellCheckOk" type="Accept"/>
+			<Button text="Cancel" press="GlobalSpellCheckCancel" type="Reject"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

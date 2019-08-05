@@ -1401,7 +1401,7 @@ var oldPos = 0;
 (function($) {
 
 	$.fn.spellCheker = function(opts) {
-		
+
 		var changeObject = {};
 		var spanId = 0,
 			position = 0;
@@ -1414,13 +1414,11 @@ var oldPos = 0;
 		var bindingValue11 = '';
 		var bindingValue111 = '';
 		var rowIndex = '';
-		
+
 		var className = $(this).attr("class");
 
-	
-		
 		var options = $.extend({
-			lang_code: "en_US",
+			lang_code: opts.lang_code,
 			Typo: Typo,
 			table: "",
 			outputTex: "outputTex",
@@ -1428,88 +1426,89 @@ var oldPos = 0;
 			scope1: opts["scope1"]
 		}, opts);
 
-	
-
 		var otable = options.table;
 
 		var saveObjectScope = options.scope;
 		var log = options.scope;
-	
-		var log1= options.scope1;
+
+		var log1 = options.scope1;
 		var dictionary = new Typo(options.lang_code, false, false, {
 			dictionaryPath: options.dictionaryPath
 		});
-	
+
 		function split(word, self, position) {
-		
-			
+
 			var specialChars = /([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/;
 			var verifiedString = "";
 			var k = 0;
 
 			for (var i = 0; i < word.length; i++) {
 				k++;
-			
-					if (specialChars.test(word[i])) {
-						var numericItem = "";
-						var subText = word[i].replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
-						subText.forEach(function(subItem) {
-							if (ignoreAllArr.includes(subItem)) {
+
+				if (specialChars.test(word[i])) {
+					var numericItem = "";
+					var subText = word[i].replace(/\'/g, '').split(/([\d!~@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+)/).filter(Boolean);
+					subText.forEach(function(subItem) {
+						if (ignoreAllArr.includes(subItem)) {
+							numericItem = numericItem + subItem;
+						} else {
+
+							if (specialChars.test(subItem)) {
+
 								numericItem = numericItem + subItem;
 							} else {
+								if (dictionary.check(subItem) == false) {
+									numericItem = numericItem + '<span id="id' + spanId + '"class="target">' + subItem + '</span>';
+									spanId++
 
-								if (specialChars.test(subItem)) {
-
-									numericItem = numericItem + subItem;
 								} else {
-									if (dictionary.check(subItem) == false) {
-										numericItem = numericItem + '<span id="id' + spanId + '"class="target">' + subItem + '</span>';
-										spanId++
-
-									} else {
-										numericItem = numericItem + subItem;
-									}
+									numericItem = numericItem + subItem;
 								}
 							}
-
-						})
-						verifiedString = verifiedString + numericItem;
-
-					} else {
-						if (ignoreAllArr.includes(word[i])) {
-							verifiedString = verifiedString + word[i];
-						} else {
-							if (dictionary.check(word[i]) == false) {
-								verifiedString = verifiedString + '<span id="id' + spanId + '"class="target">' + word[i] + '</span>';
-								spanId++
-
-							} else {
-								verifiedString = verifiedString + word[i];
-							}
-
 						}
+
+					})
+					verifiedString = verifiedString + numericItem;
+
+				} else {
+					if (ignoreAllArr.includes(word[i])) {
+						verifiedString = verifiedString + word[i];
+					} else {
+						if (dictionary.check(word[i]) == false) {
+							verifiedString = verifiedString + '<span id="id' + spanId + '"class="target">' + word[i] + '</span>';
+							spanId++
+
+						} else {
+							verifiedString = verifiedString + word[i];
+						}
+
 					}
-				
+				}
 
 				if (i == word.length - 1) {
 
 					$(self).html(verifiedString);
-				
+
 					if (oldPos != 0) {
 						position = oldPos;
-					
+
 					}
 
 				}
 
 			}
+		
 
 			$("#" + self.id).caret('pos', position).focus();
+
+		
+	
+
+		
 
 		}
 
 		function spellChkr(divid, logValue) {
-			
 
 			var listClasses = "." + className;
 			if (divid != 0) {
@@ -1518,101 +1517,131 @@ var oldPos = 0;
 
 			$(listClasses + ":visible").each(function(index, element) {
 
-			
 				if (log1.ignoreLog === 1) {
 					ignoreAllArr = [];
 				}
 				$('#' + $($(element).context).attr('id') + ':visible').unbind("keyup");
 
-				$('#' + $($(element).context).attr('id') + ':visible').keyup(function() {
-					
-					
+				$('#' + $($(element).context).attr('id') + ':visible').keyup(function(event) {
+
+
 
 					var self = this;
-				
-					position = resetOffset($("#" + this.id));
+						 position = resetOffset($("#" + this.id));
+					if(event.keyCode === 86){
+						setTimeout(function(){
+					otable.getRows()[0].getCells()[5].focus(5);	
+					setTimeout(function(){
+							$("#" + self.id).caret('pos', position).focus();
+					}, 300);
+					
+						}, 1000);
+					  
+		
+					}
+					
+					
 
-					oldPos = position;
+				
+
+					 oldPos = position;
 					var innertext = this.innerText;
 					var word = innertext.replace(/\'/g, '').split(/([\s]+)/).filter(Boolean); //split the string
+					
 
 					split(word, self, position);
 					target($(this).attr('id'));
 
 					if (otable != '') {
-						var oBinding = otable.getBinding("rows");
-						
-					
-
-							if (logValue === 0) {
-								if(log.spellCheckLogValue){
-								debugger;
-							bindingValue = log.spellCheckRowIndex;
-								
-							}
-						
-							else if (log1.logValueScroll !== 1 ) {
-							
-								bindingValue = oBinding.iLastStartIndex;
-									log.spellCheckRowIndex=bindingValue;
-							}
-							else
-							{
-								if(bindingValue==='')
-								{
-								bindingValue = oBinding.iLastStartIndex;
-									log.spellCheckRowIndex=bindingValue;
-								}
-							}
-
-							logValue = 1;
-							bindingValueLog = 1;
-							logValue1 = logValue;
-						}
-					
-
-						rowIndex = $('#' + self.id).closest('tr')["0"].rowIndex - 1 + bindingValue;
-			
-						var selContext = otable.getContextByIndex(rowIndex);
-						selContext.getModel().setProperty(selContext.getPath() + "/NarrativeString", $(self).text());
-						changeObject = selContext.getObject();
+						rowIndex = $($($(element).context).attr('rowIndex')).selector;
+                      
+                      
+						// var selContext = otable.getContextByIndex(rowIndex);
+						// selContext.getModel().setProperty(selContext.getPath() + "/NarrativeString", $(self).text());
+						// changeObject = selContext.getObject();
+						var NarrativeString = $(self).text();
+						changeObject = saveObjectScope.homeTable[rowIndex];
+						changeObject.NarrativeString = NarrativeString;
+						saveObjectScope.homeTable[rowIndex] = changeObject;
+						// log1.jsonModel.setProperty("/modelData",homeTable);
+						log1.jsonModel.setProperty("/modelData", saveObjectScope.homeTable);
+						otable.setModel(log1.jsonModel);
+						otable.bindRows("/modelData");
 						saveObjectScope.saveObjects.push(changeObject);
 						spellChkr(self.id, logValue1);
-						
+						saveObjectScope.isChanged = true;
+						saveObjectScope.scope = otable;
+
+						// var headerExpanded = saveObjectScope.dynamicId.getHeaderExpanded();
+
+						// if (headerExpanded === true) {
+						// 	var dynmicpx = saveObjectScope.dynmaicpx;
+
+						// 	var orgpx = dynmicpx / 2.2 + "px";
+						// 	saveObjectScope.orgpx = orgpx;
+						// // otable.setVisibleRowCount(11);
+
+						// } else {
+						// 	var dynmicpx = saveObjectScope.dynmaicpx;
+						// 	var orgpx = dynmicpx / 1.6 + "px";
+						// 	saveObjectScope.orgpx = orgpx;
+						// // otable.setVisibleRowCount(16);
+						// }
 
 					}
+					
+					
+					
+
 
 				})
+
+				// var headerExpanded = saveObjectScope.dynamicId.getHeaderExpanded();
+
+				// if (headerExpanded === true) {
+				// 	var dynmicpx = saveObjectScope.dynmaicpx;
+
+				// 	var orgpx = dynmicpx / 2.2 + "px";
+				// 	saveObjectScope.orgpx = orgpx;
+				// 	// otable.setVisibleRowCount(11);
+
+				// } else {
+				// 	var dynmicpx = saveObjectScope.dynmaicpx;
+				// 	var orgpx = dynmicpx / 1.6 + "px";
+				// 	saveObjectScope.orgpx = orgpx;
+				// // otable.setVisibleRowCount(16);
+				// }
 
 				var inputText = $(this).text();
 				var splitwords = inputText.replace(/\'/g, '').split(/([\s]+)/).filter(Boolean); //split the string
 				var self = this;
 
 				split(splitwords, self, 0);
-
-				target($(this).attr('id'));
+                
+    
+                
+				target($(this).attr('id'), element);
 
 				if (index == $(listClasses + ":visible").length - 1) {
 					//sap.ui.core.BusyIndicator.hide();
 				}
 
 			});
-		
 
 		}
 
-		function target(parentDivId) {
+		function target(parentDivId, element) {
 
 			var targetCls = ".target";
 			if (parentDivId != "") {
 				targetCls = "#" + parentDivId + " .target";
 			}
 			$(targetCls).contextmenu(function(eve) {
-				
+
 				if ($(".menuitems")) {
 					$(".menuitems").remove();
 				}
-				
+
 				document.addEventListener('contextmenu', event => event.preventDefault());
 
 				var currentSpanId = eve.target.id;
@@ -1628,7 +1657,7 @@ var oldPos = 0;
 					li.id = 'li';
 					li.className = 'menuitemsLi';
 					ul.appendChild(li);
-					li.innerText = "ignore all";
+					li.innerText = "Ignore All";
 				} else {
 					for (var i = 0; i < array_of_suggestions.length; i++) {
 						ul.id = 'ul' + i;
@@ -1640,33 +1669,30 @@ var oldPos = 0;
 
 					}
 					li.className = 'ignoreall';
-					li.innerText = "ignore all"
+					li.innerText = "Ignore All"
 				}
-			
+
 				$(".menuitems").finish().toggle(100);
 				$(".menuitems").css({
 					top: eve.pageY + "px",
 					left: eve.pageX + "px"
 				});
 
-			
-
 				$(document).bind("mousedown", function(e) {
 					if (!$(e.target).parents(".menuitems").length > 0) {
-					
+
 						$(".menuitems").hide(100);
 					}
 				});
 
 				$(".menuitems li").click(function(event) {
-					
-				
+
 					var oldText = eve.target.innerText;
 					var parentDivId = $("#" + eve.target.id).parent().attr('id');
 					var parentDivText = $("#" + parentDivId).html();
 
 					if (event.target.innerText.toLowerCase() === "ignore all") {
-						
+
 						if (!ignoreAllArr.includes(eve.target.innerText)) {
 							ignoreAllArr.push(eve.target.innerText);
 						}
@@ -1681,71 +1707,14 @@ var oldPos = 0;
 							event.target.innerText);
 
 						if (otable != '') {
-							
-							var oBinding = otable.getBinding("rows");
-							if (log1.logValueScroll === 1 && logValue1 === 1) {
-								
-								if (bindingValue === '') {
-									var bindingValue1 = oBinding.iLastStartIndex;
-									var rowIndex = bindingValue1;
-								} else {
-									var bindingValue1 = bindingValue;
-									var rowIndex = $($("#" + eve.target.id).parent()).closest('tr')["0"].rowIndex - 1 + bindingValue1;
 
-								}
-
-								
-								logValue1 = 0;
-							} else if (log1.logValueScroll === 1 && logValue1 === 0) {
-								
-								var bindingValue1 = oBinding.iLastStartIndex - 1;
-								var rowIndex = bindingValue1;
-							
-								logValue1 = '';
-							} else if (log1.logValueScroll === 1) {
-							
-								if (bindingValueLog === 0) {
-								
-									if (clickbindingValue === "" && bindingValue === '') {
-									
-										clickbindingValue = oBinding.iLastStartIndex;
-										bindingValue = clickbindingValue;
-									} else {
-										clickbindingValue = bindingValue;
-									}
-
-								
-									bindingValueLog = 1;
-
-								}
-
-								var rowIndex = $($("#" + eve.target.id).parent()).closest('tr')["0"].rowIndex - 1 + clickbindingValue;
-								
-							} else if (logValue1 === 1) {
-								if (bindingValueLog === 0) {
-									bindingValue111 = oBinding.iLastStartIndex;
-									var rowIndex = bindingValue111;
-								} else {
-									var rowIndex = $($("#" + eve.target.id).parent()).closest('tr')["0"].rowIndex - 1 + bindingValue;
-								}
-
-								bindingValueLog = 1;
-							
-							} else {
-								if (bindingValueLog1 === 0) {
-									bindingValue11 = oBinding.iLastStartIndex;
-									bindingValueLog1 = 1;
-								}
-								var rowIndex = $($("#" + eve.target.id).parent()).closest('tr')["0"].rowIndex - 1 + bindingValue11;
-							
-							}
+							var rowIndex = $($($(element).context).attr('rowIndex')).selector
 
 							var selContext = otable.getContextByIndex(rowIndex);
 							selContext.getModel().setProperty(selContext.getPath() + "/" + options.outputTex, parentDivText);
-								changeObject = selContext.getObject();
-						saveObjectScope.saveObjects.push(changeObject);
-							
-						
+							changeObject = selContext.getObject();
+							saveObjectScope.saveObjects.push(changeObject);
+
 						}
 						$("#" + parentDivId).html(parentDivText);
 						spellChkr(parentDivId, logValue1);
@@ -1771,7 +1740,6 @@ var oldPos = 0;
 }(jQuery));
 
 function resetOffset($textField) {
-	
 
 	var offset = $textField.caret('offset');
 	var position1 = $textField.caret('pos');

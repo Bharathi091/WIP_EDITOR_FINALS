@@ -26,6 +26,14 @@
 					"localUri": "localService/ZPRS_VALUE_HELP_SRV/metadata.xml"
 				}
 			},
+			"ZPRS_SEARCHHELP_SRV": {
+				"uri": "/sap/opu/odata/SAP/ZPRS_SEARCHHELP_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZPRS_SEARCHHELP_SRV/metadata.xml"
+				}
+			},
 			"ZPRS_USER_DATA_SRV": {
 				"uri": "/sap/opu/odata/SAP/ZPRS_USER_DATA_SRV/",
 				"type": "OData",
@@ -49,17 +57,25 @@
 					"odataVersion": "2.0",
 					"localUri": "localService/ZPRS_BILL_EDIT_SRV/metadata.xml"
 				}
+			},
+			"ZPRS_VARIANT_MAINTENANCE_SRV": {
+				"uri": "/sap/opu/odata/SAP/ZPRS_VARIANT_MAINTENANCE_SRV/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "2.0",
+					"localUri": "localService/ZPRS_VARIANT_MAINTENANCE_SRV/metadata.xml"
+				}
 			}
 		},
 		"sourceTemplate": {
-			"id": "sap.ui.ui5-template-plugin.1worklist",
+			"id": "sap.ui.ui5-template-plugin.2masterdetail",
 			"version": "1.38.3"
 		}
 	},
 	"sap.ui": {
 		"technology": "UI5",
 		"icons": {
-			"icon": "sap-icon://task",
+			"icon": "sap-icon://detail-view",
 			"favIcon": "",
 			"phone": "",
 			"phone@2": "",
@@ -100,16 +116,21 @@
 				}
 			}
 		},
-		"contentDensities": {
-			"compact": true,
-			"cozy": true
-		},
 		"resources": {
 			"css": [
 				{
 					"uri": "css/style.css"
 				}
+			],
+			"js": [
+				{
+					"uri": "extjs/lodash.js"
+				}
 			]
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
 		},
 		"models": {
 			"i18n": {
@@ -161,6 +182,16 @@
 				},
 				"dataSource": "ZPRS_BILL_EDIT_SRV",
 				"preload": true
+			},
+			"ZPRS_VARIANT_MAINTENANCE_SRV": {
+				"type": "sap.ui.model.odata.v2.ODataModel",
+				"settings": {
+					"defaultOperationMode": "Server",
+					"defaultBindingMode": "OneTime",
+					"defaultCountMode": "Request"
+				},
+				"dataSource": "ZPRS_VARIANT_MAINTENANCE_SRV",
+				"preload": true
 			}
 		},
 		"routing": {
@@ -168,10 +199,11 @@
 				"routerClass": "sap.m.routing.Router",
 				"viewType": "XML",
 				"viewPath": "zprs.wipeditor.view",
-				"controlId": "app",
-				"controlAggregation": "pages",
+				"controlId": "idAppControl",
+				"controlAggregation": "detailPages",
 				"bypassed": {
 					"target": [
+						"master",
 						"notFound"
 					]
 				},
@@ -179,21 +211,37 @@
 			},
 			"routes": [
 				{
+					"pattern": "",
+					"name": "master",
+					"target": [
+						"object",
+						"master"
+					]
+				},
+				{
+					"pattern": "Categories/{objectId}",
+					"name": "object",
+					"target": [
+						"master",
+						"object"
+					]
+				},
+				{
 					"name": "Home",
 					"pattern": "",
 					"titleTarget": "",
-					"greedy": true,
+					"greedy": false,
 					"target": [
 						"Home"
 					]
 				},
 				{
-					"name": "NarrativeEdits",
+					"name": "Narrative",
 					"pattern": "",
 					"titleTarget": "",
 					"greedy": false,
 					"target": [
-						"NarrativeEdits"
+						"Narrative"
 					]
 				},
 				{
@@ -204,21 +252,27 @@
 					"target": [
 						"LineItemEdits"
 					]
-				},
-				{
-					"name": "LineItemTransfers",
-					"pattern": "",
-					"titleTarget": "",
-					"greedy": false,
-					"target": [
-						"LineItemTransfers"
-					]
 				}
 			],
 			"targets": {
-				"objectNotFound": {
-					"viewName": "ObjectNotFound",
-					"viewId": "objectNotFound"
+				"master": {
+					"viewName": "Master",
+					"viewLevel": 1,
+					"viewId": "master",
+					"controlAggregation": "masterPages"
+				},
+				"object": {
+					"viewName": "Detail",
+					"viewId": "detail",
+					"viewLevel": 2
+				},
+				"detailObjectNotFound": {
+					"viewName": "DetailObjectNotFound",
+					"viewId": "detailObjectNotFound"
+				},
+				"detailNoObjectsAvailable": {
+					"viewName": "DetailNoObjectsAvailable",
+					"viewId": "detailNoObjectsAvailable"
 				},
 				"notFound": {
 					"viewName": "NotFound",
@@ -229,26 +283,21 @@
 					"transition": "slide",
 					"clearAggregation": true,
 					"viewName": "Home",
-					"viewId": "Home",
 					"viewLevel": 1
 				},
-				"NarrativeEdits": {
-					"viewType": "",
-					"transition": "",
-					"clearAggregation": "",
-					"viewName": "NarrativeEdits"
+				"Narrative": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "Narrative",
+					"viewLevel": 1
 				},
 				"LineItemEdits": {
 					"viewType": "XML",
 					"transition": "slide",
 					"clearAggregation": true,
-					"viewName": "LineItemEdits"
-				},
-				"LineItemTransfers": {
-					"viewType": "XML",
-					"transition": "slide",
-					"clearAggregation": true,
-					"viewName": "LineItemTransfers"
+					"viewName": "LineItemEdits",
+					"viewLevel": 1
 				}
 			}
 		},

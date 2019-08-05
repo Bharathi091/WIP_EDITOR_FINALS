@@ -1,0 +1,92 @@
+<mvc:View
+	controllerName="zprs.wipeditor.controller.Master"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	xmlns:semantic="sap.m.semantic">
+
+	<!--<semantic:MasterPage-->
+	<!--	id="page"-->
+	<!--	title="{masterView>/title}"-->
+	<!--	navButtonPress="onNavBack"-->
+	<!--	showNavButton="true">-->
+	<!--	<semantic:subHeader>-->
+	<!--		<Bar id="headerBar">-->
+	<!--			<contentMiddle>-->
+	<!--				<SearchField-->
+	<!--					id="searchField"-->
+	<!--					showRefreshButton="{= !${device>/support/touch} }"-->
+	<!--					tooltip="{i18n>masterSearchTooltip}"-->
+	<!--					width="100%"-->
+	<!--					search="onSearch">-->
+	<!--				</SearchField>-->
+	<!--			</contentMiddle>-->
+	<!--		</Bar>-->
+	<!--	</semantic:subHeader>-->
+
+		<!--<semantic:content>-->
+		
+			<Page title="MATTERS" showNavButton="false" navButtonPress="onBack" enableScrolling="true">
+						<List id="list" items="{ path :'InputsModel>/Inputs/masterItems' }" mode="Delete" delete="handleDelete" growing="true"
+							growingScrollToLoad="true">
+							<headerToolbar>
+								<Toolbar>
+									<ToolbarSpacer/>
+									<SearchField width="100%" liveChange="listSearch" id="listSearch" search="ondetailsearch"/>
+									<Button icon="sap-icon://sorting-ranking" press="listSorting"/>
+								</Toolbar>
+							</headerToolbar>
+							<items>
+								<ObjectListItem type="Active" press="onPress" title="{InputsModel>Pspid}" highlight="{InputsModel>hcolor}">
+									<attributes>
+										<ObjectAttribute text="{InputsModel>Post1}"/>
+										<ObjectAttribute text="Client No : {InputsModel>Client} "/>
+										<ObjectAttribute text="Client Name : {InputsModel>ClientName}"/>
+									</attributes>
+								</ObjectListItem>
+							</items>
+						</List>
+					</Page>
+		<!--</semantic:content>-->
+
+		<!--<semantic:sort>-->
+		<!--	<semantic:SortSelect-->
+		<!--		id="sort"-->
+		<!--		selectedKey="{masterView>/sortBy}"-->
+		<!--		change="onSort">-->
+		<!--		<core:Item-->
+		<!--			id="masterSort1"-->
+		<!--			key="CategoryName"-->
+		<!--			text="{i18n>masterSort1}"/>-->
+		<!--		<core:Item-->
+		<!--			id="masterSort2"-->
+		<!--			key="CategoryID"-->
+		<!--			text="{i18n>masterSort2}"/>-->
+		<!--	</semantic:SortSelect>-->
+		<!--</semantic:sort>-->
+
+		<!--<semantic:filter>-->
+		<!--	<semantic:FilterAction-->
+		<!--		id="filter"-->
+		<!--		press="onOpenViewSettings" />-->
+		<!--</semantic:filter>-->
+
+		<!--<semantic:group>-->
+		<!--	<semantic:GroupSelect-->
+		<!--		id="group"-->
+		<!--		selectedKey="{masterView>/groupBy}"-->
+		<!--		change="onGroup">-->
+		<!--		<core:Item-->
+		<!--			id="masterGroupNone"-->
+		<!--			key="None"-->
+		<!--			text="{i18n>masterGroupNone}"/>-->
+		<!--		<core:Item-->
+		<!--			id="masterGroup1"-->
+		<!--			key="CategoryID"-->
+		<!--			text="{i18n>masterGroup1}"/>-->
+		<!--	</semantic:GroupSelect>-->
+		<!--</semantic:group>-->
+
+	<!--</semantic:MasterPage>-->
+
+</mvc:View>

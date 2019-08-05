@@ -1,17 +1,16 @@
 <mvc:View
-	controllerName="zprs.wipeditor.controller.NotFound"
+	controllerName="zprs.wipeditor.controller.BaseController"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m">
 
 	<MessagePage
+		id="page"
 		title="{i18n>notFoundTitle}"
 		text="{i18n>notFoundText}"
 		icon="{sap-icon://document}"
-		id="page"
-		description="">
-		<customDescription>
-			<Link id="link" text="{i18n>backToWorklist}" press="onLinkPressed" />
-		</customDescription>
+		description=""
+		showNavButton="{device>/system/phone}"
+		navButtonPress="onNavBack">
 	</MessagePage>
 
 </mvc:View>

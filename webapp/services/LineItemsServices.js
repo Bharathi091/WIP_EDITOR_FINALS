@@ -21,10 +21,10 @@ sap.ui.define([
 	                deferred.resolve(oData);
 
 				},
-				error: function() {
+				error: function(err) {
 					
 				
-					deferred.reject();
+					deferred.reject(err);
 				}
 				
 			} 
@@ -38,6 +38,7 @@ sap.ui.define([
 
 		
 		getPhaseCodes: function(WipEditModel, pspid, that) {
+			
 		
 			var service = WipEditModel.getProperty("/Inputs");
 			var deferred = $.Deferred();
@@ -70,13 +71,13 @@ sap.ui.define([
 				filters: phasefilter,
 				success: function(oData) {
 					
-					console.log("phase",oData);
+				
 					deferred.resolve(oData);
 
 				},
 				error: function() {
 					
-					console.log("error");
+				
 					deferred.reject();
 				}
 			});
@@ -104,18 +105,18 @@ sap.ui.define([
 				filters: taskfilter,
 				success: function(oData) {
 				
-					console.log("taskcode",oData);
+				
 					deferred.resolve(oData);
 
 				},
 				error: function(err) {
-						console.log(error);
+					
 					deferred.reject();
 				}
 			});
 			return deferred.promise();
 		},
-		getActivitycodes: function(WipEditModel, thisRow, pspid, that) {
+		getActivitycodes: function(WipEditModel, pspid, that) {
 			
 			
 			var deferred = $.Deferred();
@@ -154,7 +155,7 @@ sap.ui.define([
 			oModelActivitycodes.read(activitycodedataset, {
 				filters: taskfilter,
 				success: function(oData) {
-	console.log("activitycode",oData);
+	
 					deferred.resolve(oData);
 
 				},
@@ -165,7 +166,7 @@ sap.ui.define([
 			return deferred.promise();
 
 		},
-	getFFtaskcodes: function(WipEditModel, thisRow, pspid, that) {
+	getFFtaskcodes: function(WipEditModel, pspid, that) {
 		
 		
 			var service = WipEditModel.getProperty("/Inputs");
@@ -187,7 +188,7 @@ sap.ui.define([
 				filters: fftaskfilter,
 				success: function(oData) {
 				
-					console.log("fftask",oData);
+				
 					deferred.resolve(oData);
 
 				},
@@ -238,6 +239,51 @@ sap.ui.define([
 				}
 			});
 			return deferred.promise();
+		},
+			addToDictionary: function(oFModel, ip_data, ref){
+			
+			var deferred = $.Deferred();
+		
+			var ServiceUrl = oFModel.sServiceUrl;
+
+		
+		
+			jQuery.ajax({
+				url: ServiceUrl,
+				headers: {
+					"X-CSRF-Token": "fetch"
+				},
+				success: function(data, textStatus, request) {
+					var sapToken = request.getResponseHeader("X-CSRF-Token");
+					var oHeaders = {
+						"X-CSRF-Token": sapToken,
+						"Content-Type": "application/json"
+					};
+
+					var oModel = new sap.ui.model.odata.v2.ODataModel({
+						serviceUrl: ServiceUrl
+					}, false);
+				
+					oModel.setHeaders(oHeaders);
+
+					oModel.create("/AddWordsToDictionarySet", ip_data, {
+						method: "POST",
+						success: function(datas) {
+							deferred.resolve(datas);
+						},
+						error: function(err) {
+							deferred.reject();
+						}
+					});
+
+				},
+				error: function() {
+					deferred.reject();
+				}
+
+			});
+			return deferred.promise();
+			
 		}
 		
 	});

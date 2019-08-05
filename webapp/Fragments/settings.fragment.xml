@@ -1,0 +1,46 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<P13nDialog showReset="false" showResetEnabled="false" ok="onOK" cancel="onCancel" reset="onReset"
+		class="sapUiSizeCompact">
+		<panels>
+			<P13nColumnsPanel title="Columns" changeColumnsItems="onChangeColumnsItems" items="{path: 'settings>/data'}"
+				columnsItems="{path: 'settings>/ColumnsItems'}">
+				<items>
+					<P13nItem columnKey="{settings>columnKey}" text="{settings>text}"/>
+				</items>
+				<columnsItems>
+					<P13nColumnsItem columnKey="{settings>columnKey}" visible="{settings>visible}"/>
+				</columnsItems>
+			</P13nColumnsPanel>
+			<!--<P13nFilterPanel title="Filters" items="{path: 'settings>/data'}" filterItems="{path: 'settings>/ColumnsItems'}">-->
+			<!--	<items>-->
+			<!--		<P13nItem columnKey="{settings>columnKey}" text="{settings>text}"/>-->
+			<!--	</items>-->
+			<!--	<filterItems>-->
+			<!--		<P13nFilterItem columnKey="{settings>columnKey}" enabled="{settings>visible}"/>-->
+			<!--	</filterItems>-->
+			<!--</P13nFilterPanel>-->
+			<!--<P13nSortPanel title="Sort" items="{path: 'settings>/data'}" sortItems="{path: 'settings>/ColumnsItems'}">-->
+			<!--	<items>-->
+			<!--		<P13nItem columnKey="{settings>columnKey}" text="{settings>text}"/>-->
+			<!--	</items>-->
+			<!--	<sortItems>-->
+			<!--		<P13nSortItem columnKey="{settings>columnKey}" enabled="{settings>visible}"/>-->
+			<!--	</sortItems>-->
+			<!--</P13nSortPanel>-->
+		</panels>
+	</P13nDialog>
+</core:FragmentDefinition>
+<!--<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">-->
+<!--	<P13nDialog showReset="true" showResetEnabled="true" ok="onOK" cancel="onCancel" reset="onReset" class="sapUiSizeCompact">-->
+<!--		<panels>-->
+<!--			<P13nColumnsPanel items="{path: 'p13Dialog>/ColumnCollection'}" columnsItems="{path: 'p13Dialog>/ColumnCollection'}">-->
+<!--				<items>-->
+<!--					<P13nItem columnKey="{p13Dialog>columnKey}" text="{p13Dialog>columnKey}"/>-->
+<!--				</items>-->
+<!--				<columnsItems>-->
+<!--					<P13nColumnsItem columnKey="{p13Dialog>columnKey}" visible="{p13Dialog>visible}"/>-->
+<!--				</columnsItems>-->
+<!--			</P13nColumnsPanel>-->
+<!--		</panels>-->
+<!--	</P13nDialog>-->
+<!--</core:FragmentDefinition>-->

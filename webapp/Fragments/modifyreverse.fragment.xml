@@ -3,26 +3,30 @@
 		<l:Grid defaultSpan="L12 M12 S12" width="auto" id="idGrid">
 			<l:content>
 				
-				<f:SimpleForm id="replaceform" height="20%" width="100%" maxContainerCols="2" editable="false" layout="ResponsiveGridLayout" 
-					labelSpanL="3" labelSpanM="3" emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1" singleContainerFullSize="true">
-					<f:content>
-					
+				<l:VerticalLayout width="200px" class="sapUiSmallMargin">
+						<l:VerticalLayout class="sapUiSmallMarginTop">
 						<Label text="Document no" design="Bold"/>
-						<Input editable="false" type="Number" enabled="false" width="30%" id="Belnr" value="{JSONModel>/Belnr}"/>
-						
+						<Input editable="false" type="Number" enabled="false" width="150px" id="Belnr" value="{JSONModel>/Belnr}" class="fraginput"/>
+							</l:VerticalLayout>
+							<l:VerticalLayout class="sapUiSmallMarginTop">
 						<Label text="Original Hours" design="Bold"/>
-						<Input editable="false" type="Number" enabled="false" width="20%" id="Megbtr" value="{JSONModel>/Megbtr}" />
-						<Input editable="false"  enabled="false" width="20%" id="HR" value="HR" />
-						
+							<l:HorizontalLayout>
+						<Input editable="false" type="Number" enabled="false" width="100px" id="Megbtr" value="{JSONModel>/Megbtr}" class="fraginput" />
+						<Label text=" " width="20px"/>
+						<Input editable="false"  enabled="false" width="50px" id="HR" value="HR" class="fraginput" />
+						</l:HorizontalLayout>
+							</l:VerticalLayout>
+								<l:VerticalLayout class="sapUiSmallMarginTop">
 						<Label text="New Hours" design="Bold"/>
-						<Input width="20%" type="Number" id="newHours" />
-					</f:content>
-				</f:SimpleForm>
+						<Input width="100px" type="Number" id="newHours" liveChange="newHoursChange" class="fraginput" />
+						</l:VerticalLayout>
+				</l:VerticalLayout>
 			</l:content>
 		</l:Grid>
 		<buttons>
-			<Button text="Cancel" press="closeModifyDialog" />
-			<Button text="Save" press="ModifyReverseSave" type="Accept"/>
+		
+			<Button text="Save" press="ModifyReverseSave" visible  = "false" id = "saveId" type="Accept"/>
+			<Button text="Cancel" press="closeModifyDialog" type="Reject" />
 		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

@@ -9,31 +9,60 @@ sap.ui.define([
 			BaseObject.call(this);
 
 			this.Inputs = {
+				isExpanded:false,
+				matters:[],
+				userSettingsData:{},
+				orgpx:"",
+				dynmaicpx:"",
+				dynamicId:{},
+				growing:0,
+				selectedMatter: {},
+				firstTableId:{},
 				hideFilterBar: true,
+				isHidden: false,
+				smartfilterId:{},
+				masterFilter:[],
+				icontabbarid:{},
+
+				btn: "",
 				rootPspid: "",
-				odatefrom:{},
-				odateto:{},
+				currentFilters:[],
+				applyArray: [],
+				changeArray: {},
+				onPressEvent: {},
+				ColumnsItems: [],
+				odatefrom: {},
+				odateto: {},
+				DocNUmber: [],
+				timeKeeperValue: [],
+				replaceArr: [],
+				replaceAllArr: [],
+				replaceStatus: "",
 				masterItems: [],
 				homeTable: [],
-				saveObjects:[],
-				indexes:[],
-				rowNarrativeCount:[],
-				rowLineCount:[],
-				rowLineTransfersCount:[],
-				spellCheckRowIndex:0,
-				spellCheckLogValue:0,
-				oldData:[],
-			scope:{},
-			homeScope:{},
-			narrativeScope :{},
-			lineItemEditsScope: {},
-			lineItemTransfersScope:{},
-				isChanged:false,
-				
+				globalSearchModel: [],
+				saveObjects: [],
+				indexes: [],
+				globalStatus: false,
+				rowNarrativeCount: [],
+				rowLineCount: [],
+				rowLineTransfersCount: [],
+				spellCheckRowIndex: 0,
+				spellCheckLogValue: 0,
+				oldData: [],
+				icon: false,
+				iconColor: "",
+				scope: {},
+				homeScope: {},
+				narrativeScope: {},
+				lineItemEditsScope: {},
+				lineItemTransfersScope: {},
+				isChanged: false,
 
 				formMatter: "",
 				formLeadPartner: "",
 				formBillingOffice: "",
+			
 				Filters: {
 					filters: ["Filter1", "Filter2", "Filter3", "Filter4"],
 					Filter1: {
@@ -375,7 +404,7 @@ sap.ui.define([
 
 					}
 				},
-				saveObjects: [],
+				// saveObjects: [],
 				editableIndexes: [0],
 				currentCol: {},
 				createMatter: [{
@@ -414,14 +443,14 @@ sap.ui.define([
 					}, {
 						"key": "Zzfftskcd",
 						"type": "Select",
-						"userCol": "Flat Fee taskCode",
+						"userCol": "FF Task Code",
 						"width": "80px"
 					},
 
 					{
 						"key": "Zzffactcd",
 						"type": "Select",
-						"userCol": "Flat Fee ActivityCode",
+						"userCol": "FF Activity Code",
 						"width": "80px"
 					}, {
 						"key": "Megbtr",
@@ -481,110 +510,111 @@ sap.ui.define([
 
 				},
 				changedLang: "en_US",
-					dicDefLanguage:"en_US",
+				dicDefLanguage: "en_US",
 
 				Countries_collection: [
-					//{
-					// 	Key: "ca",
-					// 	Text: "Catalan",
-					// 	lang:"ca"
-					// }, {
-					// 	Key: "cs_CZ",
-					// 	Text: "Czech",
-					// 		lang:"cs"
-					// }, {
-					// 	Key: "de_DE_frami",
-					// 	Text: "Dutch",
-					// 		lang:"nl"
-					// }, {
-					// 	Key: "en_AU",
-					// 	Text: "English(AU)",
-					// 		lang:"en"
-					// }, {
-					// 	Key: "en_CA",
-					// 	Text: "English(CA)",
-					// 		lang:"en"
-					// },
 					{
 						Key: "en_US",
 						Text: "English(US)",
 						lang: "en"
+					}, 
+					{
+						Key: "ca",
+						Text: "Catalan",
+						lang:"ca"
 					}, {
+						Key: "cs_CZ",
+						Text: "Czech",
+							lang:"cs"
+					}, {
+						Key: "de_DE_frami",
+						Text: "Dutch",
+							lang:"nl"
+					}, {
+						Key: "en_AU",
+						Text: "English(AU)",
+							lang:"en"
+					}, {
+						Key: "en_CA",
+						Text: "English(CA)",
+							lang:"en"
+					},
+					{
 						Key: "ar",
 						Text: "Arabic",
 						lang: "ar"
 					},
-					// {
-					// 	Key: "en_GB",
-					// 	Text: "English(UK)",
-					// 		lang:"en"
-					// }, 
+					{
+						Key: "en_GB",
+						Text: "English(UK)",
+							lang:"en"
+					}, 
 					{
 						Key: "fr",
 						Text: "French",
 						lang: "fr"
-					}
-					// {
-					// 	Key: "dataEn",
-					// 	Text: "German",
-					// 		lang:"de"
-					// }, {
-					// 	Key: "hu_HU",
-					// 	Text: "Hungarian",
-					// 		lang:"hu"
-					// }, {
-					// 	Key: "id_ID",
-					// 	Text: "Indonesian",
-					// 		lang:"id"
-					// },
+					},
+					{
+						Key: "dataEn",
+						Text: "German",
+							lang:"de"
+					}, {
+						Key: "hu_HU",
+						Text: "Hungarian",
+							lang:"hu"
+					}, {
+						Key: "id_ID",
+						Text: "Indonesian",
+							lang:"id"
+					},
 
-					// {
-					// 	Key: "it_IT",
-					// 	Text: "Italian",
-					// 		lang:"it"
-					// }, {
-					// 	Key: "pl_PL",
-					// 	Text: "Polish",
-					// 		lang:"pl"
-					// }, {
-					// 	Key: "pt_PT",
-					// 	Text: "Portugese",
-					// 		lang:"pt"
-					// }, {
-					// 	Key: "ru_RU",
-					// 	Text: "Russian",
-					// 		lang:"ru"
-					// }, {
-					// 	Key: "dataEn",
-					// 	Text: "Spanish",
-					// 		lang:"es"
-					// }, {
-					// 	Key: "sv_SE",
-					// 	Text: "Swedish",
-					// 		lang:"sv"
-					// }, {
-					// 	Key: "th_TH",
-					// 	Text: "Thai",
-					// 		lang:"th"
-					// }, {
-					// 	Key: "tr_TR",
-					// 	Text: "Turkish",
-					// 		lang:"tr"
-					// }
+					{
+						Key: "it_IT",
+						Text: "Italian",
+							lang:"it"
+					}, {
+						Key: "pl_PL",
+						Text: "Polish",
+							lang:"pl"
+					}, {
+						Key: "pt_PT",
+						Text: "Portugese",
+							lang:"pt"
+					}, {
+						Key: "ru_RU",
+						Text: "Russian",
+							lang:"ru"
+					}, {
+						Key: "dataEn",
+						Text: "Spanish",
+							lang:"es"
+					}, {
+						Key: "sv_SE",
+						Text: "Swedish",
+							lang:"sv"
+					}, {
+						Key: "th_TH",
+						Text: "Thai",
+							lang:"th"
+					}, {
+						Key: "tr_TR",
+						Text: "Turkish",
+							lang:"tr"
+					}
 				],
-					Toolbar: {
+				Toolbar: {
 					NarrativeReviewed: false,
 					NarrativeUnreview: false,
-					LineItemReviewed:false,
-					LineItemUnreview:false,
+					LineItemReviewed: false,
+					LineItemUnreview: false,
 					NarrativeSave: false,
-					LineItemEditSave:false,
-					LineItemTransferSave:false,
+					LineItemEditSave: false,
+					LineItemTransferSave: false,
 					Save_Layout: true,
 					Modify_Reverse: false,
 					Consolidate: false,
 					LineItemUpdatecodes: false,
-					LineItemTransferUpdatecodes:false,
+					LineItemTransferUpdatecodes: false,
 					Updatecodestransfers: false,
 					GlobalSpellCheck: false,
 					Mass_Transfer: false,
@@ -595,19 +625,19 @@ sap.ui.define([
 				ToolbarEnable: {
 					NarrativeReviewed: false,
 					NarrativeUnreview: false,
-					LineItemReviewed:false,
-					LineItemUnreview:false,
+					LineItemReviewed: false,
+					LineItemUnreview: false,
 					Replace_Words: false,
 					Modify_Reverse: false,
 					LineItemUpdatecodes: false,
-					LineItemTransferUpdatecodes:false,
+					LineItemTransferUpdatecodes: false,
 					Updatecodestransfers: false,
 					Consolidate: false,
 					Mass_Transfer: false,
 					Split_Transfer: false,
-						NarrativeSave: false,
-					LineItemEditSave:false,
-					LineItemTransferSave:false,
+					NarrativeSave: false,
+					LineItemEditSave: false,
+					LineItemTransferSave: false,
 				},
 				services: {
 					"InitialuserDataset": "/UserDataSet(Uname='')",
@@ -681,7 +711,1141 @@ sap.ui.define([
 					"WipAmountsSet": "/WipAmountsSet",
 					"billdataset": "/BillSummarySet('"
 
-				}
+				},
+				homeExportCols: [],
+				lineItemEditsExportCols: [],
+				lineItemTransfersExportCols: [],
+			
+			standardSettingColumns:["Belnr","Sname","Matnr","LstarText","Budat","Pernr","Megbtr","Zzblvl","ZzblvlDesc","Zzbgrp","ZzbgrpDesc","Zzteam","ZzteamDesc","Zzfepgrp","ZzfepgrpDesc","Zzphase","Zztskcd","Zzactcd","Zzfftskcd","Zzffactcd"],
+
+				visible0: {
+					Belnr: true,
+					Sname: true,
+					Matnr: true,
+					LstarText: true,
+					Budat: true,
+					Pernr: true,
+					Megbtr: true,
+
+					Zzblvl: true,
+					ZzblvlDesc: true,
+					Zzbgrp: true,
+
+					ZzbgrpDesc: true,
+					Zzteam: true,
+					ZzteamDesc: true,
+
+					Zzfepgrp: true,
+					ZzfepgrpDesc: true,
+					Zzphase: true,
+					Zztskcd: true,
+					Zzactcd: true,
+
+					Zzfftskcd: true,
+					Zzffactcd: true,
+					Pspid: false,
+					Buzei: false,
+
+					Bldat: false,
+
+					Cpudt: false,
+					Meinh: false,
+					Title: false,
+
+					Zzwerks: true,
+					Bukrs: false,
+					Werks: false,
+
+					PsPosid: false,
+					Lstar: false,
+
+					RateLocl: false,
+					AmountMatter: false,
+					WaersMatter: false,
+					AmountLocl: false,
+					WaersLocl: false,
+					AmountGlb: false,
+					WaersGlb: false
+
+				
+				},
+				ColumnsItems0: [{
+					columnKey: "Pspid",
+					text: "Matter Number",
+					visible: false
+				}, {
+					columnKey: "Zzphase",
+					text: "Phase Code",
+					visible: true
+				}, {
+					columnKey: "Zzblvl",
+					text: "Band Level",
+					visible: true
+				}, {
+					columnKey: "ZzblvlDesc",
+					text: "Band Level Description",
+					visible: true
+				}, {
+					columnKey: "Zzbgrp",
+					text: "Band Group",
+					visible: true
+				}, {
+					columnKey: "Pernr",
+					text: "Timekeeper No",
+					visible: true
+				}, {
+					columnKey: "ZzbgrpDesc",
+					text: "Band Group Description",
+					visible: true
+				}, {
+					columnKey: "Zzteam",
+					text: "Fee Earner Team",
+					visible: true
+				}, {
+					columnKey: "ZzteamDesc",
+					text: "Fee Earner Team Description",
+					visible: true
+				}, {
+					columnKey: "Belnr",
+					text: "Document No",
+					visible: true
+				}, {
+					columnKey: "Zzfepgrp",
+					text: "Practice Group ",
+					visible: true
+				}, {
+					columnKey: "Buzei",
+					text: "Line item",
+					visible: false
+				}, {
+					columnKey: "ZzfepgrpDesc",
+					text: "Practice Group Description",
+					visible: true
+				}, {
+					columnKey: "Bldat",
+					text: "Document Date",
+					visible: false
+				}, {
+					columnKey: "Budat",
+					text: "Work Date",
+					visible: true
+				}, {
+					columnKey: "Cpudt",
+					text: "Entered on",
+					visible: false
+				}, {
+					columnKey: "Meinh",
+					text: "UOM",
+					visible: false
+				}, {
+					columnKey: "Title",
+					text: "TimeKeeper Title",
+					visible: false
+				}, {
+					columnKey: "Sname",
+					text: "Timekeeper",
+					visible: true
+				}, {
+					columnKey: "Zzwerks",
+					text: "Working Office",
+					visible: true
+				}, {
+					columnKey: "Bukrs",
+					text: "Company Code",
+					visible: false
+				}, {
+					columnKey: "Werks",
+					text: "Billing Office",
+					visible: false
+				}, {
+					columnKey: "Megbtr",
+					text: "Hours/Quantity",
+					visible: true
+				}, {
+					columnKey: "PsPosid",
+					text: "Matter Working Office",
+					visible: false
+				}, {
+					columnKey: "Lstar",
+					text: "Activity Type",
+					visible: false
+				}, {
+					columnKey: "LstarText",
+					text: "Activity  Description",
+					visible: true
+				}, {
+					columnKey: "Matnr",
+					text: "Trans Type",
+					visible: true
+				}, {
+					columnKey: "RateLocl",
+					text: "Rate",
+					visible: false
+				}, {
+					columnKey: "AmountMatter",
+					text: "Matter Amount",
+					visible: false
+				}, {
+					columnKey: "WaersMatter",
+					text: "Matter Currency",
+					visible: false
+				}, {
+					columnKey: "AmountLocl",
+					text: "Local Amount",
+					visible: false
+				}, {
+					columnKey: "WaersLocl",
+					text: "Local Currency",
+					visible: false
+				}, {
+					columnKey: "AmountGlb",
+					text: "Global Amount",
+					visible: false
+				}, {
+					columnKey: "WaersGlb",
+					text: "Global Currency",
+					visible: false
+				}, {
+					columnKey: "Zztskcd",
+					text: "Task Code",
+					visible: true
+				}, {
+					columnKey: "Zzactcd",
+					text: "Activity Code",
+					visible: true
+				}, {
+					columnKey: "Zzffactcd",
+					text: "Flat Fee Activity Code",
+					visible: true
+				}, {
+					columnKey: "Zzfftskcd",
+					text: "Flat Fee Task Code",
+					visible: true
+				}],
+				
+				standardSettingColumnsLineitem:["Belnr","Sname","Matnr","LstarText","Budat","Pernr","Megbtr","Zzblvl","ZzblvlDesc","Zzbgrp","ZzbgrpDesc","Zzteam","ZzteamDesc","Zzfepgrp","ZzfepgrpDesc"],
+				visible1: {
+
+					Belnr: true,
+					Sname: true,
+					Matnr: true,
+					LstarText: true,
+					Budat: true,
+					Pernr: true,
+					Megbtr: true,
+				
+
+					Zzblvl: true,
+					ZzblvlDesc: true,
+					Zzbgrp: true,
+
+					ZzbgrpDesc: true,
+					Zzteam: true,
+					ZzteamDesc: true,
+
+					Zzfepgrp: true,
+					ZzfepgrpDesc: true,
+	Pspid: false,
+					Buzei: false,
+
+					Bldat: false,
+
+					Cpudt: false,
+					Meinh: false,
+					Title: false,
+
+					Zzwerks: true,
+					Bukrs: false,
+					Werks: false,
+
+					PsPosid: false,
+					Lstar: false,
+
+					RateLocl: false,
+					AmountMatter: false,
+					WaersMatter: false,
+					AmountLocl: false,
+					WaersLocl: false,
+					AmountGlb: false,
+					WaersGlb: false
+				},
+				ColumnsItems1: [{
+					columnKey: "Pspid",
+					text: "Matter Number",
+					visible: false
+				}, {
+					columnKey: "Zzblvl",
+					text: "Band Level",
+					visible: true
+				}, {
+					columnKey: "ZzblvlDesc",
+					text: "Band Level Description",
+					visible: true
+				}, {
+					columnKey: "Zzbgrp",
+					text: "Band Group",
+					visible: true
+				}, {
+					columnKey: "Pernr",
+					text: "Timekeeper No",
+					visible: true
+				}, {
+					columnKey: "ZzbgrpDesc",
+					text: "Band Group Description",
+					visible: true
+				}, {
+					columnKey: "Zzteam",
+					text: "Fee Earner Team",
+					visible: true
+				}, {
+					columnKey: "ZzteamDesc",
+					text: "Fee Earner Team Description",
+					visible: true
+				}, {
+					columnKey: "Belnr",
+					text: "Document No",
+					visible: true
+				}, {
+					columnKey: "Zzfepgrp",
+					text: "Practice Group ",
+					visible: true
+				}, {
+					columnKey: "Buzei",
+					text: "Line item",
+					visible: false
+				}, {
+					columnKey: "ZzfepgrpDesc",
+					text: "Practice Group Description",
+					visible: true
+				}, {
+					columnKey: "Bldat",
+					text: "Document Date",
+					visible: false
+				}, {
+					columnKey: "Budat",
+					text: "Work Date",
+					visible: true
+				}, {
+					columnKey: "Cpudt",
+					text: "Entered on",
+					visible: false
+				}, {
+					columnKey: "Meinh",
+					text: "UOM",
+					visible: false
+				}, {
+					columnKey: "Title",
+					text: "TimeKeeper Title",
+					visible: false
+				}, {
+					columnKey: "Sname",
+					text: "Timekeeper",
+					visible: true
+				}, {
+					columnKey: "Zzwerks",
+					text: "Working Office",
+					visible: true
+				}, {
+					columnKey: "Bukrs",
+					text: "Company Code",
+					visible: false
+				}, {
+					columnKey: "Werks",
+					text: "Billing Office",
+					visible: false
+				}, {
+					columnKey: "Megbtr",
+					text: "Hours/Quantity",
+					visible: true
+				}, {
+					columnKey: "PsPosid",
+					text: "Matter Working Office",
+					visible: false
+				}, {
+					columnKey: "Lstar",
+					text: "Activity Type",
+					visible: false
+				}, {
+					columnKey: "LstarText",
+					text: "Activity  Description",
+					visible: true
+				}, {
+					columnKey: "Matnr",
+					text: "Trans Type",
+					visible: true
+				}, {
+					columnKey: "RateLocl",
+					text: "Rate",
+					visible: false
+				}, {
+					columnKey: "AmountMatter",
+					text: "Matter Amount",
+					visible: false
+				}, {
+					columnKey: "WaersMatter",
+					text: "Matter Currency",
+					visible: false
+				}, {
+					columnKey: "AmountLocl",
+					text: "Local Amount",
+					visible: false
+				}, {
+					columnKey: "WaersLocl",
+					text: "Local Currency",
+					visible: false
+				}, {
+					columnKey: "AmountGlb",
+					text: "Global Amount",
+					visible: false
+				}, {
+					columnKey: "WaersGlb",
+					text: "Global Currency",
+					visible: false
+				}, {
+					columnKey: "ToZzfftskcd",
+					text: "Flat Fee Task Code",
+					visible: false
+				}],
+				
+				standardSettingColumnsTransfres:["Belnr","Sname","Matnr","LstarText","Budat","Pernr","Megbtr","Zzblvl","ZzblvlDesc","Zzbgrp","ZzbgrpDesc","Zzteam","ZzteamDesc","ZzteamDesc","Zzfepgrp","ZzfepgrpDesc"],
+				visible2: {
+
+					Belnr: true,
+					Sname: true,
+					Matnr: true,
+					LstarText: true,
+					Budat: true,
+					Pernr: true,
+					Megbtr: true,
+					
+
+					Zzblvl: true,
+					ZzblvlDesc: true,
+					Zzbgrp: true,
+
+					ZzbgrpDesc: true,
+					Zzteam: true,
+					ZzteamDesc: true,
+
+					Zzfepgrp: true,
+					ZzfepgrpDesc: true,
+					Zzphase: true,
+					Zztskcd: true,
+					Zzactcd: true,
+					Zzffactcd: true,
+					Zzfftskcd: true,
+						Pspid: false,
+					Buzei: false,
+
+					Bldat: false,
+
+					Cpudt: false,
+					Meinh: false,
+					Title: false,
+
+					Zzwerks: true,
+					Bukrs: false,
+					Werks: false,
+
+					PsPosid: false,
+					Lstar: false,
+
+					RateLocl: false,
+					AmountMatter: false,
+					WaersMatter: false,
+					AmountLocl: false,
+					WaersLocl: false,
+					AmountGlb: false,
+					WaersGlb: false,
+
+
+				},
+				ColumnsItems2: [{
+					columnKey: "Pspid",
+					text: "Matter Number",
+					visible: false
+				}, {
+					columnKey: "Zzblvl",
+					text: "Band Level",
+					visible: true
+				}, {
+					columnKey: "ZzblvlDesc",
+					text: "Band Level Description",
+					visible: true
+				}, {
+					columnKey: "Zzbgrp",
+					text: "Band Group",
+					visible: true
+				}, {
+					columnKey: "Pernr",
+					text: "Timekeeper No",
+					visible: true
+				}, {
+					columnKey: "ZzbgrpDesc",
+					text: "Band Group Description",
+					visible: true
+				}, {
+					columnKey: "Zzteam",
+					text: "Fee Earner Team",
+					visible: true
+				}, {
+					columnKey: "ZzteamDesc",
+					text: "Fee Earner Team Description",
+					visible: true
+				}, {
+					columnKey: "Belnr",
+					text: "Document No",
+					visible: true
+				}, {
+					columnKey: "Zzfepgrp",
+					text: "Practice Group ",
+					visible: true
+				}, {
+					columnKey: "Buzei",
+					text: "Line item",
+					visible: false
+				}, {
+					columnKey: "ZzfepgrpDesc",
+					text: "Practice Group Description",
+					visible: true
+				}, {
+					columnKey: "Bldat",
+					text: "Document Date",
+					visible: false
+				}, {
+					columnKey: "Budat",
+					text: "Work Date",
+					visible: true
+				}, {
+					columnKey: "Cpudt",
+					text: "Entered on",
+					visible: false
+				}, {
+					columnKey: "Meinh",
+					text: "UOM",
+					visible: false
+				}, {
+					columnKey: "Title",
+					text: "TimeKeeper Title",
+					visible: false
+				}, {
+					columnKey: "Sname",
+					text: "Timekeeper",
+					visible: true
+				}, {
+					columnKey: "Zzwerks",
+					text: "Working Office",
+					visible: true
+				}, {
+					columnKey: "Bukrs",
+					text: "Company Code",
+					visible: false
+				}, {
+					columnKey: "Werks",
+					text: "Billing Office",
+					visible: false
+				}, {
+					columnKey: "Megbtr",
+					text: "Hours/Quantity",
+					visible: true
+				}, {
+					columnKey: "PsPosid",
+					text: "Matter Working Office",
+					visible: false
+				}, {
+					columnKey: "Lstar",
+					text: "Activity Type",
+					visible: false
+				}, {
+					columnKey: "LstarText",
+					text: "Activity  Description",
+					visible: true
+				}, {
+					columnKey: "Matnr",
+					text: "Trans Type",
+					visible: true
+				}, {
+					columnKey: "RateLocl",
+					text: "Rate",
+					visible: false
+				}, {
+					columnKey: "AmountMatter",
+					text: "Matter Amount",
+					visible: false
+				}, {
+					columnKey: "WaersMatter",
+					text: "Matter Currency",
+					visible: false
+				}, {
+					columnKey: "AmountLocl",
+					text: "Local Amount",
+					visible: false
+				}, {
+					columnKey: "WaersLocl",
+					text: "Local Currency",
+					visible: false
+				}, {
+					columnKey: "AmountGlb",
+					text: "Global Amount",
+					visible: false
+				}, {
+					columnKey: "WaersGlb",
+					text: "Global Currency",
+					visible: false
+				}, {
+					columnKey: "ToZzfftskcd",
+					text: "Flat Fee Task Code",
+					visible: false
+				}],
+				DefaultVisible0: {
+
+					Pspid: false,
+					Zzphase: true,
+					Zzblvl: true,
+					ZzblvlDesc: true,
+					Zzbgrp: true,
+					Pernr: true,
+					ZzbgrpDesc: true,
+					Zzteam: true,
+					ZzteamDesc: true,
+					Belnr: true,
+					Zzfepgrp: true,
+					Buzei: false,
+					ZzfepgrpDesc: true,
+					Bldat: false,
+					Budat: true,
+					Cpudt: false,
+					Meinh: false,
+					Title: false,
+					Sname: true,
+					Zzwerks: true,
+					Bukrs: false,
+					Werks: false,
+					Megbtr: true,
+					PsPosid: false,
+					Lstar: false,
+					LstarText: true,
+					Matnr: true,
+					RateLocl: false,
+					AmountMatter: false,
+					WaersMatter: false,
+					AmountLocl: false,
+					WaersLocl: false,
+					AmountGlb: false,
+					WaersGlb: false,
+					Zztskcd: true,
+					Zzactcd: true,
+					Zzffactcd: true,
+					Zzfftskcd: true,
+
+					
+
+				},
+				DefaultColumns0: [{
+					columnKey: "Pspid",
+					text: "Matter Number",
+					visible: false
+				}, {
+					columnKey: "Zzphase",
+					text: "Phase Code",
+					visible: true
+				}, {
+					columnKey: "Zzblvl",
+					text: "Band Level",
+					visible: true
+				}, {
+					columnKey: "ZzblvlDesc",
+					text: "Band Level Description",
+					visible: true
+				}, {
+					columnKey: "Zzbgrp",
+					text: "Band Group",
+					visible: true
+				}, {
+					columnKey: "Pernr",
+					text: "Timekeeper No",
+					visible: true
+				}, {
+					columnKey: "ZzbgrpDesc",
+					text: "Band Group Description",
+					visible: true
+				}, {
+					columnKey: "Zzteam",
+					text: "Fee Earner Team",
+					visible: true
+				}, {
+					columnKey: "ZzteamDesc",
+					text: "Fee Earner Team Description",
+					visible: true
+				}, {
+					columnKey: "Belnr",
+					text: "Document No",
+					visible: true
+				}, {
+					columnKey: "Zzfepgrp",
+					text: "Practice Group ",
+					visible: true
+				}, {
+					columnKey: "Buzei",
+					text: "Line item",
+					visible: false
+				}, {
+					columnKey: "ZzfepgrpDesc",
+					text: "Practice Group Description",
+					visible: true
+				}, {
+					columnKey: "Bldat",
+					text: "Document Date",
+					visible: false
+				}, {
+					columnKey: "Budat",
+					text: "Work Date",
+					visible: true
+				}, {
+					columnKey: "Cpudt",
+					text: "Entered on",
+					visible: false
+				}, {
+					columnKey: "Meinh",
+					text: "UOM",
+					visible: false
+				}, {
+					columnKey: "Title",
+					text: "TimeKeeper Title",
+					visible: false
+				}, {
+					columnKey: "Sname",
+					text: "Timekeeper",
+					visible: true
+				}, {
+					columnKey: "Zzwerks",
+					text: "Working Office",
+					visible: true
+				}, {
+					columnKey: "Bukrs",
+					text: "Company Code",
+					visible: false
+				}, {
+					columnKey: "Werks",
+					text: "Billing Office",
+					visible: false
+				}, {
+					columnKey: "Megbtr",
+					text: "Hours/Quantity",
+					visible: true
+				}, {
+					columnKey: "PsPosid",
+					text: "Matter Working Office",
+					visible: false
+				}, {
+					columnKey: "Lstar",
+					text: "Activity Type",
+					visible: false
+				}, {
+					columnKey: "LstarText",
+					text: "Activity  Description",
+					visible: true
+				}, {
+					columnKey: "Matnr",
+					text: "Trans Type",
+					visible: true
+				}, {
+					columnKey: "RateLocl",
+					text: "Rate",
+					visible: false
+				}, {
+					columnKey: "AmountMatter",
+					text: "Matter Amount",
+					visible: false
+				}, {
+					columnKey: "WaersMatter",
+					text: "Matter Currency",
+					visible: false
+				}, {
+					columnKey: "AmountLocl",
+					text: "Local Amount",
+					visible: false
+				}, {
+					columnKey: "WaersLocl",
+					text: "Local Currency",
+					visible: false
+				}, {
+					columnKey: "AmountGlb",
+					text: "Global Amount",
+					visible: false
+				}, {
+					columnKey: "WaersGlb",
+					text: "Global Currency",
+					visible: false
+				}, {
+					columnKey: "Zztskcd",
+					text: "Task Code",
+					visible: true
+				}, {
+					columnKey: "Zzactcd",
+					text: "Activity Code",
+					visible: true
+				}, {
+					columnKey: "Zzffactcd",
+					text: "Flat Fee Activity Code",
+					visible: true
+				}, {
+					columnKey: "Zzfftskcd",
+					text: "Flat Fee Task Code",
+					visible: true
+				}],
+				DefaultVisible1: {
+
+					Pspid: false,
+
+					Zzblvl: true,
+					ZzblvlDesc: true,
+					Zzbgrp: true,
+					Pernr: true,
+					ZzbgrpDesc: true,
+					Zzteam: true,
+					ZzteamDesc: true,
+					Belnr: true,
+					Zzfepgrp: true,
+					Buzei: false,
+					ZzfepgrpDesc: true,
+					Bldat: false,
+					Budat: true,
+					Cpudt: false,
+					Meinh: false,
+					Title: false,
+					Sname: true,
+					Zzwerks: true,
+					Bukrs: false,
+					Werks: false,
+					Megbtr: true,
+					PsPosid: false,
+					Lstar: false,
+					LstarText: true,
+					Matnr: true,
+					RateLocl: false,
+					AmountMatter: false,
+					WaersMatter: false,
+					AmountLocl: false,
+					WaersLocl: false,
+					AmountGlb: false,
+					WaersGlb: false,
+					ToZzfftskcd: false
+
+				},
+				DefaultColumns1: [{
+					columnKey: "Pspid",
+					text: "Matter Number",
+					visible: false
+				}, {
+					columnKey: "Zzblvl",
+					text: "Band Level",
+					visible: true
+				}, {
+					columnKey: "ZzblvlDesc",
+					text: "Band Level Description",
+					visible: true
+				}, {
+					columnKey: "Zzbgrp",
+					text: "Band Group",
+					visible: true
+				}, {
+					columnKey: "Pernr",
+					text: "Timekeeper No",
+					visible: true
+				}, {
+					columnKey: "ZzbgrpDesc",
+					text: "Band Group Description",
+					visible: true
+				}, {
+					columnKey: "Zzteam",
+					text: "Fee Earner Team",
+					visible: true
+				}, {
+					columnKey: "ZzteamDesc",
+					text: "Fee Earner Team Description",
+					visible: true
+				}, {
+					columnKey: "Belnr",
+					text: "Document No",
+					visible: true
+				}, {
+					columnKey: "Zzfepgrp",
+					text: "Practice Group ",
+					visible: true
+				}, {
+					columnKey: "Buzei",
+					text: "Line item",
+					visible: false
+				}, {
+					columnKey: "ZzfepgrpDesc",
+					text: "Practice Group Description",
+					visible: true
+				}, {
+					columnKey: "Bldat",
+					text: "Document Date",
+					visible: false
+				}, {
+					columnKey: "Budat",
+					text: "Work Date",
+					visible: true
+				}, {
+					columnKey: "Cpudt",
+					text: "Entered on",
+					visible: false
+				}, {
+					columnKey: "Meinh",
+					text: "UOM",
+					visible: false
+				}, {
+					columnKey: "Title",
+					text: "TimeKeeper Title",
+					visible: false
+				}, {
+					columnKey: "Sname",
+					text: "Timekeeper",
+					visible: true
+				}, {
+					columnKey: "Zzwerks",
+					text: "Working Office",
+					visible: true
+				}, {
+					columnKey: "Bukrs",
+					text: "Company Code",
+					visible: false
+				}, {
+					columnKey: "Werks",
+					text: "Billing Office",
+					visible: false
+				}, {
+					columnKey: "Megbtr",
+					text: "Hours/Quantity",
+					visible: true
+				}, {
+					columnKey: "PsPosid",
+					text: "Matter Working Office",
+					visible: false
+				}, {
+					columnKey: "Lstar",
+					text: "Activity Type",
+					visible: false
+				}, {
+					columnKey: "LstarText",
+					text: "Activity  Description",
+					visible: true
+				}, {
+					columnKey: "Matnr",
+					text: "Trans Type",
+					visible: true
+				}, {
+					columnKey: "RateLocl",
+					text: "Rate",
+					visible: false
+				}, {
+					columnKey: "AmountMatter",
+					text: "Matter Amount",
+					visible: false
+				}, {
+					columnKey: "WaersMatter",
+					text: "Matter Currency",
+					visible: false
+				}, {
+					columnKey: "AmountLocl",
+					text: "Local Amount",
+					visible: false
+				}, {
+					columnKey: "WaersLocl",
+					text: "Local Currency",
+					visible: false
+				}, {
+					columnKey: "AmountGlb",
+					text: "Global Amount",
+					visible: false
+				}, {
+					columnKey: "WaersGlb",
+					text: "Global Currency",
+					visible: false
+				}, {
+					columnKey: "ToZzfftskcd",
+					text: "Flat Fee Task Code",
+					visible: false
+				}],
+				DefaultVisible2: {
+
+					Pspid: false,
+
+					Zzblvl: true,
+					ZzblvlDesc: true,
+					Zzbgrp: true,
+					Pernr: true,
+					ZzbgrpDesc: true,
+					Zzteam: true,
+					ZzteamDesc: true,
+					Belnr: true,
+					Zzfepgrp: true,
+					Buzei: false,
+					ZzfepgrpDesc: true,
+					Bldat: false,
+					Budat: true,
+					Cpudt: false,
+					Meinh: false,
+					Title: false,
+					Sname: true,
+					Zzwerks: true,
+					Bukrs: false,
+					Werks: false,
+					Megbtr: true,
+					PsPosid: false,
+					Lstar: false,
+					LstarText: true,
+					Matnr: true,
+					RateLocl: false,
+					AmountMatter: false,
+					WaersMatter: false,
+					AmountLocl: false,
+					WaersLocl: false,
+					AmountGlb: false,
+					WaersGlb: false,
+					ToZzfftskcd: false
+
+				},
+				DefaultColumns2: [{
+					columnKey: "Pspid",
+					text: "Matter Number",
+					visible: false
+				}, {
+					columnKey: "Zzblvl",
+					text: "Band Level",
+					visible: true
+				}, {
+					columnKey: "ZzblvlDesc",
+					text: "Band Level Description",
+					visible: true
+				}, {
+					columnKey: "Zzbgrp",
+					text: "Band Group",
+					visible: true
+				}, {
+					columnKey: "Pernr",
+					text: "Timekeeper No",
+					visible: true
+				}, {
+					columnKey: "ZzbgrpDesc",
+					text: "Band Group Description",
+					visible: true
+				}, {
+					columnKey: "Zzteam",
+					text: "Fee Earner Team",
+					visible: true
+				}, {
+					columnKey: "ZzteamDesc",
+					text: "Fee Earner Team Description",
+					visible: true
+				}, {
+					columnKey: "Belnr",
+					text: "Document No",
+					visible: true
+				}, {
+					columnKey: "Zzfepgrp",
+					text: "Practice Group ",
+					visible: true
+				}, {
+					columnKey: "Buzei",
+					text: "Line item",
+					visible: false
+				}, {
+					columnKey: "ZzfepgrpDesc",
+					text: "Practice Group Description",
+					visible: true
+				}, {
+					columnKey: "Bldat",
+					text: "Document Date",
+					visible: false
+				}, {
+					columnKey: "Budat",
+					text: "Work Date",
+					visible: true
+				}, {
+					columnKey: "Cpudt",
+					text: "Entered on",
+					visible: false
+				}, {
+					columnKey: "Meinh",
+					text: "UOM",
+					visible: false
+				}, {
+					columnKey: "Title",
+					text: "TimeKeeper Title",
+					visible: false
+				}, {
+					columnKey: "Sname",
+					text: "Timekeeper",
+					visible: true
+				}, {
+					columnKey: "Zzwerks",
+					text: "Working Office",
+					visible: true
+				}, {
+					columnKey: "Bukrs",
+					text: "Company Code",
+					visible: false
+				}, {
+					columnKey: "Werks",
+					text: "Billing Office",
+					visible: false
+				}, {
+					columnKey: "Megbtr",
+					text: "Hours/Quantity",
+					visible: true
+				}, {
+					columnKey: "PsPosid",
+					text: "Matter Working Office",
+					visible: false
+				}, {
+					columnKey: "Lstar",
+					text: "Activity Type",
+					visible: false
+				}, {
+					columnKey: "LstarText",
+					text: "Activity  Description",
+					visible: true
+				}, {
+					columnKey: "Matnr",
+					text: "Trans Type",
+					visible: true
+				}, {
+					columnKey: "RateLocl",
+					text: "Rate",
+					visible: false
+				}, {
+					columnKey: "AmountMatter",
+					text: "Matter Amount",
+					visible: false
+				}, {
+					columnKey: "WaersMatter",
+					text: "Matter Currency",
+					visible: false
+				}, {
+					columnKey: "AmountLocl",
+					text: "Local Amount",
+					visible: false
+				}, {
+					columnKey: "WaersLocl",
+					text: "Local Currency",
+					visible: false
+				}, {
+					columnKey: "AmountGlb",
+					text: "Global Amount",
+					visible: false
+				}, {
+					columnKey: "WaersGlb",
+					text: "Global Currency",
+					visible: false
+				}, {
+					columnKey: "ToZzfftskcd",
+					text: "Flat Fee Task Code",
+					visible: false
+				}]
 
 			};
 		}

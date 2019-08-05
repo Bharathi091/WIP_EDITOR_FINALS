@@ -5,19 +5,19 @@
     xmlns:core="sap.ui.core"
      xmlns:m="sap.m">
  
-    <Dialog title = "INFORMATION" afterClose="dialogAfterclose">
+    <Dialog title = "Change Replace Word" afterClose="dialogAfterclose">
     <l:Grid defaultSpan = "L12 M12 S12" width = "auto" id = "idGrid">
     <l:content>
         <m:Table id="bottomTable0" mode="None" noDataText="{i18n>NoDataText}">
 			<m:columns>
 				<m:Column width="10rem">
-					<m:Label text="string to be replaced" design="Bold"/>
+					<m:Label text="Replace" design="Bold"/>
 				</m:Column>
 				<m:Column width="10rem">
-					<m:Label text="with" design="Bold"/>
+					<m:Label text="Replace With" design="Bold"/>
 				</m:Column>
 				<m:Column width="5rem">
-					<m:Label text="default" design="Bold"/>
+					<m:Label text="Default" design="Bold"/>
 				</m:Column>
 				<m:Column width="5rem">
 					<m:Label text="Word" design="Bold"/>
@@ -33,17 +33,48 @@
 						<m:Input id="replace0"/>
 						<m:CheckBox text="" selected="true" id="default"/>
 						<m:CheckBox text="" selected="true" id="word"/>
-						<core:Icon src="sap-icon://add" press="addbuttonToReplace"></core:Icon>
+						<core:Icon src="sap-icon://add" press="addbuttonToReplace" class="sapUiSmallMargin"></core:Icon>
 					</m:cells>
 				</m:ColumnListItem>
 			</m:items>
 		</m:Table>
+		     <m:Table id="bottomTable01" mode="None" noDataText="{i18n>NoDataText}" visible="false">
+			<m:columns>
+				<m:Column width="10rem">
+					<m:Label text="Replace" design="Bold"/>
+				</m:Column>
+				<m:Column width="10rem">
+					<m:Label text="Replace With" design="Bold"/>
+				</m:Column>
+				<m:Column width="5rem">
+					<m:Label text="Default" design="Bold"/>
+				</m:Column>
+				<m:Column width="5rem">
+					<m:Label text="Word" design="Bold"/>
+				</m:Column>
+				<m:Column width="5rem">
+					<m:Label text="Add" design="Bold"/>
+				</m:Column>
+			</m:columns>
+			<!--<m:items>-->
+			<!--	<m:ColumnListItem>-->
+					<!--<m:cells>-->
+					<!--	<m:Input id="string01"/>
+						<m:Input id="replace01"/>
+						<m:CheckBox text="" selected="true" id="default1"/>
+						<m:CheckBox text="" selected="true" id="word1"/>
+						<core:Icon src="sap-icon://add" press="addbuttonToReplace" class="sapUiSmallMargin"></core:Icon>-->
+					<!--</m:cells>-->
+			<!--	</m:ColumnListItem>-->
+			<!--</m:items>-->
+		</m:Table>
 	</l:content>
     </l:Grid>
     <buttons>
-    <Button text = "CLOSE" press = "closereplaceDialog" type = "Reject"/>
-    <Button text = "REPLACE" press = "onreplace" type = "Accept"/>
-    <Button text = "REPLACE ALL" press = "replaceall" type = "Accept"/>
+    
+    <Button text = "Replace Selected" press = "onreplace" type = "Accept"/>
+    <Button text = "Replace All" press = "replaceall" type = "Accept"/>
+    <Button text = "Cancel" press = "closereplaceDialog" type = "Reject"/>
     </buttons>
     </Dialog>
 </core:FragmentDefinition>

@@ -1,3 +1,4 @@
+/*global history */
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/Filter",
@@ -8,26 +9,37 @@ sap.ui.define([
 	"zprs/wipeditor/services/LineItemsServices",
 	"zprs/wipeditor/services/SplitItemsServices",
 	"sap/m/MessageBox",
-
-	"sap/ui/core/format/DateFormat",
-	"sap/ui/export/Spreadsheet"
-
-
+	'sap/ui/model/Sorter',
+	
+	'sap/m/Dialog'
 ], function(Controller, Filter, JSONModel, ReportModel, FilterOperator, formatter, LineItemsServices, SplitItemsServices, MessageBox,
-	DateFormat,Spreadsheet) {
+	Sorter,
+	 Dialog) {
 	"use strict";
 
 	return Controller.extend("zprs.wipeditor.controller.BaseController", {
-		formatter: formatter,
-		onInit: function(oEvent) {
+		/**
+		 * Convenience method for accessing the router in every controller of the application.
+		 * @public
+		 * @returns {sap.ui.core.routing.Router} the router for this component
+		 */
+
+		onInit: function() {
 
 			this.jsonModel = new sap.ui.model.json.JSONModel();
 			this.getView().setModel(this.jsonModel, "JSONModel");
+
 			this.setModel(new ReportModel().getModel(), "InputsModel");
+
 			this.table = "";
+			this.filterArr = [];
+
+			this.byId("smartTable_ResponsiveTable0").setIgnoreFromPersonalisation(this.getView().getModel("InputsModel").getProperty(
+				"/settings/ignoreColumns"));
 
 			var OtableSmart0 = this.getView().byId("smartTable_ResponsiveTable0");
 			var oPersButton = OtableSmart0._oTablePersonalisationButton;
+
 			oPersButton.attachPress(function() {
 
 				var oPersController = OtableSmart0._oPersController;
@@ -46,60 +58,96 @@ sap.ui.define([
 
 		},
 
+		getRouter: function() {
+			return this.getOwnerComponent().getRouter();
+		},
 
-		gotoPress: function(oEvent) {
+		/**
+		 * Convenience method for getting the view model by name in every controller of the application.
+		 * @public
+		 * @param {string} sName the model name
+		 * @returns {sap.ui.model.Model} the model instance
+		 */
+		getModel: function(sName) {
+			return this.getView().getModel(sName);
+		},
 
-			this.onHide1();
-			sap.ui.core.BusyIndicator.show(0);
-			var value = this.getView().byId("SmartFilterBar").getControlByKey("Pspid").getTokens().length;
-			var aFilter = [];
-			if (value >= 1) {
-				var InputFields = this.getView().getModel("InputsModel");
-				InputFields.setProperty("/Inputs/hideFilterBar", false);
+		/**
+		 * Convenience method for setting the view model in every controller of the application.
+		 * @public
+		 * @param {sap.ui.model.Model} oModel the model instance
+		 * @param {string} sName the model name
+		 * @returns {sap.ui.mvc.View} the view instance
+		 */
+		setModel: function(oModel, sName) {
+			return this.getView().setModel(oModel, sName);
+		},
+
+		/**
+		 * Convenience method for getting the resource bundle.
+		 * @public
+		 * @returns {sap.ui.model.resource.ResourceModel} the resourceModel of the component
+		 */
+		getResourceBundle: function() {
+			return this.getOwnerComponent().getModel("i18n").getResourceBundle();
+		},
+
+		/**
+		 * Event handler for navigating back.
+		 * It there is a history entry or an previous app-to-app navigation we go one step back in the browser history
+		 * If not, it will replace the current entry of the browser history with the master route.
+		 * @public
+		 */
+		onNavBack: function() {
+			var sPreviousHash = History.getInstance().getPreviousHash(),
+				oCrossAppNavigator = sap.ushell.Container.getService("CrossApplicationNavigation");
+
+			if (sPreviousHash !== undefined || !oCrossAppNavigator.isInitialNavigation()) {
+				history.go(-1);
+			} else {
+				this.getRouter().navTo("master", {}, true);
 			}
-			var oModel = this.getOwnerComponent().getModel();
-			oModel.refresh(true);
-			this.values = 0;
-			this.getView().byId("list").removeSelections(true);
-			var object = this.getView().byId("SmartFilterBar").getControlByKey("Pspid").getTokens();
-			var that = this;
-			InputFields.setProperty("/Inputs/masterItems", "");
-			$.each(object, function(j, token) {
-				if (object) {
-					aFilter.push(new Filter("Pspid", "EQ", token.getText()));
+		},
+
+		//go button enable
+		filterChangeData: function(evt) {
+
+			var smartFilterBar = this.getView().byId("SmartFilterBar");
+
+			var filters = smartFilterBar.getFilters();
+			if (filters.length !== 0) {
+
+				if (filters[0].hasOwnProperty("sPath")) {
+
+					smartFilterBar.setSearchEnabled(false);
+					var keyVal = smartFilterBar.getControlByKey("MpatnerParvw").getProperty("selectedKey");
+
+					if (keyVal) {
+						smartFilterBar.setSearchEnabled(true);
+					} else {
+						smartFilterBar.setSearchEnabled(false);
+					}
+
+				} else {
+					smartFilterBar.setSearchEnabled(true);
 				}
-
-			});
-
-			oModel.read("/WipMattersSet", {
-				filters: aFilter,
-				success: function(oData) {
-					sap.ui.core.BusyIndicator.hide(0);
-
-					InputFields.setProperty("/Inputs/masterItems", oData.results);
-InputFields.setProperty("/Inputs/matserSearchItems", oData.results);
-
-
-		that.jsonModel.setProperty("/modelData", "");
-					that.getView().getModel("InputsModel").setProperty("/Inputs/formMatter", "");
-					that.getView().getModel("InputsModel").setProperty("/Inputs/formLeadPartner", "");
-					that.getView().getModel("InputsModel").setProperty("/Inputs/formBillingOffice", "");
-					that.jsonModel.setProperty("/RowCount", "0");
-						that.getView().byId("Home").setVisible(true);
-			that.getView().byId("Narrative").setVisible(false);
-			that.getView().byId("LineItemEdits").setVisible(false);
-			that.getView().byId("LineItemTransfers").setVisible(false);
-			that.getView().byId("NarrativeEditsVBox").setVisible(false);
-			that.getView().byId("LineItemEditsVbox").setVisible(false);
-			that.getView().byId("LineItemTransfersVbox").setVisible(false);
-
-					
-
-				}
-			});
+			}
 
 		},
-		
+		businessPartnerTypeChange: function() {
+
+			var smartFilterBar = this.getView().byId("SmartFilterBar");
+			var keyVal = smartFilterBar.getControlByKey("MpatnerParvw").getProperty("selectedKey");
+
+			if (keyVal) {
+				smartFilterBar.setSearchEnabled(true);
+			} else {
+				smartFilterBar.setSearchEnabled(false);
+			}
+
+		},
+
+		//masterpages list search
 		listSearch: function(oEvent) {
 			debugger;
 			var searchValue = this.byId("listSearch").getValue();
@@ -123,96 +171,92 @@ InputFields.setProperty("/Inputs/matserSearchItems", oData.results);
 
 		},
 
-		onPress: function(oEvent) {
-			
-			var aFilter = [];
-			var that = this;
+		//settings
+		onSettingsopen: function() {
 
-			var InputFields = this.getModel("InputsModel");
+			var odialog = this._getsettingsDialogbox();
 
-			var Pspid = oEvent.getSource().getProperty("title");
-			InputFields.setProperty("/Inputs/rootPspid", Pspid);
+			odialog.open();
 
-			var odatefrom = this.getView().byId("SmartFilterBar").getControlByKey("Budat").getFrom();
-			InputFields.setProperty("/Inputs/odatefrom", odatefrom);
-			var odateto = this.getView().byId("SmartFilterBar").getControlByKey("Budat").getTo();
-			InputFields.setProperty("/Inputs/odateto", odateto);
+			odialog._headerTitle.setText("View Settings");
 
-			aFilter.push(new Filter("Pspid", FilterOperator.EQ, Pspid));
-			aFilter.push(new Filter("Budat", sap.ui.model.FilterOperator.BT, odatefrom, odateto));
-			this.getView().byId("Home");
-			var oModel = this.getOwnerComponent().getModel();
-			sap.ui.core.BusyIndicator.show(0);
-			LineItemsServices.getInstance().selectListItem(oModel, aFilter)
-				.done(function(oData) {
+			var orderedData = this.jsonModel.getProperty("/ColumnsItems");
+			var orderedDataAsc = _.orderBy(orderedData, ['text'], ['asc']);
 
-					sap.ui.core.BusyIndicator.hide(0);
+			this.jsonModel.setProperty("/ColumnsItems", orderedDataAsc);
 
-					that.getModel("InputsModel").setProperty("/Inputs/homeTable", oData.results);
+			odialog.setModel(new JSONModel({
 
-					that.jsonModel.setProperty("/modelData", oData.results);
-					that.jsonModel.setProperty("/RowCount", oData.results.length);
-					that.jsonModel.setProperty("/RowCount1", oData.results.length);
-					that.jsonModel.setProperty("/RowCount2", oData.results.length);
-					that.jsonModel.setProperty("/RowCount3", oData.results.length);
-
-					that.getView().getModel("InputsModel").setProperty("/Inputs/formMatter", oData.results[0].Pspid);
-					that.getView().getModel("InputsModel").setProperty("/Inputs/formLeadPartner", oData.results[0].Sname);
-					that.getView().getModel("InputsModel").setProperty("/Inputs/formBillingOffice", oData.results[0].Werks);
-				
-				
-				
-					var Otable = that.getView().byId("WipDetailsSet");
-					Otable.setModel(that.jsonModel);
-					Otable.bindRows("/modelData");
-					var OtableSmart0 = that.getView().byId("smartTable_ResponsiveTable0");
-
-					var oPersButton = OtableSmart0._oTablePersonalisationButton;
-					oPersButton.attachPress(function() {
-
-						var oPersController = OtableSmart0._oPersController;
-						var oPersDialog = oPersController._oDialog;
-
-						oPersDialog.attachOk(function(oEvent) {
-
-							setTimeout(function() {
-
-								that.jsonModel.setProperty("/modelData", that.getModel("InputsModel").getProperty("/Inputs/homeTable"));
-								var Otablenew = that.getView().byId("WipDetailsSet");
-								Otablenew.bindRows("/modelData");
-							}, 1000);
-
-						});
-
-					});
-
-				})
-				.fail(function() {
-
-				});
-		
-
-			this.getView().byId("Narrative").setVisible(true);
-			this.getView().byId("LineItemEdits").setVisible(true);
-			this.getView().byId("LineItemTransfers").setVisible(true);
-
-			this.getView().byId("comboPosition").setVisible(false);
-			this.getView().byId("Home").setVisible(true);
-			this.getView().byId("NarrativeEditsVBox").setVisible(false);
-			this.getView().byId("LineItemEditsVbox").setVisible(false);
-			this.getView().byId("LineItemTransfersVbox").setVisible(false);
-			var homeScope = this.getView().byId("Home");
-			var narScope = this.getView().byId("NarrativeEditsVBox");
-			var lineItemEditScope = this.getView().byId("LineItemEditsVbox");
-			var lineItemTransferScope = this.getView().byId("LineItemTransfersVbox");
-			InputFields.setProperty("/Inputs/homeScope", homeScope);
-			InputFields.setProperty("/Inputs/narrativeScope", narScope);
-			InputFields.setProperty("/Inputs/lineItemEditsScope", lineItemEditScope);
-			InputFields.setProperty("/Inputs/lineItemTransfersScope", lineItemTransferScope);
-			InputFields.setProperty("/Inputs/isChanged", false);
+				data: _.orderBy(this.jsonModel.getProperty("/ColumnsItems"), ['text'], ['asc']),
+				ColumnsItems: _.orderBy(this.jsonModel.getProperty("/ColumnsItems"), ['text'], ['asc'])
+			}), "settings");
 
 		},
+		_getsettingsDialogbox: function() {
+			if (!this._oSettingsDialog) {
 
+				this._oSettingsDialog = sap.ui.xmlfragment("settings", "zprs.wipeditor.Fragments.settings", this);
+				// this._oSettingsDialog.mProperties.title = "View Settings";
+				this.getView().addDependent(this._oSettingsDialog);
+
+			}
+			return this._oSettingsDialog;
+
+		},
+		onCancel: function() {
+
+			var oPersDialog = this._oSettingsDialog;
+
+			oPersDialog.getPanels()[0]._getSearchField().setProperty("value", "");
+			oPersDialog.getPanels()[0]._getSearchField().fireSearch();
+
+			this._oSettingsDialog.close();
+		},
+		onOK: function() {
+
+			var oPersDialog = this._oSettingsDialog;
+			var oPanel = oPersDialog.getPanels()[0];
+			oPersDialog.getPanels()[0]._getSearchField().setProperty("value", "");
+			oPersDialog.getPanels()[0]._getSearchField().fireSearch();
+
+			var oPanelContent = oPanel.getAggregation("content")[1];
+			var oColumnsTable = oPanelContent.getContent()[0];
+			var oSelectedItems = oColumnsTable.getSelectedItems();
+
+			var selColumnKeys = [];
+
+			var items = this.jsonModel.getProperty("/ColumnsItems");
+			var visible = this.jsonModel.getProperty("/visible");
+
+			//selected col keys
+			for (var i = 0; i < oSelectedItems.length; i++) {
+				var colname = oSelectedItems[i].getCells()[0].getText();;
+				items.forEach(function(obj) {
+					if (obj.text == colname) {
+						selColumnKeys.push(obj.columnKey);
+					}
+				});
+			}
+			this.jsonModel.setProperty("/ColumnsItems",items);
+			var oColumnKeys = [];
+			items.forEach(function(obj) {
+				oColumnKeys.push(obj.columnKey);
+			});
+
+			for (var i = 0; i < oColumnKeys.length; i++) {
+				var item = oColumnKeys[i];
+				if (selColumnKeys.includes(item)) {
+					visible[item] = true;
+				} else {
+					visible[item] = false;
+				}
+			}
+
+			this.jsonModel.setProperty("/visible", visible);
+			this._oSettingsDialog.close();
+		},
+
+		//list sort
 		listSorting: function(oEvent) {
 
 			var InputsModel = this.getView().getModel("InputsModel");
@@ -223,58 +267,268 @@ InputFields.setProperty("/Inputs/matserSearchItems", oData.results);
 				var reversedMasteredItems = masterItems.reverse();
 				InputsModel.setProperty("/Inputs/masterItems", reversedMasteredItems);
 
-			
-
 			}
 		},
 
-		handleDelete: function(oEvent) {
+		//click event for column sorting and filter
+		onClick: function(oID) {
 
-			
-			var oList = oEvent.getSource(),
-				oItem = oEvent.getParameter("listItem");
-			var oTitle = oEvent.getParameter("listItem").getTitle();
+			var that = this;
+			$('#' + oID).click(function(oEvent) {
 
-			var InputFields = this.getView().getModel("InputsModel");
-			var oMatter = InputFields.getProperty("/Inputs/formMatter");
+				var oTarget = oEvent.currentTarget;
 
-			if (oTitle === oMatter) {
-				this.jsonModel.setProperty("/modelData", "");
-				this.jsonModel.setProperty("/RowCount", "0");
+				var oLabelText = oTarget.childNodes[0].textContent;
 
-				this.getView().getModel("InputsModel").setProperty("/Inputs/formMatter", "");
-				this.getView().getModel("InputsModel").setProperty("/Inputs/formLeadPartner", "");
-				this.getView().getModel("InputsModel").setProperty("/Inputs/formBillingOffice", "");
-				this.getView().byId("Home").setVisible(true);
-				this.getView().byId("Narrative").setVisible(false);
-				this.getView().byId("LineItemEdits").setVisible(false);
-				this.getView().byId("LineItemTransfers").setVisible(false);
-				this.getView().byId("NarrativeEditsVBox").setVisible(false);
-				this.getView().byId("LineItemEditsVbox").setVisible(false);
-				this.getView().byId("LineItemTransfersVbox").setVisible(false);
-			}
-			oList.removeItem(oItem);
+				var values = that.getView().getModel("i18n").getResourceBundle().aPropertyFiles[0].mProperties;
+				for (var name in values) {
 
+					var value = values[name];
+					if (value === oLabelText) {
+						var oKey = name;
+					}
+				}
+
+				that.jsonModel.setProperty("/bindingValue", oKey);
+
+				var value = "";
+				that.filterArr.forEach(function(obj) {
+					if (obj.Key === oKey) {
+						value = obj.Value;
+						if (obj.Key === "ReviewComplete") {
+							value = obj.reviewValue;
+						}
+
+					}
+
+				});
+
+				that._oResponsivePopover.openBy(oTarget);
+				if (oKey === "Budat" || oKey === "Cpudt" || oKey === "Bldat") {
+					sap.ui.core.Fragment.byId("personalizationDialog0", "filterBox").setVisible(false);
+				} else {
+					sap.ui.core.Fragment.byId("personalizationDialog0", "filterBox").setVisible(true);
+				}
+				
+			    if (oKey === "Zzphase" || oKey === "Zztskcd" || oKey === "Zzactcd" || oKey === "Zzffactcd" || oKey === "Zzfftskcd"){
+					sap.ui.core.Fragment.byId("personalizationDialog0", "sortAsc").setVisible(false);
+						sap.ui.core.Fragment.byId("personalizationDialog0", "sortDesc").setVisible(false);
+				} else {
+					sap.ui.core.Fragment.byId("personalizationDialog0", "sortAsc").setVisible(true);
+					sap.ui.core.Fragment.byId("personalizationDialog0", "sortDesc").setVisible(true);
+				}
+
+				sap.ui.core.Fragment.byId("personalizationDialog0", "filterValue").setValue(value);
+			});
 		},
 
-	
-		closeDialog: function() {
-		
-			var Otable1 = this.getModel("InputsModel").getProperty("/Inputs/scope");
-			
-			var tableId = 	Otable1.getId().substring(12);
+		//column sorting hometable
+		onAscending: function() {
+
+			var oTable = this.getView().byId("WipDetailsSet");
+			var oItems = oTable.getBinding("items");
+			var oBindingPath = this.jsonModel.getProperty("/bindingValue");
+			var tableItems = this.getModel("InputsModel").getProperty("/Inputs/globalSearchModel");
+
+			var Data = tableItems.sort(function(a, b) {
+
+				if (oBindingPath === "Megbtr" || oBindingPath === "RateLocl" || oBindingPath === "AmountMatter" || oBindingPath === "AmountLocl" ||
+					oBindingPath === "AmountGlb") {
+					var x = a[oBindingPath].toLowerCase();
+					var y = b[oBindingPath].toLowerCase();
+					return x - y;
+				} else if (oBindingPath === "Bldat" || oBindingPath === "Budat" || oBindingPath === "Cpudt") {
+
+					return new Date(a[oBindingPath]) - new Date(b[oBindingPath]);
+
+				} else {
+					var x = a[oBindingPath].toLowerCase();
+					var y = b[oBindingPath].toLowerCase();
+					if (x < y) {
+						return -1;
+					}
+					if (x > y) {
+						return 1;
+					}
+					return 0;
+				}
+
+			});
+
+			this.jsonModel.setProperty("/modelData", Data);
+			oTable.setModel(this.jsonModel);
+
+			this._oResponsivePopover.close();
+
+		},
+		onDescending: function() {
+
+			var oTable = this.getView().byId("WipDetailsSet");
+			var oItems = oTable.getBinding("items");
+			var oBindingPath = this.jsonModel.getProperty("/bindingValue");
+			var tableItems = this.getModel("InputsModel").getProperty("/Inputs/globalSearchModel");
+
+			var Data = tableItems.sort(function(a, b) {
+
+				if (oBindingPath === "Megbtr" || oBindingPath === "RateLocl" || oBindingPath === "AmountMatter" || oBindingPath === "AmountLocl" ||
+					oBindingPath === "AmountGlb") {
+					var x = a[oBindingPath].toLowerCase();
+					var y = b[oBindingPath].toLowerCase();
+					return y - x;
+
+				} else if (oBindingPath === "Bldat" || oBindingPath === "Budat" || oBindingPath === "Cpudt") {
+
+					return new Date(b[oBindingPath]) - new Date(a[oBindingPath]);
+
+				} else {
+					var x = a[oBindingPath].toLowerCase();
+					var y = b[oBindingPath].toLowerCase();
+					if (x < y) {
+						return 1;
+					}
+					if (x > y) {
+						return -1;
+					}
+					return 0;
+				}
+
+			});
+
+			this.jsonModel.setProperty("/modelData", Data);
+			oTable.setModel(this.jsonModel);
+
+			this._oResponsivePopover.close();
+		},
+
+		//column filter hometable
+		onChange: function(oEvent) {
 
 			var InputFields = this.getModel("InputsModel");
-			var homeScope = InputFields.getProperty("/Inputs/homeScope");
-			var narScope = InputFields.getProperty("/Inputs/narrativeScope");
-			var lineItemEditScope = InputFields.getProperty("/Inputs/lineItemEditsScope");
-			var lineItemTransferScope = InputFields.getProperty("/Inputs/lineItemTransfersScope");
-			if (tableId === "WipDetailsSet") {
-				this.getView().byId("comboPosition").setVisible(false);
-				homeScope.setVisible(true);
-				narScope.setVisible(false);
-				lineItemEditScope.setVisible(false);
-				lineItemTransferScope.setVisible(false);
+			var oTable = this.getView().byId("WipDetailsSet");
+			var oValue = oEvent.getParameter("value");
+			var revVal = "";
+			if (oValue === "") {
+				oValue = " ";
+			}
+			var oBindingPath = this.jsonModel.getProperty("/bindingValue");
+
+			if (oBindingPath === "ReviewComplete") {
+
+				revVal = oValue;
+				if ("Reviewed".includes(oValue)) {
+
+					oValue = "X";
+				}
+
+			}
+			var that = this;
+			if (oValue === " ") {
+
+				if (this.filterArr.length > 0) {
+
+					this.filterArr.forEach(function(obj, id) {
+						if (obj.Key === oBindingPath) {
+							that.filterArr.splice(id, 1);
+						}
+					});
+				}
+
+			} else {
+
+				var idxs = 0;
+				var log = false;
+				this.filterArr.forEach(function(obj, id) {
+
+					if (obj.Key === oBindingPath) {
+						log = true;
+						idxs = id;
+					}
+
+				});
+				if (log) {
+
+					if (oBindingPath === "ReviewComplete") {
+
+						this.filterArr[idxs] = {
+							Key: oBindingPath,
+							Value: oValue,
+							reviewValue: revVal
+						};
+					} else {
+						this.filterArr[idxs] = {
+							Key: oBindingPath,
+							Value: oValue
+						};
+					}
+
+				} else {
+
+					if (oBindingPath === "ReviewComplete") {
+
+						this.filterArr.push({
+							Key: oBindingPath,
+							Value: oValue,
+							reviewValue: revVal
+						});
+					} else {
+						this.filterArr.push({
+							Key: oBindingPath,
+							Value: oValue
+						});
+					}
+
+				}
+
+			}
+			if (!this.filterArr.length > 0) {
+				var results = InputFields.getProperty("/Inputs/homeTable");
+				this.jsonModel.setProperty("/modelData", results);
+				oTable.setModel(this.jsonModel);
+
+			} else {
+
+				var aFilters = [];
+
+				this.filterArr.forEach(function(obj) {
+
+					var oFilter = new Filter(obj.Key, "Contains", obj.Value);
+					aFilters.push(oFilter);
+
+				});
+
+			}
+			var resArr = [];
+			var oItems = oTable.getBinding("items");
+			var results = oItems.filter(aFilters, "Application");
+			this.jsonModel.setProperty("/RowCount", results.aIndices.length);
+			for (var l = 0; l < results.aIndices.length; l++) {
+				var modelData = this.jsonModel.getProperty("/modelData");
+				var res = modelData[results.aIndices[l]];
+				resArr.push(res);
+			}
+			this.getModel("InputsModel").setProperty("/Inputs/globalSearchModel", resArr);
+
+			this._oResponsivePopover.close();
+
+		},
+
+		//masterpages list delete
+	
+
+		//refresh dialogbox close
+		closeDialog: function() {
+
+			var Otable1 = this.getModel("InputsModel").getProperty("/Inputs/scope");
+
+			var tableId = Otable1.getId();
+
+			var InputFields = this.getModel("InputsModel");
+			var viewId = InputFields.getProperty("/Inputs/viewId");
+
+			var iconTabId = InputFields.getProperty("/Inputs/icontabbarid");
+			if (tableId === viewId + "--Home--WipDetailsSet") {
+
+				iconTabId.setSelectedKey("Home");
 				InputFields.setProperty("/Inputs/Toolbar/NarrativeReviewed", false);
 				InputFields.setProperty("/Inputs/Toolbar/NarrativeUnreview", false);
 				InputFields.setProperty("/Inputs/Toolbar/LineItemReviewed", false);
@@ -291,12 +545,9 @@ InputFields.setProperty("/Inputs/matserSearchItems", oData.results);
 				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
 				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
 				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
-			} else if (tableId === "WipDetailsSet1") {
-				this.byId("comboPosition").setVisible(true);
-				homeScope.setVisible(false);
-				narScope.setVisible(true);
-				lineItemEditScope.setVisible(false);
-				lineItemTransferScope.setVisible(false);
+
+			} else if (tableId === viewId + "--NarrativeEditsVBox--WipDetailsSet1") {
+				iconTabId.setSelectedKey("NarrativeEdits");
 				InputFields.setProperty("/Inputs/Toolbar/NarrativeReviewed", true);
 				InputFields.setProperty("/Inputs/Toolbar/NarrativeUnreview", true);
 				InputFields.setProperty("/Inputs/Toolbar/LineItemReviewed", false);
@@ -314,19 +565,14 @@ InputFields.setProperty("/Inputs/matserSearchItems", oData.results);
 				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
 				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", true);
 
-				
-
 				InputFields.setProperty("/Inputs/ToolbarEnable/NarrativeReviewed", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/NarrativeUnreview", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/Replace_Words", false);
 				InputFields.setProperty("/Inputs/ToolbarEnable/NarrativeSave", true);
 
-			} else if (tableId === "WipDetailsSet2") {
-				this.getView().byId("comboPosition").setVisible(false);
-				homeScope.setVisible(false);
-				narScope.setVisible(false);
-				lineItemEditScope.setVisible(true);
-				lineItemTransferScope.setVisible(false);
+			} else if (tableId === viewId + "--LineItemEditsVbox--WipDetailsSet2") {
+
+				iconTabId.setSelectedKey("LineItemEdits");
 				InputFields.setProperty("/Inputs/Toolbar/NarrativeReviewed", false);
 				InputFields.setProperty("/Inputs/Toolbar/NarrativeUnreview", false);
 				InputFields.setProperty("/Inputs/Toolbar/LineItemReviewed", true);
@@ -343,20 +589,35 @@ InputFields.setProperty("/Inputs/matserSearchItems", oData.results);
 				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", false);
 				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", false);
 				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
+				var index = this.getModel("InputsModel").getProperty("/Inputs/rowLineCount");
 
-			
+				if (index.length === 1) {
 
-				InputFields.setProperty("/Inputs/ToolbarEnable/LineItemReviewed", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/LineItemUnreview", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/LineItemUpdatecodes", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemReviewed", true);
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemUnreview", true);
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemUpdatecodes", true);
+
+					InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", true);
+
+				} else if (index.length > 1) {
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemReviewed", true);
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemUnreview", true);
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemUpdatecodes", true);
+					InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
+
+				} else {
+
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemReviewed", false);
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemUnreview", false);
+					InputFields.setProperty("/Inputs/ToolbarEnable/LineItemUpdatecodes", false);
+					InputFields.setProperty("/Inputs/ToolbarEnable/Modify_Reverse", false);
+
+				}
 				InputFields.setProperty("/Inputs/ToolbarEnable/LineItemEditSave", true);
+
 			} else {
-				this.getView().byId("comboPosition").setVisible(false);
-				homeScope.setVisible(false);
-				narScope.setVisible(false);
-				lineItemEditScope.setVisible(false);
-				lineItemTransferScope.setVisible(true);
+
+				iconTabId.setSelectedKey("LineItemTransfers");
 				InputFields.setProperty("/Inputs/Toolbar/NarrativeReviewed", false);
 				InputFields.setProperty("/Inputs/Toolbar/NarrativeUnreview", false);
 				InputFields.setProperty("/Inputs/Toolbar/LineItemReviewed", false);
@@ -373,140 +634,45 @@ InputFields.setProperty("/Inputs/matserSearchItems", oData.results);
 				InputFields.setProperty("/Inputs/Toolbar/Mass_Transfer", true);
 				InputFields.setProperty("/Inputs/Toolbar/Split_Transfer", true);
 				InputFields.setProperty("/Inputs/Toolbar/Replace_Words", false);
+				var index = this.getModel("InputsModel").getProperty("/Inputs/rowLineTransfersCount");
 
-				InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/LineItemTransferUpdatecodes", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
-				InputFields.setProperty("/Inputs/ToolbarEnable/LineItemTransferSave", true);
-			}
-			this._Dialog.close();
-		
-		},
-	
-		createColumnConfig: function(tableId) {
+				if (index.length === 1) {
 
-			var i18nLabel = this.getView().getModel("i18n").getResourceBundle();
+					InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
+					InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", true);
 
-			var iTotalCols = tableId.getColumns();
-			var arr = [];
-			var dateFields = ["Bldat", "Budat", "Cpudt"];
-			for (var colE = 0; colE < iTotalCols.length; colE++) {
+					InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", true);
 
-				var obj = {
-					label: i18nLabel.getText(iTotalCols[colE].mProperties.sortProperty),
-					property: iTotalCols[colE].mProperties.sortProperty,
-					width: iTotalCols[colE].mProperties.width
-				};
-				if (dateFields.includes(iTotalCols[colE].mProperties.sortProperty)) {
-					obj.format = "MM/dd/YYY";
-					obj.type = "date";
-					obj.textAlign = 'begin';
-				}
-				arr.push(obj);
-				if (colE === iTotalCols.length - 1) {
-					return arr;
-				}
-			}
+				} else if (index.length > 1) {
 
-		},
+					InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", true);
+					InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", true);
 
-		Export: function(Event) {
-			
+					InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
 
-		
-			var tableId = Event.getSource().getParent().getParent().getTable();
-
-			var aCols, oSettings, oExcelDate, oDateFormat, oExcelFileName, oExportData;
-			aCols = this.createColumnConfig(tableId);
-
-			oExportData = this.getView().getModel("InputsModel").getProperty("/Inputs/homeTable");
-
-			oDateFormat = DateFormat.getDateInstance({
-				pattern: "MM-dd-YYYY"
-			});
-			oExcelDate = oDateFormat.format(new Date());
-			oExcelFileName = "WipEditor" + oExcelDate + ".xlsx";
-			oSettings = {
-				workbook: {
-					columns: aCols
-				},
-				dataSource: oExportData,
-				fileName: oExcelFileName
-			};
-			var oSpreadsheet = new sap.ui.export.Spreadsheet(oSettings);
-			oSpreadsheet.onprogress = function(iValue) {
-				jQuery.sap.log.debug("Export: %" + iValue + " completed");
-			};
-			oSpreadsheet.build()
-				.then(function() {
-					jQuery.sap.log.debug("Export is finished");
-				})
-				.catch(function(sMessage) {
-					jQuery.sap.log.error("Export error: " + sMessage);
-				});
-		},
-
-		onSort: function(oEvent) {
-			
-			oEvent.preventDefault();
-			var InputsModel = this.getView().getModel("InputsModel");
-			var tableItems = this.jsonModel.getProperty("/modelData");
-			var sortProperty = oEvent.getParameter("column").getProperty("sortProperty");
-
-			var sortOrder = oEvent.getParameter("sortOrder");
-
-			var sortedData = tableItems.sort(function(a, b) {
-				if (sortProperty === "Budat") {
-				
-					return new Date(a.Budat) - new Date(b.Budat);
 				} else {
 
-					var x = a[sortProperty].toLowerCase();
-					var y = b[sortProperty].toLowerCase();
-					if (x < y) {
-						return -1;
-					}
-					if (x > y) {
-						return 1;
-					}
-					return 0;
-				}
+					InputFields.setProperty("/Inputs/ToolbarEnable/Consolidate", false);
+					InputFields.setProperty("/Inputs/ToolbarEnable/Mass_Transfer", false);
 
-			});
-			if (sortOrder == "Descending") {
-				sortedData = sortedData.reverse();
+					InputFields.setProperty("/Inputs/ToolbarEnable/Split_Transfer", false);
+
+				}
+				InputFields.setProperty("/Inputs/ToolbarEnable/LineItemTransferSave", true);
+
+			}
+			this._Dialog.close();
+			if (tableId === viewId + "--NarrativeEditsVBox--WipDetailsSet1") {
+				this.bus = sap.ui.getCore().getEventBus();
+				this.bus.publish("homeChannelNarrativespell", "toSummaryEditNarrativespell", {
+					parNarrative: "narrativeEditspell"
+				});
 			}
 
-			this.jsonModel.setProperty("/modelData", sortedData);
-
-			oEvent.getSource().getParent().getTable().setModel(that.jsonModel);
-
-		},
-
-		getModel: function(sName) {
-			return this.getView().getModel(sName);
 		},
 
 	
-		setModel: function(oModel, sName) {
-			return this.getView().setModel(oModel, sName);
-		},
-
 	
-		getResourceBundle: function() {
-			return this.getOwnerComponent().getModel("i18n").getResourceBundle();
-		},
-
-	
-		onShareEmailPress: function() {
-			var oViewModel = (this.getModel("objectView") || this.getModel("worklistView"));
-			sap.m.URLHelper.triggerEmail(
-				null,
-				oViewModel.getProperty("/shareSendEmailSubject"),
-				oViewModel.getProperty("/shareSendEmailMessage")
-			);
-		}
 
 	});
 

@@ -1,6 +1,6 @@
  #### WELCOME ####
 
-This is your copy of the SAPUI5 Worklist Freestyle Application Template.
+This is your copy of the SAPUI5 Master-Detail Freestyle Application Template.
 You can find the template version in the .project.json - file in your workspace
 
 Standalone runnable files (*.html) are located in the test-folder

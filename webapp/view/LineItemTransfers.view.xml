@@ -1,257 +1,427 @@
-<mvc:View  controllerName="zprs.wipeditor.controller.LineItemTransfers"
-xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:sl="sap.ui.comp.navpopover"
-	xmlns:smartChart="sap.ui.comp.smartchart" xmlns:core="sap.ui.core" xmlns:smartTable="sap.ui.comp.smarttable" xmlns:m="sap.m"
-	xmlns:l="sap.ui.layout" xmlns:uitbl="sap.ui.table" xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:tnt="sap.tnt"
-	xmlns:smartField="sap.ui.comp.smartfield" xmlns:smartFilter="sap.ui.core.Control" xmlns:f="sap.ui.layout.form"
+<mvc:View controllerName="zprs.wipeditor.controller.LineItemTransfers" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:sl="sap.ui.comp.navpopover" xmlns:smartChart="sap.ui.comp.smartchart" xmlns:core="sap.ui.core"
+	xmlns:smartTable="sap.ui.comp.smarttable" xmlns:m="sap.m" xmlns:l="sap.ui.layout" xmlns:uitbl="sap.ui.table"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar" xmlns:tnt="sap.tnt" xmlns:smartField="sap.ui.comp.smartfield"
+	xmlns:smartFilter="sap.ui.core.Control" xmlns:f="sap.ui.layout.form"
 	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:semantic="sap.m.semantic"
-	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartList="sap.ui.comp.smartlist" xmlns:a="sap.m.IconTabFilterDesign">
-	<f:SimpleForm id="formData2" maxContainerCols="4" class="form" layout="Layout">
-		<l:HorizontalLayout class="sapUiSmallMargin">
-			<Label text="Matter Number : "/>
-			<Text text="{InputsModel>/Inputs/formMatter}"/>
-		</l:HorizontalLayout>
-		<!--<Input  editable="false" id="Matterform" value=""/>-->
-		<l:HorizontalLayout class="sapUiSmallMargin">
-			<Label text="Lead Partner : "/>
-			<Text text="{InputsModel>/Inputs/formLeadPartner}"/>
-		</l:HorizontalLayout>
-		<!--<Input editable="false" id="BillingDateform" value=""/>-->
-		<l:HorizontalLayout class="sapUiSmallMargin">
-			<Label text="Billing Office : "/>
-			<Text text="{InputsModel>/Inputs/formBillingOffice}"/>
-		</l:HorizontalLayout>
-		<!--<SearchField width="100%" liveChange="onGlobalSearch" class="searchPosition" id="searchText3"/>-->
-	</f:SimpleForm>
-		<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable3" editable="false" entitySet="WipDetailsSet"
-											tableType="AnalyticalTable" showRowCount="false" header="{i18n>Results} ({JSONModel>/RowCount3})" useVariantManagement="true" persistencyKey="SmartTablePKey" useTablePersonalisation="true"
-										useExportToExcel="false" beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false"
-											dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport" class="smartTable">
-											<smartTable:customToolbar>
-												<Toolbar>
-													<m:ToolbarSpacer/>
-														<Select items="{ path: 'InputsModel>/Inputs/Countries_collection'}" class="comboPosition" id="comboPosition" width="20%"
-								change="dictionaryChange" visible="false">
-								<core:Item key="{InputsModel>key}" text="{InputsModel>Text}"/>
-							</Select>
-							<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText"/>
-													<Button icon="sap-icon://synchronize" press="Reload"/>
-														<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Export to spreadsheet"/>
-												</Toolbar>
-											</smartTable:customToolbar>
-											<uitbl:Table id="WipDetailsSet3" filter="filter" sort="onSort" rows="{path:'JSONModel>/modelData'}" rowSelectionChange="LineItemTransferSelection">
-												<uitbl:columns>
-												
-													<uitbl:Column width="8rem" filterProperty="Zzwipcur" sortProperty="Zzwipcur" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Zzwipcur" , "maxLength": "5","columnIndex":"1", "leadingProperty": "Zzwipcur" }'/>
-														</uitbl:customData>
-														<uitbl:label>
-															<Text text="Info"/>
-														</uitbl:label>
-														<uitbl:template>
-															<!--<smartField:SmartField editable="true" id="Zzwiprate" change="ChangeTransfer" value="{Zzwiprate}" />-->
-															<core:Icon src="sap-icon://alert" class="size3" visible="false" id="alert1" color="green"/>
-														</uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="ToMatter" sortProperty="ToMatter" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "ToMatter" , "maxLength": "5","columnIndex":"1", "leadingProperty": "ToMatter" }'/>
-														</uitbl:customData>
-														<uitbl:label>
-															<Text text="ToMatter"/>
-														</uitbl:label>
-														<uitbl:template>
-															<smartField:SmartField editable="true" id="ToMatter" change="changeTransferToMatter" value="{ToMatter}"/>
-														</uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Percent" sortProperty="Percent" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Percent" , "maxLength": "5","columnIndex":"2", "leadingProperty": "Percent" }'/>
-														</uitbl:customData>
-														<uitbl:label>
-															<Text text="%"/>
-														</uitbl:label>
-														<uitbl:template>
-															<smartField:SmartField editable="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" id="Percent" change="changeTransferPercentage"
-																value="{Percent}"/>
-														</uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Belnr" sortProperty="Belnr" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Belnr" , "maxLength": "5","columnIndex":"3", "leadingProperty": "Belnr" }'/>
-														</uitbl:customData>
-														<uitbl:label>
-															<Text text="Document No"/>
-														</uitbl:label>
-														<uitbl:template>
-															<smartField:SmartField editable="false" id="Belnr3" value="{Belnr}"/>
-														</uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Awtyp" sortProperty="Awtyp" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Awtyp" , "maxLength": "5","columnIndex":"4", "leadingProperty": "Awtyp" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="Trans Type"/></uitbl:label>
-														<uitbl:template>
-															<smartField:SmartField editable="false" id="Awtyp3" value="{Awtyp}"/></uitbl:template>
-													</uitbl:Column>
-													<!--<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
-													<!--	<uitbl:customData>-->
-													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"5", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>-->
-													<!--	<uitbl:label>-->
-													<!--		<Text text="Activity Desc"/></uitbl:label>-->
-													<!--	<uitbl:template>-->
-													<!--		<smartField:SmartField editable="false" id="Audat3" value="{ZzbgrpDesc}"/></uitbl:template>-->
-													<!--</uitbl:Column>-->
-													<uitbl:Column width="8rem" filterProperty="Budat" showFilterMenuEntry="false" sortProperty="Budat" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Budat" , "maxLength": "5","columnIndex":"6", "leadingProperty": "Budat" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="Work Date"/></uitbl:label>
-														<uitbl:template>
-															<!--<smartField:SmartField editable="false" id="Blda3t" value="{Bldat}"/>-->
-															<m:Text width="100%" text="{ path: 'Budat', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd.MM.yyyy' } }"/>
-														</uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Tdid" sortProperty="Tdid" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Tdid" , "maxLength": "5","columnIndex":"7", "leadingProperty": "Tdid" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="TimeKeeper no"/></uitbl:label>
-														<uitbl:template>
-															<smartField:SmartField editable="false" id="Tdid3" value="{Tdid}"/></uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Tdname" sortProperty="Tdname" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Tdname" , "maxLength": "5","columnIndex":"8", "leadingProperty": "Tdname" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="TimeKeeper Name"/></uitbl:label>
-														<uitbl:template>
-															<smartField:SmartField editable="false" id="Tdname3" value="{Tdname}"/></uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Quantity" sortProperty="Quantity" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Quantity" , "maxLength": "5","columnIndex":"9", "leadingProperty": "Quantity" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="Quantity"/></uitbl:label>
-														<uitbl:template>
-															<smartField:SmartField editable="false" id="Quantity3" value="{Quantity}"/></uitbl:template>
-													</uitbl:Column>
-													<!--<uitbl:Column width="8rem" filterProperty="Zzblvl" sortProperty="Zzblvl" showSortMenuEntry="true" autoResizable="true">-->
-													<!--	<uitbl:customData>-->
-													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" , "maxLength": "5","columnIndex":"10", "leadingProperty": "Zzblvl" }'/></uitbl:customData>-->
-													<!--	<uitbl:label>-->
-													<!--		<Text text="Band Level"/></uitbl:label>-->
-													<!--	<uitbl:template>-->
-													<!--		<smartField:SmartField editable="false" id="Zzblvl3" value="{Zzblvl}"/></uitbl:template>-->
-													<!--</uitbl:Column>-->
-													<!--<uitbl:Column width="8rem" filterProperty="ZzblvlDesc" sortProperty="ZzblvlDesc" showSortMenuEntry="true" autoResizable="true">-->
-													<!--	<uitbl:customData>-->
-													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzblvlDesc" , "maxLength": "5","columnIndex":"11", "leadingProperty": "ZzblvlDesc" }'/></uitbl:customData>-->
-													<!--	<uitbl:label>-->
-													<!--		<Text text="Band Level Description"/></uitbl:label>-->
-													<!--	<uitbl:template>-->
-													<!--		<smartField:SmartField editable="false" id="ZzblvlDesc3" value="{ZzblvlDesc}"/></uitbl:template>-->
-													<!--</uitbl:Column>-->
-													<!--<uitbl:Column width="8rem" filterProperty="Zzbgrp" sortProperty="Zzbgrp" showSortMenuEntry="true" autoResizable="true">-->
-													<!--	<uitbl:customData>-->
-													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzbgrp" , "maxLength": "5","columnIndex":"12", "leadingProperty": "Zzbgrp" }'/></uitbl:customData>-->
-													<!--	<uitbl:label>-->
-													<!--		<Text text="Bang Group"/></uitbl:label>-->
-													<!--	<uitbl:template>-->
-													<!--		<smartField:SmartField editable="false" id="Zzbgrp3" value="{Zzbgrp}"/></uitbl:template>-->
-													<!--</uitbl:Column>-->
-													<!--<uitbl:Column width="8rem" filterProperty="ZzbgrpDesc" sortProperty="ZzbgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
-													<!--	<uitbl:customData>-->
-													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" , "maxLength": "5","columnIndex":"13", "leadingProperty": "ZzbgrpDesc" }'/></uitbl:customData>-->
-													<!--	<uitbl:label>-->
-													<!--		<Text text="Band Group Description"/></uitbl:label>-->
-													<!--	<uitbl:template>-->
-													<!--		<smartField:SmartField editable="false" id="ZzbgrpDesc3" value="{ZzbgrpDesc}"/></uitbl:template>-->
-													<!--</uitbl:Column>-->
-													<!--<uitbl:Column width="8rem" filterProperty="Zzteam" sortProperty="Zzteam" showSortMenuEntry="true" autoResizable="true">-->
-													<!--	<uitbl:customData>-->
-													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzteam" , "maxLength": "5","columnIndex":"14", "leadingProperty": "Zzteam" }'/></uitbl:customData>-->
-													<!--	<uitbl:label>-->
-													<!--		<Text text="Fee Earner Team"/></uitbl:label>-->
-													<!--	<uitbl:template>-->
-													<!--		<smartField:SmartField editable="false" id="Zzteam3" value="{Zzteam}"/></uitbl:template>-->
-													<!--</uitbl:Column>-->
-													<!--<uitbl:Column width="8rem" filterProperty="Zzfepgrp" sortProperty="Zzfepgrp" showSortMenuEntry="true" autoResizable="true">-->
-													<!--	<uitbl:customData>-->
-													<!--		<core:CustomData key="p13nData" value='\{"columnKey": "Zzfepgrp" , "maxLength": "5","columnIndex":"15", "leadingProperty": "Zzfepgrp" }'/></uitbl:customData>-->
-													<!--	<uitbl:label>-->
-													<!--		<Text text="Practise Group"/></uitbl:label>-->
-													<!--	<uitbl:template>-->
-													<!--		<smartField:SmartField editable="false" id="Zzfepgrp3" value="{Zzfepgrp}"/></uitbl:template>-->
-													<!--</uitbl:Column>-->
-													<!--<uitbl:Column width="8rem" filterProperty="ZzfepgrpDesc" sortProperty="ZzfepgrpDesc" showSortMenuEntry="true" autoResizable="true">-->
-													<!--	<uitbl:customData>-->
-													<!--		<core:CustomData key="p13nData"-->
-													<!--			value='\{"columnKey": "ZzfepgrpDesc" , "maxLength": "5","columnIndex":"16", "leadingProperty": "ZzfepgrpDesc" }'/></uitbl:customData>-->
-													<!--	<uitbl:label>-->
-													<!--		<Text text="Practise Group Description"/></uitbl:label>-->
-													<!--	<uitbl:template>-->
-													<!--		<smartField:SmartField editable="false" id="ZzfepgrpDesc3" value="{ZzfepgrpDesc}"/></uitbl:template>-->
-													<!--</uitbl:Column>-->
-													<uitbl:Column width="8rem" filterProperty="Zztskcd" sortProperty="Zztskcd" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Zztskcd" , "maxLength": "5","columnIndex":"18", "leadingProperty": "Zztskcd" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="Task Code"/></uitbl:label>
-														<uitbl:template>
-															<m:Select width="11rem" forceSelection="false" enabled="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}"
-																selectedKey="{selectedTaskCode}" items="{ path: 'taskCodes', templateShareable:false}">
-																<core:Item key="{TaskCodes}" text="{TaskCodes} {TaskCodeDesc}"/>
-															</m:Select>
-														</uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Zzactcd" sortProperty="Zzactcd" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Zzactcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "Zzactcd" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="Activity Code"/></uitbl:label>
-														<uitbl:template>
-															<m:Select width="11rem" forceSelection="false" enabled="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" change="CodesChange"
-																selectedKey="{selectedActCode}" items="{ path: 'actCodes' , templateShareable:false }">
-																<core:Item key="{ActivityCodes}" text="{ActivityCodes} {ActivityCodeDesc}"/>
-															</m:Select>
-														</uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Zzfftskcd" sortProperty="Zzfftskcd" showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Zzfftskcd" , "maxLength": "5","columnIndex":"19", "leadingProperty": "Zzfftskcd" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="Flat Fee Task Code"/></uitbl:label>
-														<uitbl:template>
-															<m:Select width="11rem" forceSelection="false" enabled="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}" change="fftaskCodeChange"
-																items="{ path: 'ffTskCodes', templateShareable:false }" selectedKey="{selectedFFTaskCode}">
-																<core:Item key="{FfTaskCodes}" text="{FfTaskCodes} {FfTaskCodes}"/>
-															</m:Select>
-														</uitbl:template>
-													</uitbl:Column>
-													<uitbl:Column width="8rem" filterProperty="Zzffactcd " sortProperty="Zzffactcd " showSortMenuEntry="true" autoResizable="true">
-														<uitbl:customData>
-															<core:CustomData key="p13nData" value='\{"columnKey": "Zzffactcd " , "maxLength": "5","columnIndex":"20", "leadingProperty": "Zzffactcd" }'/></uitbl:customData>
-														<uitbl:label>
-															<Text text="Flat Fee Activity Code"/></uitbl:label>
-														<uitbl:template>
-															<m:Select width="11rem" forceSelection="false" enabled="{ path: 'Edit' ,formatter: '.formatter.editablefunction'}"
-																items="{ path: 'ffActCodes', templateShareable:false}" selectedKey="{selectedFFActCode}">
-																<core:Item key="{FfActivityCodes}" text="{FfActivityCodes} {FfActivityCodeDesc}"/>
-															</m:Select>
-														</uitbl:template>
-													</uitbl:Column>
-												</uitbl:columns>
-											</uitbl:Table>
-										</smartTable:SmartTable>
-									<!--<Toolbar class="toolbar">-->
-<!--	<ToolbarSpacer/>-->
-<!--	<Button text="Save" press="onLineItemTransfersSave" id="Save"></Button>-->
-<!--	<Button text="UpdateCodes" press="onUpdateCodes" id="UpdateCodes" visible="false"></Button>-->
-<!--	<Button text="Consolidate" press="onConsolidate" id="Consolidate" visible="false"></Button>-->
-<!--	<Button text="MassTransfer" press="onMassTransfer" id="MassTransfer" visible="false" ></Button>-->
-<!--	<Button text="SplitTransfer" press="onSplitTransfer" id="SplitTransfer" visible="false"></Button>-->
-<!--</Toolbar>-->
-							
+	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartList="sap.ui.comp.smartlist" xmlns:a="sap.m.IconTabFilterDesign"
+	xmlns:v="sap.ui.comp.variants">
+	<Bar>
+		<contentLeft>
+			<l:HorizontalLayout >
+				<Label design="Bold" text="Matter Number"/>
+				<Label design="Bold" text=":"/>
+				<Text text="{InputsModel>/Inputs/formMatter}" class="sapUiTinyMarginBegin"/>
+			</l:HorizontalLayout>
+		</contentLeft>
+		<contentMiddle>
+			<l:HorizontalLayout >
+				<Label design="Bold" text="Lead Partner"/>
+				<Label design="Bold" text=":"/>
+				<Text text="{InputsModel>/Inputs/formLeadPartner}" class="sapUiTinyMarginBegin"/>
+			</l:HorizontalLayout>
+		</contentMiddle>
+		<contentRight>
+			<l:HorizontalLayout >
+				<Label design="Bold" text="Billing Office"/>
+				<Label design="Bold" text=":"/>
+				<Text text="{InputsModel>/Inputs/formBillingOffice}" class="sapUiTinyMarginBegin"/>
+			</l:HorizontalLayout>
+		</contentRight>
+	</Bar>
+	<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable3" editable="false" entitySet="WipDetailsSet"
+		tableType="AnalyticalTable" showRowCount="false" header="{i18n>Results} ({JSONModel>/RowCount3})" useVariantManagement="false"
+		persistencyKey="SmartTablePKey4" useTablePersonalisation="false" useExportToExcel="false" beforeRebindTable="onBeforeRebindTable"
+		afterVariantApply="applyVariant" enableAutoBinding="false" dataReceived="onDataReceived" fitContainer="true" beforeExport="beforeExport"
+		class="smartTable"
+		ignoreFromPersonalisation="IsTskcdValid,Awtyp,ToZzactcd,Tdname,Tdid,IsActcdValid,IsFfactcdValid,IsFftskcdValid,ToZzffactcd,Blart,PhaseStatustext,PhaseStatus,Tdobject,Twaer,Zzwipamt,ReviewComplete,NarrativeString,ToZztskcd">
+		<smartTable:layoutData>
+			<m:FlexItemData growFactor="1" baseSize="0%"/>
+		</smartTable:layoutData>
+		<smartTable:customToolbar>
+			<m:OverflowToolbar id="stickyToolbar" class="stickyToolbar">
+				<v:VariantManagement id="variant" standardItemText="Standard" select="onlayoutitmSelect" save="onlayoutSave" enabled="true"
+					variantItems="{path: 'JSONModel>/VarinatSaveSet'}" manage="onLayoutModify" showExecuteOnSelection="false" showShare="false">
+					<v:variantItems>
+						<v:VariantItem text="{JSONModel>name}" key="{JSONModel>name}"></v:VariantItem>
+					</v:variantItems>
+				</v:VariantManagement>
+				<ToolbarSpacer/>
+				<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText"/>
+				<Button icon="sap-icon://synchronize" tooltip="Refresh" press="Reload"/>
+				<Button icon="sap-icon://expand-group" press="onPressToggle" tooltip="Narrative Toggle"/>
+				<!--<Button icon="sap-icon://action-settings" tooltip="Table Personalisation settings" press="ontablesettings"/>-->
+				<!--<Button icon="sap-icon://download" tooltip="Download" press="downloadfile"/>-->
+				<Button icon="sap-icon://action-settings" press="onSettingsopen"/>
+				<Button icon="sap-icon://excel-attachment" tooltip="Download Excel" press="ExportLineItem"/>
+			</m:OverflowToolbar >
+		</smartTable:customToolbar>
+		<ScrollContainer height="100%" class="scrollId" id="scrollId" horizontal="true" vertical="true" focusable="true">
+			<Table id="WipDetailsSet3" inset="false" class="ful-tbl-class " mode="MultiSelect" items="{path: 'JSONModel>/modelData'}"
+				selectionChange="LineItemTransfersSelection" fixedLayout="false" sticky="ColumnHeaders" growing="true" growingScrollToLoad="true"
+				growingThreshold="50">
+				<columns>
+					<Column demandPopin="false" visible="{JSONModel>/visible/Zzwipcur}" hAlign="Begin">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzwipcur" ,"columnIndex":"1" , "leadingProperty": "Zzwipcur"}'/>
+						</customData>
+						<Label text="{i18n>Zzwipcur}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/ToMatter}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData"
+								value='\{"columnKey": "ToMatter" ,"sortProperty": "ToMatter" ,"filterProperty": "ToMatter" ,"columnIndex":"2" , "leadingProperty": "ToMatter"}'/>
+						</customData>
+						<Label text="{i18n>ToMatter}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Percent}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData"
+								value='\{"columnKey": "Percent" ,"sortProperty": "Percent" ,"filterProperty": "Percent" ,"columnIndex":"2" , "leadingProperty": "Percent"}'/>
+						</customData>
+						<Label text="{i18n>Percent}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Quantity}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData"
+								value='\{"columnKey": "Quantity" ,"sortProperty": "Quantity" ,"filterProperty": "Quantity" ,"columnIndex":"2" , "leadingProperty": "Quantity"}'/>
+						</customData>
+						<Label text="{i18n>Quantity}" design="Bold"/>
+					</Column>
+					<Column demandPopin="false" visible="{JSONModel>/visible/Belnr}" hAlign="Begin">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Belnr" ,"columnIndex":"3" ,"leadingProperty": "Belnr"}'/>
+						</customData>
+						<Label text="{i18n>Belnr}" design="Bold"/>
+					</Column>
+					<Column demandPopin="false" visible="{JSONModel>/visible/Sname}" hAlign="Begin">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Sname","columnIndex":"4" , "leadingProperty": "Sname"}'/>
+						</customData>
+						<Label text="{i18n>Sname}" design="Bold"/>
+					</Column>
+					<Column demandPopin="false" visible="{JSONModel>/visible/Matnr}" hAlign="Begin">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Matnr","columnIndex":"5" , "leadingProperty": "Matnr"}'/>
+						</customData>
+						<Label text="{i18n>Matnr}" design="Bold"/>
+					</Column>
+					<Column demandPopin="false" visible="{JSONModel>/visible/LstarText}" hAlign="Begin" width="8rem">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "LstarText" ,"columnIndex":"6" , "leadingProperty": "LstarText"}'/>
+						</customData>
+						<Label text="{i18n>LstarText}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Budat}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Budat","type":"date" ,"columnIndex":"7" , "leadingProperty": "Budat"}'/>
+						</customData>
+						<Label text="{i18n>Budat}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Zzwerks}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzwerks" ,"columnIndex":"19" , "leadingProperty": "Zzwerks"}'/>
+						</customData>
+						<Label text="{i18n>Zzwerks}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Pernr}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Pernr" ,"columnIndex":"8" , "leadingProperty": "Pernr"}'/>
+						</customData>
+						<Label text="{i18n>Pernr}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Megbtr}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Megbtr" ,"columnIndex":"9" , "leadingProperty": "Megbtr"}'/>
+						</customData>
+						<Label text="{i18n>Megbtr}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Zzblvl}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" ,"columnIndex":"10" , "leadingProperty": "Zzblvl"}'/>
+						</customData>
+						<Label text="{i18n>Zzblvl}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/ZzblvlDesc}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "ZzblvlDesc","columnIndex":"11" , "leadingProperty": "ZzblvlDesc"}'/>
+						</customData>
+						<Label text="{i18n>ZzblvlDesc}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Zzbgrp}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzbgrp" ,"columnIndex":"12" , "leadingProperty": "Zzbgrp"}'/>
+						</customData>
+						<Label text="{i18n>Zzbgrp}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/ZzbgrpDesc}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" ,"columnIndex":"13" , "leadingProperty": "ZzbgrpDesc"}'/>
+						</customData>
+						<Label text="{i18n>ZzbgrpDesc}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Zzteam}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzteam" ,"columnIndex":"14" , "leadingProperty": "Zzteam"}'/>
+						</customData>
+						<Label text="{i18n>Zzteam}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/ZzteamDesc}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "ZzteamDesc" ,"columnIndex":"15" , "leadingProperty": "ZzteamDesc"}'/>
+						</customData>
+						<Label text="{i18n>ZzteamDesc}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Zzfepgrp}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzfepgrp","columnIndex":"16" , "leadingProperty": "Zzfepgrp"}'/>
+						</customData>
+						<Label text="{i18n>Zzfepgrp}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/ZzfepgrpDesc}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "ZzfepgrpDesc","columnIndex":"17" , "leadingProperty": "ZzfepgrpDesc"}'/>
+						</customData>
+						<Label text="{i18n>ZzfepgrpDesc}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzphase","columnIndex":"18" , "leadingProperty": "Zzphase"}'/>
+						</customData>
+						<Label text="{i18n>Zzphase}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zztskcd" ,"columnIndex":"19" , "leadingProperty": "Zztskcd"}'/>
+						</customData>
+						<Label text="{i18n>Zztskcd}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzactcd","columnIndex":"20" , "leadingProperty": "Zzactcd"}'/>
+						</customData>
+						<Label text="{i18n>Zzactcd}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzfftskcd","columnIndex":"21" , "leadingProperty": "Zzfftskcd"}'/>
+						</customData>
+						<Label text="{i18n>Zzfftskcd}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Zzffactcd" ,"columnIndex":"22" , "leadingProperty": "Zzffactcd"}'/>
+						</customData>
+						<Label text="{i18n>Zzffactcd}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Pspid}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Pspid" ,"columnIndex":"19" , "leadingProperty": "Pspid"}'/>
+						</customData>
+						<Label text="{i18n>Pspid}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Buzei}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Buzei" ,"columnIndex":"19" , "leadingProperty": "Buzei"}'/>
+						</customData>
+						<Label text="{i18n>Buzei}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Bldat}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" ,"columnIndex":"19" , "leadingProperty": "Bldat"}'/>
+						</customData>
+						<Label text="{i18n>Bldat}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Cpudt}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Cpudt" ,"columnIndex":"19" , "leadingProperty": "Cpudt"}'/>
+						</customData>
+						<Label text="{i18n>Cpudt}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Meinh}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Meinh" ,"columnIndex":"19" , "leadingProperty": "Meinh"}'/>
+						</customData>
+						<Label text="{i18n>Meinh}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Title}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Title" ,"columnIndex":"19" , "leadingProperty": "Title"}'/>
+						</customData>
+						<Label text="{i18n>Title}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Bukrs}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Bukrs" ,"columnIndex":"19" , "leadingProperty": "Bukrs"}'/>
+						</customData>
+						<Label text="{i18n>Bukrs}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Werks}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Werks" ,"columnIndex":"19" , "leadingProperty": "Werks"}'/>
+						</customData>
+						<Label text="{i18n>Werks}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/PsPosid}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "PsPosid" ,"columnIndex":"19" , "leadingProperty": "PsPosid"}'/>
+						</customData>
+						<Label text="{i18n>PsPosid}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/Lstar}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "Lstar" ,"columnIndex":"19" , "leadingProperty": "Lstar"}'/>
+						</customData>
+						<Label text="{i18n>Lstar}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/RateLocl}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "RateLocl" ,"columnIndex":"19" , "leadingProperty": "RateLocl"}'/>
+						</customData>
+						<Label text="{i18n>RateLocl}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/AmountMatter}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "AmountMatter" ,"columnIndex":"19" , "leadingProperty": "AmountMatter"}'/>
+						</customData>
+						<Label text="{i18n>AmountMatter}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/WaersMatter}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "WaersMatter" ,"columnIndex":"19" , "leadingProperty": "WaersMatter"}'/>
+						</customData>
+						<Label text="{i18n>WaersMatter}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/AmountLocl}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "AmountLocl" ,"columnIndex":"19" , "leadingProperty": "AmountLocl"}'/>
+						</customData>
+						<Label text="{i18n>AmountLocl}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/WaersLocl}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "WaersLocl" ,"columnIndex":"19" , "leadingProperty": "WaersLocl"}'/>
+						</customData>
+						<Label text="{i18n>WaersLocl}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/AmountGlb}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "AmountGlb" ,"columnIndex":"19" , "leadingProperty": "AmountGlb"}'/>
+						</customData>
+						<Label text="{i18n>AmountGlb}" design="Bold"/>
+					</Column>
+					<Column hAlign="Begin" visible="{JSONModel>/visible/WaersGlb}" demandPopin="false">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "WaersGlb" ,"columnIndex":"19" , "leadingProperty": "WaersGlb"}'/>
+						</customData>
+						<Label text="{i18n>WaersGlb}" design="Bold"/>
+					</Column>
+					<Column hAlign="End" demandPopin="true" visible="{generalSetting>/showNarr}" minScreenWidth="200rem">
+						<customData>
+							<core:CustomData key="p13nData" value='\{"columnKey": "NarrativeString" ,"columnIndex":"23" , "leadingProperty": "NarrativeString"}'/>
+						</customData>
+						<Label text="{i18n>NarrativeString}" design="Bold"/>
+					</Column>
+				</columns>
+				<ColumnListItem >
+					<cells>
+						<core:Icon src="sap-icon://alert" class="size3" visible="{JSONModel>iconVisible}" id="alert1" color="{JSONModel>iconColor}"
+							tooltip="{JSONModel>iconTooltip}"/>
+						<MultiInput id="ToMatter" showValueHelp="true" visible="{JSONModel>/visible/ToMatter}"
+							change="changeTransferToMatter" liveChange="suggest" valueHelpRequest="valueHelpRequest" value="{JSONModel>ToMatter}" showSuggestion="false"
+							suggestionRows="{ path :'InputsModel>/Inputs/matters'}">
+							<suggestionColumns width="100%">
+								<Column width="1000px">
+									<Label text="Matter"/>
+								</Column>
+								<Column width="2000px">
+									<Label text="Matter Name"/>
+								</Column>
+							</suggestionColumns>
+							<suggestionRows>
+								<ColumnListItem>
+									<cells>
+										<Label text="{InputsModel>Pspid}"/>
+										<Label text="{InputsModel>Post1}"/>
+									</cells>
+								</ColumnListItem>
+							</suggestionRows>
+						</MultiInput>
+					 <!--<MultiInput id="ToMatter" showValueHelp="true" 	liveChange="enableCodes"  visible="{JSONModel>/visible/ToMatter}" change="changeTransferToMatter" suggest="suggest1" valueHelpRequest="valueHelpRequest" value="{JSONModel>ToMatter}" showSuggestion="true"/>-->
+						<Input editable="{JSONModel>isEditableP}" visible="{JSONModel>/visible/Percent}" id="Percent" liveChange="changeTransferPercentage"
+							value="{ path: 'JSONModel>Percent', formatter: '.formatter.RemoveDecimalZeros' }" class="percent"/>
+						<Input editable="{JSONModel>isEditableH}" visible="{JSONModel>/visible/Quantity}" id="Quantity" liveChange="changeTransferQuantity"
+							value="{ path: 'JSONModel>Quantity', formatter: '.formatter.RemoveDecimalZeros' }" class="quantity"/>
+						<Label visible="{JSONModel>/visible/Belnr}" text="{JSONModel>Belnr}"/>
+						<Label visible="{JSONModel>/visible/Sname}" text="{JSONModel>Sname}"/>
+						<Label visible="{JSONModel>/visible/Matnr}" text="{JSONModel>Matnr}"/>
+						<Label visible="{JSONModel>/visible/LstarText}" text="{JSONModel>LstarText}"/>
+						<Label visible="{JSONModel>/visible/Budat}"
+							text="{path:'JSONModel>Budat', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium' , UTC:true,pattern: 'dd.MM.YYYY' }}"/>
+						<Label visible="{JSONModel>/visible/Zzwerks}" text="{JSONModel>Zzwerks}"/>
+						<Label visible="{JSONModel>/visible/Pernr}" text="{ path: 'JSONModel>Pernr', formatter: '.formatter.removeLeadingZeros' }"/>
+						<Label visible="{JSONModel>/visible/Megbtr}"
+							text="{ parts: [ {path: 'JSONModel>Matnr'}, {path: 'JSONModel>Megbtr'} ] , formatter: '.formatter.fixeddecimal' }"/>
+						<Label visible="{JSONModel>/visible/Zzblvl}" text="{JSONModel>Zzblvl}"/>
+						<Label visible="{JSONModel>/visible/ZzblvlDesc}" text="{JSONModel>ZzblvlDesc}"/>
+						<Label visible="{JSONModel>/visible/Zzbgrp}" text="{JSONModel>Zzbgrp}"/>
+						<Label visible="{JSONModel>/visible/ZzbgrpDesc}" text="{JSONModel>ZzbgrpDesc}"/>
+						<Label visible="{JSONModel>/visible/Zzteam}" text="{JSONModel>Zzteam}"/>
+						<Label visible="{JSONModel>/visible/ZzteamDesc}" text="{JSONModel>ZzteamDesc}"/>
+						<Label visible="{JSONModel>/visible/Zzfepgrp}" text="{JSONModel>Zzfepgrp}"/>
+						<Label visible="{JSONModel>/visible/ZzfepgrpDesc}" text="{JSONModel>ZzfepgrpDesc}"/>
+						<m:Select visible="{JSONModel>/visible/Zzphase}" enabled="{JSONModel>isEditable}" width="11rem" forceSelection="false" id="phaseCodeId"
+							change="phaseCodesChange" selectedKey="{JSONModel>selectedPhaseCode}" items="{ path:'JSONModel>phaseCodes', templateShareable:false}">
+							<core:Item key="{JSONModel>Phasecode}" text="{JSONModel>Phasecode} {JSONModel>PhasecodeDesc}"/>
+						</m:Select>
+						<m:Select visible="{JSONModel>/visible/Zztskcd}" width="11rem" forceSelection="false" enabled="{JSONModel>isEditable}" id="taskCodeId"
+							selectedKey="{JSONModel>selectedTaskCode}" items="{ path: 'JSONModel>taskCodes', templateShareable:false}">
+							<core:Item key="{JSONModel>TaskCodes}" text="{JSONModel>TaskCodes} {TaskCodeDesc}"/>
+						</m:Select>
+						<m:Select visible="{JSONModel>/visible/Zzactcd}" width="11rem" forceSelection="false" enabled="{JSONModel>isEditable}" id="ActCodeId"
+							change="CodesChange" selectedKey="{JSONModel>selectedActCode}" items="{ path: 'JSONModel>actCodes' , templateShareable:false }">
+							<core:Item key="{JSONModel>ActivityCodes}" text="{JSONModel>ActivityCodes} {JSONModel>ActivityCodeDesc}"/>
+						</m:Select>
+						<m:Select visible="{JSONModel>/visible/Zzffactcd}" width="11rem" forceSelection="false" enabled="{JSONModel>isEditable}" id="FfTaskCodes"
+							change="fftaskCodeChange" items="{ path: 'JSONModel>ffTskCodes', templateShareable:false }" selectedKey="{JSONModel>selectedFFTaskCode}">
+							<core:Item key="{JSONModel>FfTaskCodes}" text="{JSONModel>FfTaskCodes} {JSONModel>FfTaskCodes}"/>
+						</m:Select>
+						<m:Select visible="{JSONModel>/visible/Zzfftskcd}" width="11rem" forceSelection="false" enabled="{JSONModel>isEditable}" id="ffActCodeId"
+							items="{ path: 'JSONModel>ffActCodes', templateShareable:false}" selectedKey="{JSONModel>selectedFFActCode}">
+							<core:Item key="{JSONModel>FfActivityCodes}" text="{JSONModel>FfActivityCodes} {JSONModel>FfActivityCodeDesc}"/>
+						</m:Select>
+						<Label visible="{JSONModel>/visible/Pspid}" text="{JSONModel>Pspid}"/>
+						<Label visible="{JSONModel>/visible/Buzei}" text="{JSONModel>Buzei}"/>
+						<Label visible="{JSONModel>/visible/Bldat}"
+							text="{path:'JSONModel>Bldat', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium' , UTC:true }}"/>
+						<Label visible="{JSONModel>/visible/Cpudt}"
+							text="{path:'JSONModel>Cpudt', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium' , UTC:true }}"/>
+						<Label visible="{JSONModel>/visible/Meinh}" text="{JSONModel>Meinh}"/>
+						<Label visible="{JSONModel>/visible/Title}" text="{JSONModel>Title}"/>
+						<Label visible="{JSONModel>/visible/Bukrs}" text="{JSONModel>Bukrs}"/>
+						<Label visible="{JSONModel>/visible/Werks}" text="{JSONModel>Werks}"/>
+						<Label visible="{JSONModel>/visible/PsPosid}" text="{JSONModel>PsPosid}"/>
+						<Label visible="{JSONModel>/visible/Lstar}" text="{JSONModel>Lstar}"/>
+						<Label visible="{JSONModel>/visible/RateLocl}" text="{JSONModel>RateLocl}"/>
+						<Label visible="{JSONModel>/visible/AmountMatter}" text="{JSONModel>AmountMatter}"/>
+						<Label visible="{JSONModel>/visible/WaersMatter}" text="{JSONModel>WaersMatter}"/>
+						<Label visible="{JSONModel>/visible/AmountLocl}" text="{JSONModel>AmountLocl}"/>
+						<Label visible="{JSONModel>/visible/WaersLocl}" text="{JSONModel>WaersLocl}"/>
+						<Label visible="{JSONModel>/visible/AmountGlb}" text="{JSONModel>AmountGlb}"/>
+						<Label visible="{JSONModel>/visible/WaersGlb}" text="{JSONModel>WaersGlb}"/>
+						<TextArea cols="1000" growing="true" growingMaxLines="7" rows="1" value="{JSONModel>NarrativeString}" width="100%" editable="false"
+							liveChange="handelTblFieldChange"></TextArea>
+					</cells>
+				</ColumnListItem>
+			</Table>
+		</ScrollContainer>
+	</smartTable:SmartTable>
+	<!--<Toolbar class="toolbar">-->
+	<!--	<ToolbarSpacer/>-->
+	<!--	<Button text="Save" press="onLineItemTransfersSave" id="Save"></Button>-->
+	<!--	<Button text="UpdateCodes" press="onUpdateCodes" id="UpdateCodes" visible="false"></Button>-->
+	<!--	<Button text="Consolidate" press="onConsolidate" id="Consolidate" visible="false"></Button>-->
+	<!--	<Button text="MassTransfer" press="onMassTransfer" id="MassTransfer" visible="false" ></Button>-->
+	<!--	<Button text="SplitTransfer" press="onSplitTransfer" id="SplitTransfer" visible="false"></Button>-->
+	<!--</Toolbar>-->
 </mvc:View>

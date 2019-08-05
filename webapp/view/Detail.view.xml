@@ -1,0 +1,494 @@
+<mvc:View controllerName="zprs.wipeditor.controller.Detail" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f" xmlns:layout="sap.ui.layout"
+	height="100%" xmlns:sl="sap.ui.comp.navpopover" xmlns:smartChart="sap.ui.comp.smartchart" xmlns:core="sap.ui.core"
+	xmlns:smartTable="sap.ui.comp.smarttable" xmlns:m="sap.m" xmlns:uitbl="sap.ui.table" xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:tnt="sap.tnt" xmlns:smartField="sap.ui.comp.smartfield" xmlns:smartFilter="sap.ui.core.Control"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:semantic="sap.m.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:smartList="sap.ui.comp.smartlist" xmlns:a="sap.m.IconTabFilterDesign" xmlns:v="sap.ui.comp.variants">
+	<Page showHeader = "false" enableScrolling="false">
+		<content>
+	<f:DynamicPage id="dynamicPageId"  class="sapUiNoContentPadding"
+	 showFooter="true" preserveHeaderStateOnScroll="true" fitContent="true" height="90%">
+		<f:title class="sapUiNoContentPadding">
+			<f:DynamicPageTitle stateChange="toggleHeaderOnTitleClick" class="dynmaicpagetitle">
+				<f:heading >
+					<layout:HorizontalLayout >
+						<Button icon="sap-icon://menu2" id="hide" press="onHide"></Button>
+						<!--<Button icon="sap-icon://menu2" visible="false" id="show" press="onHide1"></Button>-->
+						<Label text="WIP Editor" class="titleText sapUiTinyMargin"/>
+					</layout:HorizontalLayout>
+				</f:heading>
+				<f:snappedContent>
+					<!--<IconTabBar id="idIconTabBarMulti" >-->
+					<!--	<items>-->
+					<!--		<IconTabFilter icon="sap-icon://hint"></IconTabFilter>-->
+					<!--		<IconTabFilter icon="sap-icon://attachment"></IconTabFilter>-->
+					<!--		<IconTabFilter icon="sap-icon://notes"></IconTabFilter>-->
+					<!--		<IconTabFilter icon="sap-icon://group"></IconTabFilter>-->
+					<!--	</items>-->
+					<!--</IconTabBar>-->
+				</f:snappedContent>
+			</f:DynamicPageTitle>
+		</f:title>
+		<!--DynamicPage Header -->
+		<f:header  class="sapUiNoContentPadding" >
+			<f:DynamicPageHeader pinnable="false" id="dynamicPageHeader" class="dynamicPageHeader">
+				<f:content class="sapUiNoContentPadding">
+				<smartFilterBar:SmartFilterBar id="SmartFilterBar" search="gotoPress" persistencyKey="SmartFilterBar" entityType="WipMatters"
+					customData:dateFormatSettings="\{&quot;UTC&quot;:true\}" initialise="initiatedFilterbars" filterChange="filterChangeData"
+					filterBarExpanded="{InputsModel>/Inputs/hideFilterBar}" visible="true" label="WipEditor" searchEnabled="false">
+					<smartFilterBar:controlConfiguration >
+						<smartFilterBar:ControlConfiguration key="Budat" mandatory="mandatory" label="{i18n>Budat}" index="1" controlType="date"
+							filterType="interval" visibleInAdvancedArea="true" preventInitialDataFetchInValueHelpDialog="true" ></smartFilterBar:ControlConfiguration>
+						<smartFilterBar:ControlConfiguration key="Client" label="{i18n>Client}" index="2" id="client" visibleInAdvancedArea="true"
+							preventInitialDataFetchInValueHelpDialog="true" filterType="multi" />
+						<smartFilterBar:ControlConfiguration key="MpatnerParvw" visibleInAdvancedArea="true" label="{i18n>MpatnerParvw}" index="3" >
+							<smartFilterBar:customControl>
+								<m:ComboBox id="Estatus" items="{ path: '/VL_SH_ZPRS_SH_WIPEDIT_PARVW_F' }" showSecondaryValues="false"
+									selectionChange="businessPartnerTypeChange">
+									<core:ListItem key="{MPATNER_PARVW}" text="{MPATNER_PARVW_NAME}"/>
+								</m:ComboBox>
+							</smartFilterBar:customControl>
+						</smartFilterBar:ControlConfiguration>
+						<smartFilterBar:ControlConfiguration key="Mpatner" label="{i18n>Mpatner}" index="4" id="Mpatner" visibleInAdvancedArea="true"
+							preventInitialDataFetchInValueHelpDialog="true" filterType="multi" />
+						<smartFilterBar:ControlConfiguration key="Pspid" label="{i18n>Pspid1}" index="5" id="Matter" visibleInAdvancedArea="true"
+							preventInitialDataFetchInValueHelpDialog="true" filterType="multi" />
+						<smartFilterBar:ControlConfiguration key="Rptgroup" label="{i18n>Rptgroup}" index="6" id="Rptgroup" visibleInAdvancedArea="true"
+							preventInitialDataFetchInValueHelpDialog="true" filterType="multi" />
+						<smartFilterBar:ControlConfiguration key="Mgbill" label="{i18n>Mgbill}" index="7" id="Mgbill" visibleInAdvancedArea="true"
+							preventInitialDataFetchInValueHelpDialog="true" filterType="multi" />
+						<smartFilterBar:ControlConfiguration key="Belnr" label="{i18n>Belnrs}" index="8" id="Belnr" visibleInAdvancedArea="true"
+							preventInitialDataFetchInValueHelpDialog="true" filterType="multi" />
+						<smartFilterBar:ControlConfiguration key="Pernr" label="{i18n>Pernr1}" index="9" id="Pernr" visibleInAdvancedArea="true"
+							preventInitialDataFetchInValueHelpDialog="true" filterType="multi" />
+						<smartFilterBar:ControlConfiguration key="ClientParvw" visible="false"/>
+						<smartFilterBar:ControlConfiguration key="MpatnerParvwName" visible="false"/>
+							<smartFilterBar:ControlConfiguration key="MpatnerParvwName" visible="false"/>
+								<smartFilterBar:ControlConfiguration key="Post1" visible="false"/>
+									<smartFilterBar:ControlConfiguration key="ClientName" visible="false"/>
+										<smartFilterBar:ControlConfiguration key="MpatnerName" visible="false"/>
+					</smartFilterBar:controlConfiguration>
+					<smartFilterBar:groupConfiguration>
+							<smartFilterBar:GroupConfiguration key="WipMatters" label="WIP Editor"></smartFilterBar:GroupConfiguration>
+						</smartFilterBar:groupConfiguration>
+				</smartFilterBar:SmartFilterBar>
+				</f:content>
+			</f:DynamicPageHeader>
+		</f:header>
+		<f:content>
+		
+			<IconTabBar id="idIconTabBarMulti" expandable="false" visible="false" select="handleIconTabBarSelect" stretchContentHeight="true" applyContentPadding="false"  class="sapUiNoContentPadding icontabbar">
+				<items>
+					<IconTabFilter icon="sap-icon://flag" iconColor="Positive" visible="false" text=" " key="Home" class="container">
+						
+							<Bar>
+								<contentLeft>
+									<layout:HorizontalLayout >
+										<Label design="Bold" text="Matter Number"/>
+										<Label design="Bold" text=":"/>
+										<Text text="{InputsModel>/Inputs/formMatter}" class="sapUiTinyMarginBegin"/>
+									</layout:HorizontalLayout>
+								</contentLeft>
+								<contentMiddle>
+									<layout:HorizontalLayout >
+										<Label design="Bold" text="Lead Partner"/>
+										<Label design="Bold" text=":"/>
+										<Text text="{InputsModel>/Inputs/formLeadPartner}" class="sapUiTinyMarginBegin"/>
+									</layout:HorizontalLayout>
+								</contentMiddle>
+								<contentRight>
+									<layout:HorizontalLayout >
+										<Label design="Bold" text="Billing Office"/>
+										<Label design="Bold" text=":"/>
+										<Text text="{InputsModel>/Inputs/formBillingOffice}" class="sapUiTinyMarginBegin"/>
+									</layout:HorizontalLayout>
+								</contentRight>
+							</Bar>
+							
+						<smartTable:SmartTable enableCustomFilter="false" visible="true" id="smartTable_ResponsiveTable0" editable="false" entitySet="WipDetailsSet"
+							tableType="AnalyticalTable" showRowCount="false" useVariantManagement="false" persistencyKey="SmartTablePKey"
+							useTablePersonalisation="false" header="{i18n>Results} ({JSONModel>/RowCount})" useExportToExcel="false"
+							beforeRebindTable="onBeforeRebindTable" enableAutoBinding="false" afterVariantApply="applyVariant" dataReceived="onDataReceived"
+							fitContainer="true" beforeExport="beforeExport" class="smartTable" sticky="customToolbar" 
+							ignoreFromPersonalisation="IsTskcdValid,Awtyp,Tdname,Tdid,ToZzactcd,IsActcdValid,IsFfactcdValid,IsFftskcdValid,ToZzffactcd,Blart,PhaseStatustext,Percent,PhaseStatus,Tdobject,Twaer,Zzwipamt,ToMatter,ToZztskcd">
+							<smartTable:layoutData>
+								<FlexItemData growFactor="1" baseSize="0%"/>
+							</smartTable:layoutData>
+							<smartTable:customToolbar>
+								<m:OverflowToolbar id="stickyToolbar" class="stickyToolbar">
+									<v:VariantManagement id="variant" standardItemText="Standard" select="onlayoutitmSelect" save="onlayoutSave" enabled="true"
+										variantItems="{path: 'JSONModel>/VarinatSaveSet'}" manage="onLayoutModify" showExecuteOnSelection="false" showShare="false">
+										<v:variantItems>
+											<v:VariantItem text="{JSONModel>name}" key="{JSONModel>name}"></v:VariantItem>
+										</v:variantItems>
+									</v:VariantManagement>
+									<ToolbarSpacer/>
+									<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText"/>
+									<Button icon="sap-icon://synchronize" tooltip="Refresh" press="Reload"/>
+									<Button icon="sap-icon://expand-group" press="onPressToggle" tooltip="Narrative Toggle"/>
+									<!--<Button icon="sap-icon://action-settings" tooltip="Table Personalisation settings" press="ontablesettings"/>-->
+									<!--<Button icon="sap-icon://download" tooltip="Download" press="downloadfile"/>-->
+									<Button icon="sap-icon://action-settings" press="onSettingsopen"/>
+									<Button icon="sap-icon://excel-attachment" tooltip="Download Excel" press="ExportLineItem"/>
+								</m:OverflowToolbar >
+							</smartTable:customToolbar>
+							<ScrollContainer id="scrollId" horizontal="true" height = "100%" vertical="true"  class="container">
+								<Table id="WipDetailsSet" inset="false" mode="None" items="{path: 'JSONModel>/modelData'}" selectionChange="LineItemEditsSelection"
+									fixedLayout="false" sticky="ColumnHeaders,HeaderToolbar" class="ful-tbl-class" growing="true" growingScrollToLoad="true"
+									growingThreshold="50">
+									<!--<headerToolbar class="stickyToolbar" >-->
+									<!--	<Toolbar>-->
+									<!--		<content>-->
+									<!--			<Label text="Results :({JSONModel>/RowCount})" design="Bold"/>-->
+									<!--			<ToolbarSpacer/>-->
+									<!--			<SearchField width="20%" liveChange="onGlobalSearch" class="searchPosition" id="searchText"/>-->
+									<!--			<Button icon="sap-icon://synchronize" press="Reload" tooltip="Refresh" id="Reload"/>-->
+									<!--			<Button icon="sap-icon://excel-attachment" press="Export" tooltip="Download Excel"/>-->
+									<!--		</content>-->
+									<!--	</Toolbar>-->
+									<!--</headerToolbar>-->
+									<columns>
+										<Column demandPopin="false" visible="{JSONModel>/visible/Belnr}" hAlign="Begin" width="60px">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Belnr" ,"columnIndex":"1" ,"leadingProperty": "Belnr"}'/>
+											</customData>
+											<Label text="{i18n>Belnr}" design="Bold"/>
+										</Column>
+										<Column demandPopin="false" visible="{JSONModel>/visible/Matnr}" hAlign="Begin" width="60px">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Matnr","columnIndex":"2" , "leadingProperty": "Matnr"}'/>
+											</customData>
+											<Label text="{i18n>Matnr}" design="Bold"/>
+										</Column>
+										<Column demandPopin="false" visible="{JSONModel>/visible/LstarText}" hAlign="Begin" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "LstarText" ,"columnIndex":"3" , "leadingProperty": "LstarText"}'/>
+											</customData>
+											<Label text="{i18n>LstarText}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Budat}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Budat","type":"date" ,"columnIndex":"4" , "leadingProperty": "Budat"}'/>
+											</customData>
+											<Label text="{i18n>Budat}" design="Bold"/>
+										</Column>
+										<Column demandPopin="false" visible="{JSONModel>/visible/Zzwerks}" hAlign="Begin" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzwerks" ,"columnIndex":"5" , "leadingProperty": "Zzwerks"}'/>
+											</customData>
+											<Label text="{i18n>Zzwerks}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Pernr}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Pernr" ,"columnIndex":"6" , "leadingProperty": "Pernr"}'/>
+											</customData>
+											<Label text="{i18n>Pernr}" design="Bold"/>
+										</Column>
+										<Column demandPopin="false" visible="{JSONModel>/visible/Sname}" hAlign="Begin" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Sname","columnIndex":"7" , "leadingProperty": "Sname"}'/>
+											</customData>
+											<Label text="{i18n>Sname}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Megbtr}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Megbtr" ,"columnIndex":"8" , "leadingProperty": "Megbtr"}'/>
+											</customData>
+											<Label text="{i18n>Megbtr}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zzblvl}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzblvl" ,"columnIndex":"9" , "leadingProperty": "Zzblvl"}'/>
+											</customData>
+											<Label text="{i18n>Zzblvl}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/ZzblvlDesc}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "ZzblvlDesc","columnIndex":"10" , "leadingProperty": "ZzblvlDesc"}'/>
+											</customData>
+											<Label text="{i18n>ZzblvlDesc}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zzbgrp}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzbgrp" ,"columnIndex":"11" , "leadingProperty": "Zzbgrp"}'/>
+											</customData>
+											<Label text="{i18n>Zzbgrp}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/ZzbgrpDesc}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "ZzbgrpDesc" ,"columnIndex":"12" , "leadingProperty": "ZzbgrpDesc"}'/>
+											</customData>
+											<Label text="{i18n>ZzbgrpDesc}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zzteam}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzteam" ,"columnIndex":"14" , "leadingProperty": "Zzteam"}'/>
+											</customData>
+											<Label text="{i18n>Zzteam}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/ZzteamDesc}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "ZzteamDesc" ,"columnIndex":"15" , "leadingProperty": "ZzteamDesc"}'/>
+											</customData>
+											<Label text="{i18n>ZzteamDesc}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zzfepgrp}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzfepgrp","columnIndex":"16" , "leadingProperty": "Zzfepgrp"}'/>
+											</customData>
+											<Label text="{i18n>Zzfepgrp}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/ZzfepgrpDesc}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "ZzfepgrpDesc","columnIndex":"17" , "leadingProperty": "ZzfepgrpDesc"}'/>
+											</customData>
+											<Label text="{i18n>ZzfepgrpDesc}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zzphase}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzphase","columnIndex":"18" , "leadingProperty": "Zzphase"}'/>
+											</customData>
+											<Label text="{i18n>Zzphase}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zztskcd}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zztskcd" ,"columnIndex":"19" , "leadingProperty": "Zztskcd"}'/>
+											</customData>
+											<Label text="{i18n>Zztskcd}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zzactcd}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzactcd","columnIndex":"20" , "leadingProperty": "Zzactcd"}'/>
+											</customData>
+											<Label text="{i18n>Zzactcd}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zzfftskcd}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzfftskcd","columnIndex":"21" , "leadingProperty": "Zzfftskcd"}'/>
+											</customData>
+											<Label text="{i18n>Zzfftskcd}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Zzffactcd}" demandPopin="false" width="8rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Zzffactcd" ,"columnIndex":"22" , "leadingProperty": "Zzffactcd"}'/>
+											</customData>
+											<Label text="{i18n>Zzffactcd}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Pspid}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Pspid" ,"columnIndex":"19" , "leadingProperty": "Pspid"}'/>
+											</customData>
+											<Label text="{i18n>Pspid}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Buzei}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Buzei" ,"columnIndex":"19" , "leadingProperty": "Buzei"}'/>
+											</customData>
+											<Label text="{i18n>Buzei}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Bldat}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Bldat" ,"columnIndex":"19" , "leadingProperty": "Bldat"}'/>
+											</customData>
+											<Label text="{i18n>Bldat}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Cpudt}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Cpudt" ,"columnIndex":"19" , "leadingProperty": "Cpudt"}'/>
+											</customData>
+											<Label text="{i18n>Cpudt}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Meinh}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Meinh" ,"columnIndex":"19" , "leadingProperty": "Meinh"}'/>
+											</customData>
+											<Label text="{i18n>Meinh}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Title}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Title" ,"columnIndex":"19" , "leadingProperty": "Title"}'/>
+											</customData>
+											<Label text="{i18n>Title}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Bukrs}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Bukrs" ,"columnIndex":"19" , "leadingProperty": "Bukrs"}'/>
+											</customData>
+											<Label text="{i18n>Bukrs}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Werks}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Werks" ,"columnIndex":"19" , "leadingProperty": "Werks"}'/>
+											</customData>
+											<Label text="{i18n>Werks}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/PsPosid}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "PsPosid" ,"columnIndex":"19" , "leadingProperty": "PsPosid"}'/>
+											</customData>
+											<Label text="{i18n>PsPosid}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/Lstar}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "Lstar" ,"columnIndex":"19" , "leadingProperty": "Lstar"}'/>
+											</customData>
+											<Label text="{i18n>Lstar}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/RateLocl}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "RateLocl" ,"columnIndex":"19" , "leadingProperty": "RateLocl"}'/>
+											</customData>
+											<Label text="{i18n>RateLocl}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/AmountMatter}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "AmountMatter" ,"columnIndex":"19" , "leadingProperty": "AmountMatter"}'/>
+											</customData>
+											<Label text="{i18n>AmountMatter}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/WaersMatter}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "WaersMatter" ,"columnIndex":"19" , "leadingProperty": "WaersMatter"}'/>
+											</customData>
+											<Label text="{i18n>WaersMatter}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/AmountLocl}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "AmountLocl" ,"columnIndex":"19" , "leadingProperty": "AmountLocl"}'/>
+											</customData>
+											<Label text="{i18n>AmountLocl}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/WaersLocl}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "WaersLocl" ,"columnIndex":"19" , "leadingProperty": "WaersLocl"}'/>
+											</customData>
+											<Label text="{i18n>WaersLocl}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/AmountGlb}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "AmountGlb" ,"columnIndex":"19" , "leadingProperty": "AmountGlb"}'/>
+											</customData>
+											<Label text="{i18n>AmountGlb}" design="Bold"/>
+										</Column>
+										<Column hAlign="Begin" visible="{JSONModel>/visible/WaersGlb}" demandPopin="false">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "WaersGlb" ,"columnIndex":"19" , "leadingProperty": "WaersGlb"}'/>
+											</customData>
+											<Label text="{i18n>WaersGlb}" design="Bold"/>
+										</Column>
+										<Column hAlign="End" demandPopin="true" visible="{generalSetting>/showNarr}" minScreenWidth="200rem">
+											<customData>
+												<core:CustomData key="p13nData" value='\{"columnKey": "NarrativeString" ,"columnIndex":"23" , "leadingProperty": "NarrativeString"}'/>
+											</customData>
+											<Label text="{i18n>NarrativeString}" design="Bold"/>
+										</Column>
+									</columns>
+									<ColumnListItem >
+										<cells>
+											<Label visible="{JSONModel>/visible/Belnr}" text="{JSONModel>Belnr}"/>
+											<Label visible="{JSONModel>/visible/Matnr}" text="{JSONModel>Matnr}"/>
+											<Label visible="{JSONModel>/visible/LstarText}" text="{JSONModel>LstarText}"/>
+											<Label visible="{JSONModel>/visible/Budat}"
+												text="{path:'JSONModel>Budat', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium' , UTC:true ,pattern: 'dd.MM.YYYY' }}"/>
+											<Label visible="{JSONModel>/visible/Zzwerks}" text="{JSONModel>Zzwerks}"/>
+											<Label visible="{JSONModel>/visible/Pernr}" text="{ path: 'JSONModel>Pernr', formatter: '.formatter.removeLeadingZeros' }"/>
+											<Label visible="{JSONModel>/visible/Sname}" text="{JSONModel>Sname}"/>
+											<Label visible="{JSONModel>/visible/Megbtr}" text="{ parts: [ {path: 'JSONModel>Matnr'}, {path: 'JSONModel>Megbtr'} ] , formatter: '.formatter.fixeddecimal' }"/>
+											<Label visible="{JSONModel>/visible/Zzblvl}" text="{JSONModel>Zzblvl}"/>
+											<Label visible="{JSONModel>/visible/ZzblvlDesc}" text="{JSONModel>ZzblvlDesc}"/>
+											<Label visible="{JSONModel>/visible/Zzbgrp}" text="{JSONModel>Zzbgrp}"/>
+											<Label visible="{JSONModel>/visible/ZzbgrpDesc}" text="{JSONModel>ZzbgrpDesc}"/>
+											<Label visible="{JSONModel>/visible/Zzteam}" text="{JSONModel>Zzteam}"/>
+											<Label visible="{JSONModel>/visible/ZzteamDesc}" text="{JSONModel>ZzteamDesc}"/>
+											<Label visible="{JSONModel>/visible/Zzfepgrp}" text="{JSONModel>Zzfepgrp}"/>
+											<Label visible="{JSONModel>/visible/ZzfepgrpDesc}" text="{JSONModel>ZzfepgrpDesc}"/>
+											<Label visible="{JSONModel>/visible/Zzphase}" text="{JSONModel>Zzphase}"/>
+											<Label visible="{JSONModel>/visible/Zztskcd}" text="{JSONModel>Zztskcd}"/>
+											<Label visible="{JSONModel>/visible/Zzactcd}" text="{JSONModel>Zzactcd}"/>
+											<Label visible="{JSONModel>/visible/Zzfftskcd}" text="{JSONModel>Zzfftskcd}"/>
+											<Label visible="{JSONModel>/visible/Zzffactcd}" text="{JSONModel>Zzffactcd}"/>
+											<Label visible="{JSONModel>/visible/Pspid}" text="{JSONModel>Pspid}"/>
+											<Label visible="{JSONModel>/visible/Buzei}" text="{JSONModel>Buzei}"/>
+											<Label visible="{JSONModel>/visible/Bldat}"
+												text="{path:'JSONModel>Bldat', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium' , UTC:true }}"/>
+											<Label visible="{JSONModel>/visible/Cpudt}"
+												text="{path:'JSONModel>Cpudt', type: 'sap.ui.model.type.Date', formatOptions: { style: 'medium' , UTC:true }}"/>
+											<Label visible="{JSONModel>/visible/Meinh}" text="{JSONModel>Meinh}"/>
+											<Label visible="{JSONModel>/visible/Title}" text="{JSONModel>Title}"/>
+											<Label visible="{JSONModel>/visible/Bukrs}" text="{JSONModel>Bukrs}"/>
+											<Label visible="{JSONModel>/visible/Werks}" text="{JSONModel>Werks}"/>
+											<Label visible="{JSONModel>/visible/PsPosid}" text="{JSONModel>PsPosid}"/>
+											<Label visible="{JSONModel>/visible/Lstar}" text="{JSONModel>Lstar}"/>
+											<Label visible="{JSONModel>/visible/RateLocl}" text="{JSONModel>RateLocl}"/>
+											<Label visible="{JSONModel>/visible/AmountMatter}" text="{JSONModel>AmountMatter}"/>
+											<Label visible="{JSONModel>/visible/WaersMatter}" text="{JSONModel>WaersMatter}"/>
+											<Label visible="{JSONModel>/visible/AmountLocl}" text="{JSONModel>AmountLocl}"/>
+											<Label visible="{JSONModel>/visible/WaersLocl}" text="{JSONModel>WaersLocl}"/>
+											<Label visible="{JSONModel>/visible/AmountGlb}" text="{JSONModel>AmountGlb}"/>
+											<Label visible="{JSONModel>/visible/WaersGlb}" text="{JSONModel>WaersGlb}"/>
+											<TextArea cols="1000" growing="true" growingMaxLines="7" rows="1" value="{JSONModel>NarrativeString}" width="100%" editable="false"
+												liveChange="handelTblFieldChange" ></TextArea>
+										</cells>
+									</ColumnListItem>
+								</Table>
+							</ScrollContainer>
+						</smartTable:SmartTable>
+						
+					</IconTabFilter>
+					<IconTabFilter icon="sap-icon://write-new-document" iconColor="Critical"  text="Narrative Edits" visible="true"
+						key="NarrativeEdits" design="Horizontal" >
+						<mvc:XMLView id="NarrativeEditsVBox" visible="true" height="95%"  viewName="zprs.wipeditor.view.NarrativeEdits"/>
+					</IconTabFilter>
+					<IconTabFilter icon="sap-icon://write-new-document" text="Line Item Edits" visible="true" key="LineItemEdits" design="Horizontal">
+						<mvc:XMLView id="LineItemEditsVbox" visible="true"   height="95%" viewName="zprs.wipeditor.view.LineItemEdits"/>
+					</IconTabFilter>
+					<IconTabFilter icon="sap-icon://write-new-document" iconColor="Negative" text="Line Item Transfers" visible="true" key="LineItemTransfers"
+						design="Horizontal">
+						<mvc:XMLView id="LineItemTransfersVbox" visible="true" height="95%" viewName="zprs.wipeditor.view.LineItemTransfers"/>
+					</IconTabFilter>
+				</items>
+			</IconTabBar>
+			
+		
+		</f:content>
+		<!--DynamicPage Footer -->
+	
+	</f:DynamicPage>
+	</content>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button text="Reviewed" press="NarrativeFunction" visible="{InputsModel>/Inputs/Toolbar/NarrativeReviewed}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/NarrativeReviewed}"/>
+				<Button text="UnReview" press="NarrativeFunction" visible="{InputsModel>/Inputs/Toolbar/NarrativeUnreview}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/NarrativeUnreview}"/>
+				<Button text="Reviewed" press="LineItemEditsFuntion" visible="{InputsModel>/Inputs/Toolbar/LineItemReviewed}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/LineItemReviewed}"/>
+				<Button text="UnReview" press="LineItemEditsFuntion" visible="{InputsModel>/Inputs/Toolbar/LineItemUnreview}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/LineItemUnreview}"/>
+				<Button text="Save" press="NarrativeFunction" visible="{InputsModel>/Inputs/Toolbar/NarrativeSave}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/NarrativeSave}"/>
+				<Button text="Save" press="LineItemEditsFuntion" visible="{InputsModel>/Inputs/Toolbar/LineItemEditSave}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/LineItemEditSave}"/>
+				<Button text="Save" press="LineItemTransferfunction" visible="{InputsModel>/Inputs/Toolbar/LineItemTransferSave}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/LineItemTransferSave}"/>
+				<Button text="Modify/Reverse" press="LineItemEditsFuntion" visible="{InputsModel>/Inputs/Toolbar/Modify_Reverse}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/Modify_Reverse}"/>
+				<Button text="Update Codes" press="LineItemEditsFuntion" visible="{InputsModel>/Inputs/Toolbar/LineItemUpdatecodes}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/LineItemUpdatecodes}"/>
+				<Button text="Update Codes" press="LineItemTransferfunction" visible="{InputsModel>/Inputs/Toolbar/LineItemTransferUpdatecodes}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/LineItemTransferUpdatecodes}"/>
+				<Button text="A Global Spell Check" press="NarrativeFunction" visible="{InputsModel>/Inputs/Toolbar/GlobalSpellCheck}"/>
+				<Button text="Consolidate" press="LineItemTransferfunction" visible="{InputsModel>/Inputs/Toolbar/Consolidate}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/Consolidate}"/>
+				<Button text="Mass Transfer" press="LineItemTransferfunction" visible="{InputsModel>/Inputs/Toolbar/Mass_Transfer}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/Mass_Transfer}"/>
+				<Button text="Split Transfer" press="LineItemTransferfunction" visible="{InputsModel>/Inputs/Toolbar/Split_Transfer}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/Split_Transfer}"/>
+				<Button text="Replace Words" press="NarrativeFunction" visible="{InputsModel>/Inputs/Toolbar/Replace_Words}"
+					enabled="{InputsModel>/Inputs/ToolbarEnable/Replace_Words}"/>
+				<!--<Button icon="sap-icon://save" text="Save Layout" press="onPress1" visible="{InputsModel>/Inputs/Toolbar/Save_Layout}"/>-->
+			</Toolbar>
+		</footer>
+	</Page>
+</mvc:View>

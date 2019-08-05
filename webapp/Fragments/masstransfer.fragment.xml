@@ -1,27 +1,28 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core"
-	xmlns:smartField="sap.ui.comp.smartfield" xmlns:smartMultiInput="sap.ui.comp.smartmultiinput"  xmlns:m="sap.m">
+	xmlns:smartField="sap.ui.comp.smartfield" xmlns:smartMultiInput="sap.ui.comp.smartmultiinput" xmlns:m="sap.m">
 	<Dialog title="Mass Transfer">
 		<l:Grid defaultSpan="L12 M12 S12" width="auto" id="idGrid">
 			<l:content>
-			<Table id="matter">
+			 <l:VerticalLayout width="50%">
+			
+					<Table id="matter" width="200%"></Table>
 				
-			</Table>
-				<Label text="Percentage" labelFor="percentage"/>
-				<Input id="percentage" value="100"/>
-				<Table id="masstransfertable">
+	
+				<Table id="masstransfertable" width="200%">
 					<columns>
-						<Column width="160px">
-							<Text text="Document Number"/>
+						<Column width="50%">
+							<Label text="Document Number" design="Bold"/>
 						</Column>
-						<Column width="80px">
-							<Text text="item Number"/>
+						<Column width="25%">
+							<Label text="Item Number" design="Bold"/>
 						</Column>
-						<Column width="80px">
-							<Text text="Delete"/>
+						<Column width="25%">
+							<Label text="Delete" design="Bold"/>
 						</Column>
 					</columns>
 					<items></items>
 				</Table>
+				</l:VerticalLayout>
 			</l:content>
 		</l:Grid>
 		<buttons>
